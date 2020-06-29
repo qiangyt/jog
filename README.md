@@ -7,25 +7,22 @@ UNDER EARLY DEVELOPMENT. DON'T USE FOR NOW.
 
 ## Planned Features
 
-    1. supported formats:
+- [ ] supported formats:
 
-        [x]  logstash
+   - [x] logstash
+   - [ ] zap
+   - [ ] bunyan
+   - [ ] will add more
 
-        [ ]  zap
+- [ ] customizable colorization (not yet supports windows)
 
-        [ ]  bunyan
+- [ ]  friendly to multi-containers log outputted by docker-compose
 
-        [ ] will add more
+- [ ]  customizable output format
 
-    2.  [ ]  customizable colorization (not yet supports windows)
+- [ ]  compressed logger name - only first letters of package names are outputed
 
-    3.  [ ]  friendly to multi-containers log outputted by docker-compose
+- [x]  support JSON log mixed with non-JSON log line (for ex., springboot banner) - directly print them
 
-    4.  [ ]  customizable output format
-
-    5.  [ ]  compressed logger name - only first letters of package names are outputed
-
-    6.  [x]  support JSON log mixed with non-JSON log line (for ex., springboot banner) - directly print them
-
-    7.  [ ]  filter-by, either command line and web ui
+- [ ]  filter-by, either command line and web ui
 
