@@ -4,8 +4,14 @@ import (
 	"fmt"
 )
 
-// MatchLevel tells us which level the input log event matches the specific format that this interface supports
-// MatchLevel(raw string, logEvent map[string]interface{}) int
 func main() {
+	/*if len(os.Args) == 2 {
+		filePath := os.Args[1]
+		ProcessLinesWithLocalFile(filePath)
+	} else {
+		ProcessLinesWithReader(os.Stdin)
+	}*/
+
+	ProcessLinesWithLocalFile("/Users/i508673/github/qiangyt/json2log/example_logs/bts.log")
 	fmt.Println()
 }
