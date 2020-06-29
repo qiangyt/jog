@@ -16,3 +16,5 @@
 
 /j2log
 /example_logs/
+/j2log.log
+/.vscode

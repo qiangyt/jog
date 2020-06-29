@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strings"
 
@@ -62,12 +63,13 @@ func NewLogEvent(lineNo int, raw string) LogEvent {
 
 	line := strings.TrimSpace(raw)
 	if len(line) == 0 {
+		log.Printf("line %d is blank\n", lineNo)
 		return NewRawLogEvent(lineNo, raw)
 	}
 
 	all := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(line), &all); err != nil {
-		// TODO: panic(errors.Wrapf(err, "failed to parse line: \n%s"+line))
+		log.Printf("failed to parse line %d: <%s>\n\treason %v\n", lineNo, raw, errors.Wrap(err, ""))
 		return NewRawLogEvent(lineNo, raw)
 	}
 
@@ -94,6 +96,7 @@ func ParseRawLine(lineNo int, raw string) LogEvent {
 	parser = _logstashParser
 	amountOfFieldsPopulated := parser.Parse(r)
 	if amountOfFieldsPopulated <= 0 {
+		log.Printf("no fields populated. line %d: <%s>\n", lineNo, raw)
 		return NewRawLogEvent(lineNo, raw)
 	}
 
@@ -108,11 +111,13 @@ func ProcessRawLine(lineNo int, raw string) {
 
 // ProcessLinesWithLocalFile ...
 func ProcessLinesWithLocalFile(localFilePath string) {
+	log.Printf("processing local file: %s\n", localFilePath)
 
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to read file: %s", localFilePath))
 	}
+	log.Printf("file is opened: %s\n", localFilePath)
 	defer f.Close()
 
 	ProcessLinesWithReader(f)
@@ -125,8 +130,16 @@ func ProcessLinesWithReader(reader io.Reader) {
 
 	for lineNo := 1; true; lineNo++ {
 		raw, err := buf.ReadString('\n')
+
+		if len(raw) != 0 {
+			// trim the tail \n
+			if raw[len(raw)-1] == '\n' {
+				raw = raw[:len(raw)-1]
+			}
+		}
 		if err != nil {
 			if err == io.EOF {
+				log.Printf("got EOF, line %d\n", lineNo)
 				ProcessRawLine(lineNo, raw)
 				return
 			}
