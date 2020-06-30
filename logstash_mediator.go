@@ -1,14 +1,14 @@
 package main
 
-// LogstashParserT implements LogParser interface
-type LogstashParserT struct {
+// LogstashMediatorT implements LogMediator interface
+type LogstashMediatorT struct {
 }
 
-// LogstashParser is pointer of LogstashParserT
-type LogstashParser = *LogstashParserT
+// LogstashMediator is pointer of LogstashMediatorT
+type LogstashMediator = *LogstashMediatorT
 
-// Parse the log event
-func (me LogstashParser) Parse(event LogEvent) int {
+// Populate the log event
+func (me LogstashMediator) Populate(event LogEvent) int {
 	amountOfFieldsPopulated := 0
 
 	for fieldName, fieldValue := range event.All {

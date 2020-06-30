@@ -82,7 +82,7 @@ func NewLogEvent(lineNo int, raw string) LogEvent {
 	}
 }
 
-var _logstashParser LogstashParser
+var _logstashMediator LogstashMediator
 
 // ParseRawLine ...
 func ParseRawLine(lineNo int, raw string) LogEvent {
@@ -91,10 +91,10 @@ func ParseRawLine(lineNo int, raw string) LogEvent {
 		return r
 	}
 
-	var parser LogParser
+	var mediator LogMediator
 
-	parser = _logstashParser
-	amountOfFieldsPopulated := parser.Parse(r)
+	mediator = _logstashMediator
+	amountOfFieldsPopulated := mediator.Populate(r)
 	if amountOfFieldsPopulated <= 0 {
 		log.Printf("no fields populated. line %d: <%s>\n", lineNo, raw)
 		return NewRawLogEvent(lineNo, raw)
