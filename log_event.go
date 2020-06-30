@@ -111,8 +111,6 @@ func ProcessRawLine(lineNo int, raw string) {
 
 // ProcessLinesWithLocalFile ...
 func ProcessLinesWithLocalFile(localFilePath string) {
-	log.Printf("processing local file: %s\n", localFilePath)
-
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to read file: %s", localFilePath))

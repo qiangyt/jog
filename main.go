@@ -2,24 +2,30 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/gookit/color"
+	"log"
+	"os"
 )
 
 func main() {
-	color.Blue.Println("Simple to use color")
+	Colors["Blue"].Println("Simple to use color")
 
-	log := InitLogger()
-	defer log.Close()
+	logFile := InitLogger()
+	defer logFile.Close()
 
-	/*if len(os.Args) == 2 {
-		filePath := os.Args[1]
-		ProcessLinesWithLocalFile(filePath)
-	} else {
+	var filePath string
+	filePath = "./example_logs/logstash.log"
+
+	if len(filePath) == 0 && len(os.Args) == 2 {
+		filePath = os.Args[1]
+	}
+
+	if len(filePath) == 0 {
 		log.Println("Read log lines from stdin")
-		ProcessLinesWithReader(os.Stdin)
-	}*/
+		//ProcessLinesWithReader(os.Stdin)
+	} else {
+		log.Printf("processing local file: %s\n", filePath)
+		//ProcessLinesWithLocalFile(filePath)
+	}
 
-	ProcessLinesWithLocalFile("/Users/i508673/github/qiangyt/json2log/example_logs/bts.log")
 	fmt.Println()
 }
