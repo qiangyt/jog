@@ -2,9 +2,13 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/gookit/color"
 )
 
 func main() {
+	color.Blue.Println("Simple to use color")
+
 	log := InitLogger()
 	defer log.Close()
 

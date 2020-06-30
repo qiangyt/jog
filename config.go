@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"runtime"
 
+	"github.com/gookit/color"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -68,22 +69,52 @@ func DefaultOSType() OSType {
 	return ParseOSType(runtime.GOOS)
 }
 
-// ConfigT ...
-type ConfigT struct {
-	LocalPort int    `yaml:"localPort"`
-	LocalIP   string `yaml:"localIp"`
+// LevelColorsConfigT ...
+type LevelColorsConfigT struct {
+	DEBUG string `yaml:"DEBUG"`
+	INFO  string `yaml:"INFO"`
+	ERROR string `yaml:"ERROR"`
+	WARN  string `yaml:"WARN"`
+	TRACE string `yaml:"TRACE"`
+	FINE  string `yaml:"FINE"`
+	FATAL string `yaml:"FATAL"`
 }
 
-// Config ...
-type Config = *ConfigT
+// LevelColorsConfig ...
+type LevelColorsConfig = *LevelColorsConfigT
+
+// OutputColorConfigT ...
+type OutputColorConfigT struct {
+	Keywords map[string]string  `yaml:"keywords"`
+	Levels   LevelColorsConfigT `yaml:"levels"`
+	Raw      string             `yaml:"raw"`
+	Others   string             `yaml:"others"`
+}
+
+// OutputColorConfig ...
+type OutputColorConfig = *OutputColorConfigT
+
+// OutputConfigT ...
+type OutputConfigT struct {
+	Pattern string             `yaml:"pattern"`
+	Colors  OutputColorConfigT `yaml:"colors"`
+}
+
+// RootConfigT ...
+type RootConfigT struct {
+	Output OutputConfigT `yaml:"output"`
+}
+
+// RootConfig ...
+type RootConfig = *RootConfigT
 
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
-	r := filepath.Join(dir, ".trayboat.yaml")
+	r := filepath.Join(dir, ".j2log.yaml")
 	if FileExists(r) {
 		return r
 	}
-	r = filepath.Join(dir, ".trayboat.yml")
+	r = filepath.Join(dir, ".j2log.yml")
 	if FileExists(r) {
 		return r
 	}
@@ -108,16 +139,39 @@ func DetermineConfigFilePath() string {
 		return r
 	}
 
-	dir = os.ExpandEnv("${HOME}/.trayboat")
+	dir = os.ExpandEnv("${HOME}")
 	return lookForConfigFile(dir)
 }
 
 // LoadConfig ...
-func LoadConfig() Config {
+func LoadConfig() RootConfig {
+	color.Red.Println("Simple to use color")
+
 	path := DetermineConfigFilePath()
 	log.Printf("Config file: %s\n", path)
 
-	var r ConfigT
+	r := &RootConfigT{
+		Output: OutputConfigT{
+			Pattern: "",
+			Colors: OutputColorConfigT{
+				Keywords: map[string]string{
+					"a": "aa",
+					"b": "bb",
+				},
+				Levels: LevelColorsConfigT{
+					DEBUG: "",
+					INFO:  "",
+					ERROR: "",
+					WARN:  "",
+					TRACE: "",
+					FINE:  "",
+					FATAL: "",
+				},
+				Raw:    "",
+				Others: "",
+			},
+		},
+	}
 
 	if len(path) != 0 {
 		raw := ReadFile(path)
@@ -127,14 +181,7 @@ func LoadConfig() Config {
 		}
 	}
 
-	if r.LocalPort == 0 {
-		r.LocalPort = 7086
-	}
-	if len(r.LocalIP) == 0 {
-		r.LocalIP = "127.0.0.1"
-	}
-
-	return &r
+	return r
 }
 
 func getConfigString(prefix string, m map[string]interface{}, key string) (bool, string) {
