@@ -94,7 +94,7 @@ func ParseRawLine(lineNo int, raw string) LogEvent {
 	var mediator LogMediator
 
 	mediator = _logstashMediator
-	amountOfFieldsPopulated := mediator.Populate(r)
+	amountOfFieldsPopulated := mediator.PopulateFields(r)
 	if amountOfFieldsPopulated <= 0 {
 		log.Printf("no fields populated. line %d: <%s>\n", lineNo, raw)
 		return NewRawLogEvent(lineNo, raw)
@@ -110,7 +110,7 @@ func ProcessRawLine(lineNo int, raw string) {
 }
 
 // ProcessLinesWithLocalFile ...
-func ProcessLinesWithLocalFile(localFilePath string) {
+func ProcessLinesWithLocalFile(cfg Config, localFilePath string) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to read file: %s", localFilePath))
@@ -118,11 +118,11 @@ func ProcessLinesWithLocalFile(localFilePath string) {
 	log.Printf("file is opened: %s\n", localFilePath)
 	defer f.Close()
 
-	ProcessLinesWithReader(f)
+	ProcessLinesWithReader(cfg, f)
 }
 
 // ProcessLinesWithReader ...
-func ProcessLinesWithReader(reader io.Reader) {
+func ProcessLinesWithReader(cfg Config, reader io.Reader) {
 
 	buf := bufio.NewReader(reader)
 

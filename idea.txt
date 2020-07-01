@@ -1,0 +1,15 @@
+1. use https://github.com/spf13/afero to support various of remote files, and testing
+
+2. use https://github.com/tidwall/buntdb to Index fields inside JSON documents
+
+3. use an embeded graph db to query/filter, for ex. https://github.com/krotik/eliasdb, and dgraph
+
+4. use https://github.com/HouzuoGuo/tiedot, which is an embeded json document db, to support query/filter
+
+5. use https://github.com/blevesearch/bleve (A modern text indexing library for go) to index any go data structure (including JSON)
+
+6. connect to ELK to read log? (https://github.com/olivere/elastic)
+
+7. collect logs from docker hosts, for ex. refer to https://github.com/AliyunContainerService/log-pilot
+
+8. integrate with IaaS/PaaS log services

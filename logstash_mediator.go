@@ -7,8 +7,8 @@ type LogstashMediatorT struct {
 // LogstashMediator is pointer of LogstashMediatorT
 type LogstashMediator = *LogstashMediatorT
 
-// Populate the log event
-func (me LogstashMediator) Populate(event LogEvent) int {
+// PopulateFields populates field into the log event
+func (me LogstashMediator) PopulateFields(event LogEvent) int {
 	amountOfFieldsPopulated := 0
 
 	for fieldName, fieldValue := range event.All {

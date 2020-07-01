@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gookit/color"
+	"github.com/gookit/goutil/strutil"
 )
 
 // Colors ...
@@ -70,4 +73,20 @@ var Colors = map[string]color.Color{
 	"LightWhite":      color.LightWhite,
 	"LightYellow":     color.LightYellow,
 	"LightMagenta":    color.LightMagenta,
+}
+
+// ColorsFromLabel ...
+func ColorsFromLabel(label string) ([]color.Color, error) {
+	colorNames := strutil.Split(label, ",")
+	r := make([]color.Color, 0, len(colorNames))
+
+	for _, colorName := range colorNames {
+		c, has := Colors[colorName]
+		if !has {
+			return nil, fmt.Errorf("unknown color name '%s' in '%s'. allowed: %v", colorName, label, Colors)
+		}
+		r = append(r, c)
+	}
+
+	return r, nil
 }

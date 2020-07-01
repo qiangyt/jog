@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	Colors["Blue"].Println("Simple to use color")
-
 	logFile := InitLogger()
 	defer logFile.Close()
+
+	cfg := LoadConfig()
 
 	var filePath string
 	filePath = "./example_logs/logstash.log"
@@ -21,10 +21,10 @@ func main() {
 
 	if len(filePath) == 0 {
 		log.Println("Read log lines from stdin")
-		//ProcessLinesWithReader(os.Stdin)
+		ProcessLinesWithReader(cfg, os.Stdin)
 	} else {
 		log.Printf("processing local file: %s\n", filePath)
-		//ProcessLinesWithLocalFile(filePath)
+		ProcessLinesWithLocalFile(cfg, filePath)
 	}
 
 	fmt.Println()

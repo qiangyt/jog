@@ -69,44 +69,84 @@ func DefaultOSType() OSType {
 	return ParseOSType(runtime.GOOS)
 }
 
-// LevelColorsConfigT ...
-type LevelColorsConfigT struct {
-	DEBUG string `yaml:"DEBUG"`
-	INFO  string `yaml:"INFO"`
-	ERROR string `yaml:"ERROR"`
-	WARN  string `yaml:"WARN"`
-	TRACE string `yaml:"TRACE"`
-	FINE  string `yaml:"FINE"`
-	FATAL string `yaml:"FATAL"`
+// ColorConfigT ...
+type ColorConfigT struct {
+	yaml.Unmarshaler
+	yaml.Marshaler
+
+	Label  string
+	Colors []color.Color
 }
 
-// LevelColorsConfig ...
-type LevelColorsConfig = *LevelColorsConfigT
+// NewColorConfig ...
+func NewColorConfig(label string) ColorConfigT {
+	var r ColorConfigT
 
-// OutputColorConfigT ...
-type OutputColorConfigT struct {
-	Keywords map[string]string  `yaml:"keywords"`
-	Levels   LevelColorsConfigT `yaml:"levels"`
-	Raw      string             `yaml:"raw"`
-	Others   string             `yaml:"others"`
+	if err := yaml.UnmarshalStrict([]byte(label), &r); err != nil {
+		panic(errors.Wrap(err, "failed to unmarshal color: "+label))
+	}
+
+	return r
 }
 
-// OutputColorConfig ...
-type OutputColorConfig = *OutputColorConfigT
+// UnmarshalYAML ...
+func (me ColorConfigT) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	if err := unmarshal(&me.Label); err != nil {
+		return err
+	}
+
+	c, err := ColorsFromLabel(me.Label)
+	if err != nil {
+		return nil
+	}
+	me.Colors = c
+
+	return nil
+}
+
+// MarshalYAML ...
+func (me ColorConfigT) MarshalYAML() (interface{}, error) {
+	return me.Label, nil
+}
+
+// OutputColorsConfigT ...
+type OutputColorsConfigT struct {
+	LineNo     ColorConfigT `yaml:"lineNo"`
+	Timestamp  ColorConfigT `yaml:"timestamp"`
+	Version    ColorConfigT `yaml:"version"`
+	Message    ColorConfigT `yaml:"message"`
+	Logger     ColorConfigT `yaml:"logger"`
+	Thread     ColorConfigT `yaml:"thread"`
+	StackTrace ColorConfigT `yaml:"stackTrace"`
+
+	Debug ColorConfigT `yaml:"debug"`
+	Info  ColorConfigT `yaml:"info"`
+	Error ColorConfigT `yaml:"error"`
+	Warn  ColorConfigT `yaml:"warn"`
+	Trace ColorConfigT `yaml:"trace"`
+	Fine  ColorConfigT `yaml:"fine"`
+	Fatal ColorConfigT `yaml:"fatal"`
+
+	Raw    ColorConfigT `yaml:"raw"`
+	Others ColorConfigT `yaml:"others"`
+}
+
+// OutputColorsConfig ...
+type OutputColorsConfig = *OutputColorsConfigT
 
 // OutputConfigT ...
 type OutputConfigT struct {
-	Pattern string             `yaml:"pattern"`
-	Colors  OutputColorConfigT `yaml:"colors"`
+	Pattern string              `yaml:"pattern"`
+	Colors  OutputColorsConfigT `yaml:"colors"`
 }
 
-// RootConfigT ...
-type RootConfigT struct {
+// ConfigT ...
+type ConfigT struct {
 	Output OutputConfigT `yaml:"output"`
 }
 
-// RootConfig ...
-type RootConfig = *RootConfigT
+// Config ...
+type Config = *ConfigT
 
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
@@ -144,31 +184,34 @@ func DetermineConfigFilePath() string {
 }
 
 // LoadConfig ...
-func LoadConfig() RootConfig {
+func LoadConfig() Config {
 	color.Red.Println("Simple to use color")
 
 	path := DetermineConfigFilePath()
 	log.Printf("Config file: %s\n", path)
 
-	r := &RootConfigT{
+	r := &ConfigT{
 		Output: OutputConfigT{
 			Pattern: "",
-			Colors: OutputColorConfigT{
-				Keywords: map[string]string{
-					"a": "aa",
-					"b": "bb",
-				},
-				Levels: LevelColorsConfigT{
-					DEBUG: "",
-					INFO:  "",
-					ERROR: "",
-					WARN:  "",
-					TRACE: "",
-					FINE:  "",
-					FATAL: "",
-				},
-				Raw:    "",
-				Others: "",
+			Colors: OutputColorsConfigT{
+				LineNo:     NewColorConfig("FgWhite"),
+				Timestamp:  NewColorConfig("FgWhite"),
+				Version:    NewColorConfig("FgWhite"),
+				Message:    NewColorConfig("FgWhite"),
+				Logger:     NewColorConfig("FgWhite"),
+				Thread:     NewColorConfig("FgWhite"),
+				StackTrace: NewColorConfig("FgWhite"),
+
+				Debug: NewColorConfig("FgBlue,OpBold"),
+				Info:  NewColorConfig("FgWhite,OpBold"),
+				Error: NewColorConfig("FgRed,OpBold"),
+				Warn:  NewColorConfig("FgYellow,OpBold"),
+				Trace: NewColorConfig("FgGreen,OpBold"),
+				Fine:  NewColorConfig("FgCyan,OpBold"),
+				Fatal: NewColorConfig("FgRed,OpBold"),
+
+				Raw:    NewColorConfig("FgWhite"),
+				Others: NewColorConfig("FgWhite"),
 			},
 		},
 	}
@@ -176,7 +219,7 @@ func LoadConfig() RootConfig {
 	if len(path) != 0 {
 		raw := ReadFile(path)
 
-		if err := yaml.Unmarshal(raw, &r); err != nil {
+		if err := yaml.UnmarshalStrict(raw, &r); err != nil {
 			panic(errors.Wrap(err, "failed to unmarshal config file: "+path))
 		}
 	}
