@@ -10,7 +10,7 @@ func main() {
 	logFile := InitLogger()
 	defer logFile.Close()
 
-	cfg := LoadConfig()
+	cfg := ConfigWithDefaultYamlFile()
 
 	var filePath string
 	filePath = "./example_logs/logstash.log"

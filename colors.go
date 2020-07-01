@@ -76,7 +76,7 @@ var Colors = map[string]color.Color{
 }
 
 // ColorsFromLabel ...
-func ColorsFromLabel(label string) ([]color.Color, error) {
+func ColorsFromLabel(label string) (color.Style, error) {
 	colorNames := strutil.Split(label, ",")
 	r := make([]color.Color, 0, len(colorNames))
 
@@ -88,5 +88,5 @@ func ColorsFromLabel(label string) ([]color.Color, error) {
 		r = append(r, c)
 	}
 
-	return r, nil
+	return color.New(r...), nil
 }

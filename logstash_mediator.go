@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 // LogstashMediatorT implements LogMediator interface
 type LogstashMediatorT struct {
 }
@@ -38,7 +40,7 @@ func (me LogstashMediator) PopulateFields(event LogEvent) int {
 			continue
 		}
 		if fieldName == "level" {
-			event.Level = fieldValue.(string)
+			event.Level = strings.ToLower(fieldValue.(string))
 			amountOfFieldsPopulated++
 			continue
 		}

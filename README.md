@@ -29,6 +29,8 @@ UNDER EARLY DEVELOPMENT. DON'T USE FOR NOW.
 
 - [ ]  Customizable output format
 
+- [x]  Hightlight startup line
+
 - [ ]  Compressed logger name - only first letters of package names are outputed
 
 - [x]  Support JSON log mixed with non-JSON log line (for ex., springboot banner) - directly print them

@@ -74,61 +74,93 @@ type ColorConfigT struct {
 	yaml.Unmarshaler
 	yaml.Marshaler
 
-	Label  string
-	Colors []color.Color
+	Label string
+	Style color.Style
 }
 
+// ColorConfig ...
+type ColorConfig = *ColorConfigT
+
 // NewColorConfig ...
-func NewColorConfig(label string) ColorConfigT {
+func NewColorConfig(label string) ColorConfig {
 	var r ColorConfigT
 
 	if err := yaml.UnmarshalStrict([]byte(label), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal color: "+label))
 	}
 
-	return r
+	return &r
 }
 
 // UnmarshalYAML ...
-func (me ColorConfigT) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	if err := unmarshal(&me.Label); err != nil {
+func (me ColorConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	err := unmarshal(&me.Label)
+	if err != nil {
 		return err
 	}
 
-	c, err := ColorsFromLabel(me.Label)
-	if err != nil {
-		return nil
-	}
-	me.Colors = c
-
-	return nil
+	me.Style, err = ColorsFromLabel(me.Label)
+	return err
 }
 
 // MarshalYAML ...
-func (me ColorConfigT) MarshalYAML() (interface{}, error) {
+func (me ColorConfig) MarshalYAML() (interface{}, error) {
 	return me.Label, nil
+}
+
+// Render ...
+func (me ColorConfig) Render(a ...interface{}) string {
+	return me.Style.Render(a...)
+}
+
+// Sprint is alias of the 'Render'
+func (me ColorConfig) Sprint(a ...interface{}) string {
+	return me.Style.Sprint(a...)
+}
+
+// Sprintf format and render message.
+func (me ColorConfig) Sprintf(format string, a ...interface{}) string {
+	return me.Style.Sprintf(format, a...)
+}
+
+// Print render and Print text
+func (me ColorConfig) Print(a ...interface{}) {
+	me.Style.Print(a...)
+}
+
+// Printf render and print text
+func (me ColorConfig) Printf(format string, a ...interface{}) {
+	me.Style.Printf(format, a...)
+}
+
+// Println render and print text line
+func (me ColorConfig) Println(a ...interface{}) {
+	me.Style.Println(a...)
 }
 
 // OutputColorsConfigT ...
 type OutputColorsConfigT struct {
-	LineNo     ColorConfigT `yaml:"lineNo"`
-	Timestamp  ColorConfigT `yaml:"timestamp"`
-	Version    ColorConfigT `yaml:"version"`
-	Message    ColorConfigT `yaml:"message"`
-	Logger     ColorConfigT `yaml:"logger"`
-	Thread     ColorConfigT `yaml:"thread"`
-	StackTrace ColorConfigT `yaml:"stackTrace"`
+	LineNo      ColorConfig `yaml:"line-no"`
+	Timestamp   ColorConfig
+	Version     ColorConfig
+	Message     ColorConfig
+	Logger      ColorConfig
+	Thread      ColorConfig
+	StackTrace  ColorConfig `yaml:"stack-trace"`
+	StartedLine ColorConfig `yaml:"started-line"`
 
-	Debug ColorConfigT `yaml:"debug"`
-	Info  ColorConfigT `yaml:"info"`
-	Error ColorConfigT `yaml:"error"`
-	Warn  ColorConfigT `yaml:"warn"`
-	Trace ColorConfigT `yaml:"trace"`
-	Fine  ColorConfigT `yaml:"fine"`
-	Fatal ColorConfigT `yaml:"fatal"`
+	Debug ColorConfig
+	Info  ColorConfig
+	Error ColorConfig
+	Warn  ColorConfig
+	Trace ColorConfig
+	Fine  ColorConfig
+	Fatal ColorConfig
 
-	Raw    ColorConfigT `yaml:"raw"`
-	Others ColorConfigT `yaml:"others"`
+	Raw             ColorConfig
+	OthersName      ColorConfig `yaml:"others-name"`
+	OthersSeparator ColorConfig `yaml:"others-separator"`
+	OthersValue     ColorConfig `yaml:"others-value"`
 }
 
 // OutputColorsConfig ...
@@ -136,14 +168,50 @@ type OutputColorsConfig = *OutputColorsConfigT
 
 // OutputConfigT ...
 type OutputConfigT struct {
-	Pattern string              `yaml:"pattern"`
-	Colors  OutputColorsConfigT `yaml:"colors"`
+	Pattern            string
+	CompressLoggerName bool `yaml:"compress-logger-name"`
+	Colors             OutputColorsConfig
+	StartedLine        string `yaml:"started-line"`
 }
+
+// OutputConfig ...
+type OutputConfig = *OutputConfigT
 
 // ConfigT ...
 type ConfigT struct {
-	Output OutputConfigT `yaml:"output"`
+	Output OutputConfigT
 }
+
+// DefaultConfigYAML ...
+const DefaultConfigYAML = `
+output:
+  pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} ${others} ${stacktrace}"
+  compress-logger-name: true
+  colors:
+    line-no: FgDefault
+    timestamp: FgDefault
+    version: FgDefault
+    message: FgDefault
+    logger: FgDefault
+    thread: FgDefault
+    stack-trace: FgDefault
+    started-line: FgGreen, OpBold
+
+    debug: FgBlue,OpBold
+    info: FgBlue,OpBold
+    error: FgRed,OpBold
+    warn: FgYellow,OpBold
+    trace: FgBlue,OpBold
+    fine: FgCyan,OpBold
+    fatal: FgRed,OpBold
+
+    raw: FgDefault
+    others-name: FgDefault,OpBold
+    others-separator: FgDefault
+    others-value: FgDefault
+
+  started-line: Started Application in
+`
 
 // Config ...
 type Config = *ConfigT
@@ -183,48 +251,34 @@ func DetermineConfigFilePath() string {
 	return lookForConfigFile(dir)
 }
 
-// LoadConfig ...
-func LoadConfig() Config {
-	color.Red.Println("Simple to use color")
-
+// ConfigWithDefaultYamlFile ...
+func ConfigWithDefaultYamlFile() Config {
 	path := DetermineConfigFilePath()
+
+	if len(path) == 0 {
+		log.Println("Config file not found, take default config")
+		return ConfigWithYaml(DefaultConfigYAML)
+	}
+
+	log.Printf("Config file: %s\n", path)
+	return ConfigWithYaml(path)
+}
+
+// ConfigWithYamlFile ...
+func ConfigWithYamlFile(path string) Config {
 	log.Printf("Config file: %s\n", path)
 
-	r := &ConfigT{
-		Output: OutputConfigT{
-			Pattern: "",
-			Colors: OutputColorsConfigT{
-				LineNo:     NewColorConfig("FgWhite"),
-				Timestamp:  NewColorConfig("FgWhite"),
-				Version:    NewColorConfig("FgWhite"),
-				Message:    NewColorConfig("FgWhite"),
-				Logger:     NewColorConfig("FgWhite"),
-				Thread:     NewColorConfig("FgWhite"),
-				StackTrace: NewColorConfig("FgWhite"),
+	yamlText := string(ReadFile(path))
+	return ConfigWithYaml(yamlText)
+}
 
-				Debug: NewColorConfig("FgBlue,OpBold"),
-				Info:  NewColorConfig("FgWhite,OpBold"),
-				Error: NewColorConfig("FgRed,OpBold"),
-				Warn:  NewColorConfig("FgYellow,OpBold"),
-				Trace: NewColorConfig("FgGreen,OpBold"),
-				Fine:  NewColorConfig("FgCyan,OpBold"),
-				Fatal: NewColorConfig("FgRed,OpBold"),
-
-				Raw:    NewColorConfig("FgWhite"),
-				Others: NewColorConfig("FgWhite"),
-			},
-		},
+// ConfigWithYaml ...
+func ConfigWithYaml(yamlText string) Config {
+	var r ConfigT
+	if err := yaml.UnmarshalStrict([]byte(yamlText), &r); err != nil {
+		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))
 	}
-
-	if len(path) != 0 {
-		raw := ReadFile(path)
-
-		if err := yaml.UnmarshalStrict(raw, &r); err != nil {
-			panic(errors.Wrap(err, "failed to unmarshal config file: "+path))
-		}
-	}
-
-	return r
+	return &r
 }
 
 func getConfigString(prefix string, m map[string]interface{}, key string) (bool, string) {
