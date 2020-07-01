@@ -32,6 +32,14 @@ func FileStat(path string, ensureExists bool) os.FileInfo {
 	return r
 }
 
+// FileExists ...
+func FileExists(path string) bool {
+	if FileStat(path, false) == nil {
+		return false
+	}
+	return true
+}
+
 // RemoveFile ...
 func RemoveFile(path string) {
 	if err := os.Remove(path); err != nil {

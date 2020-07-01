@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gookit/goutil/fsutil"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -23,11 +22,11 @@ type Config = *ConfigT
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
 	r := filepath.Join(dir, ".j2log.yaml")
-	if fsutil.PathExists(r) {
+	if FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, ".j2log.yml")
-	if fsutil.PathExists(r) {
+	if FileExists(r) {
 		return r
 	}
 	return ""
