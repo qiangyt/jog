@@ -17,8 +17,8 @@ UNDER EARLY DEVELOPMENT. DON'T USE FOR NOW.
 - [ ] Customizable colorization (not yet supports windows)
 
 - [ ] able to directly read many sources:
-   - [ ] stdin
-   - [ ] local file
+   - [x] stdin
+   - [x] local file
    - [ ] remote file (HTTP/HTTPs/FTP/SFTP)
    - [ ] k8s log
    - [ ] docker-compose log
@@ -27,11 +27,11 @@ UNDER EARLY DEVELOPMENT. DON'T USE FOR NOW.
 
 - [ ]  Friendly to multi-containers log outputted by docker-compose
 
-- [ ]  Customizable output format
+- [x]  Customizable output format
 
 - [x]  Hightlight startup line
 
-- [ ]  Compressed logger name - only first letters of package names are outputed
+- [x]  Compressed logger name - only first letters of package names are outputed
 
 - [x]  Support JSON log mixed with non-JSON log line (for ex., springboot banner) - directly print them
 
