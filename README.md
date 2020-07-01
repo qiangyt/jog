@@ -17,6 +17,8 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [ ] Bunyan
       - [x] Actually you could define your own format. Run `jog -t` to see configuration example. Most-likely your JSON log format is already supported, automatically
 
+   - [x] Support Mac OSX, Windows, Linux
+
    - [x] Supports customized fields
 
    - [x] Customizable output pattern
@@ -42,16 +44,12 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [ ]  Filtering, both command line and embedded Web UI
 
-
-## Executable binaries:
-
-   https://github.com/qiangyt/jog/releases/
-
 ## Usage:
-  Copy the downloaded binary to $PATH. For ex.
+  Download the executable binary to $PATH. For ex.
 
   ```shell
-     cp jog /usr/local/bin/
+     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.0/jog.darwin -o /usr/local/bin/jog
+     chmod +x /usr/local/bin/jog
   ```
 
    * View a local JSON log file: `jog sample.log`
@@ -61,6 +59,22 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    * From stdin steam: `tail -f sample.log | ./jog`
 
    * Check full usage: `jog -h`
+
+     ```
+      Convert and view structured (JSON) log
+      v0.9.0
+
+      Usage:
+      jog  [option...]  <your JSON log file path>
+      cat  <your JSON file path>  |  jog  [option...]
+
+      Options:
+      -c, --config <config file path>  Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
+      -t, --template                   Print a config YAML file template
+      -h, --help                       Display this information
+      -V, --version                    Display app version information
+      -d, --debug                      Print more error detail
+     ```
 
 ## Build
 
