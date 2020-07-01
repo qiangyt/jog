@@ -186,7 +186,7 @@ func ParseRawLine(cfg Config, lineNo int, raw string) LogEvent {
 	var mediator LogMediator
 
 	mediator = _logstashMediator
-	amountOfFieldsPopulated := mediator.PopulateFields(r)
+	amountOfFieldsPopulated := mediator.PopulateFields(cfg, r)
 	if amountOfFieldsPopulated <= 0 {
 		log.Printf("no fields populated. line %d: <%s>\n", lineNo, raw)
 		return NewRawLogEvent(cfg, lineNo, raw)

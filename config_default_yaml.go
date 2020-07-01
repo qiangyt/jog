@@ -29,5 +29,16 @@ output:
     others-separator: FgDefault
     others-value: FgDefault
 
-  started-line: Started Application in
+  started-line: "Started Application in"
+
+logstash:
+  field-names:
+    line-no:
+    timestamp: "@timestamp"
+    version: "@version"
+    message: message
+    logger: logger_name
+    thread: thread_name
+    level: level
+    stack-trace: stack_trace
 `

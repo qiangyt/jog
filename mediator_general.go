@@ -2,15 +2,15 @@ package main
 
 import "strings"
 
-// LogstashMediatorT implements LogMediator interface
-type LogstashMediatorT struct {
+// GenerialMediatorT implements LogMediator interface
+type GenerialMediatorT struct {
 }
 
-// LogstashMediator is pointer of LogstashMediatorT
-type LogstashMediator = *LogstashMediatorT
+// GenerialMediator is pointer of GenerialMediatorT
+type GenerialMediator = *GenerialMediatorT
 
 // PopulateFields populates field into the log event
-func (me LogstashMediator) PopulateFields(event LogEvent) int {
+func (me GenerialMediator) PopulateFields(cfg Config, event LogEvent) int {
 	amountOfFieldsPopulated := 0
 
 	for fieldName, fieldValue := range event.All {

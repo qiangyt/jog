@@ -10,20 +10,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// OutputConfigT ...
-type OutputConfigT struct {
-	Pattern            string
-	CompressLoggerName bool `yaml:"compress-logger-name"`
-	Colors             OutputColorsConfig
-	StartedLine        string `yaml:"started-line"`
-}
-
-// OutputConfig ...
-type OutputConfig = *OutputConfigT
-
 // ConfigT ...
 type ConfigT struct {
-	Output OutputConfigT
+	Output   OutputConfigT
+	Logstash InputConfigT
 }
 
 // Config ...
