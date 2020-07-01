@@ -6,6 +6,7 @@ type OutputConfigT struct {
 	CompressLoggerName bool `yaml:"compress-logger-name"`
 	Colors             OutputColorsConfig
 	StartedLine        string `yaml:"started-line"`
+	StartedLineAppend  string `yaml:"started-line-append"`
 }
 
 // OutputConfig ...

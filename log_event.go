@@ -121,7 +121,9 @@ func (me LogEvent) Println(cfg Config) {
 	}))
 
 	if me.IsStartedLine {
-		fmt.Printf("\n\n\n\n")
+		if len(cfg.Output.StartedLineAppend) > 0 {
+			fmt.Printf(cfg.Output.StartedLineAppend)
+		}
 	}
 }
 
@@ -179,7 +181,7 @@ func NewLogEvent(cfg Config, index int, raw string) (LogEvent, map[string]interf
 		Others:        make(map[string]interface{}),
 		Raw:           raw,
 		IsParsed:      true,
-		IsStartedLine: strings.Contains(raw, cfg.Output.StartedLine),
+		IsStartedLine: len(cfg.Output.StartedLine) > 0 && strings.Contains(raw, cfg.Output.StartedLine),
 	}, fields
 }
 

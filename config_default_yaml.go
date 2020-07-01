@@ -37,6 +37,7 @@ output:
     others-value: FgDefault
 
   started-line: "Started Application in"
+  started-line-append: "\n\n"
 
 input:
   ignore-conversion-error: true
