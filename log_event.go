@@ -215,7 +215,7 @@ func ProcessRawLine(cfg Config, index int, raw string) {
 func ProcessLinesWithLocalFile(cfg Config, localFilePath string) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
-		panic(errors.Wrapf(err, "failed to read file: %s", localFilePath))
+		panic(errors.Wrap(err, ""))
 	}
 	log.Printf("file is opened: %s\n", localFilePath)
 	defer f.Close()

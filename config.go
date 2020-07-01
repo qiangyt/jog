@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -34,16 +33,6 @@ func lookForConfigFile(dir string) string {
 
 // DetermineConfigFilePath return (file path)
 func DetermineConfigFilePath() string {
-	for i, arg := range os.Args {
-		if arg == "-c" {
-			log.Println("got -c option")
-			if i == len(os.Args)-1 {
-				panic(fmt.Errorf("missing config file for -c option"))
-			}
-			return os.Args[i+1]
-		}
-	}
-
 	dir := ExeDirectory()
 	r := lookForConfigFile(dir)
 	if len(r) != 0 {

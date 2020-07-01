@@ -52,7 +52,7 @@ func RemoveFile(path string) {
 func ReadFile(path string) []byte {
 	r, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(errors.Wrap(err, "failed to read file: "+path))
+		panic(errors.Wrap(err, ""))
 	}
 	return r
 }
