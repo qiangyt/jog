@@ -65,15 +65,16 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       v0.9.0
 
       Usage:
-      jog  [option...]  <your JSON log file path>
-      cat  <your JSON file path>  |  jog  [option...]
+          jog  [option...]  <your JSON log file path>
+          or
+          cat  <your JSON file path>  |  jog  [option...]
 
       Options:
-      -c, --config <config file path>  Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
-      -t, --template                   Print a config YAML file template
-      -h, --help                       Display this information
-      -V, --version                    Display app version information
-      -d, --debug                      Print more error detail
+          -c, --config <config file path>  Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
+          -t, --template                   Print a config YAML file template
+          -h, --help                       Display this information
+          -V, --version                    Display app version information
+          -d, --debug                      Print more error detail
      ```
 
 ## Build

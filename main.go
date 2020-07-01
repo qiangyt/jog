@@ -31,6 +31,7 @@ func PrintHelp() {
 
 	color.OpBold.Println("Usage:")
 	fmt.Println("  jog  [option...]  <your JSON log file path>")
+	fmt.Println("  or")
 	fmt.Println("  cat  <your JSON file path>  |  jog  [option...]")
 	fmt.Println()
 
