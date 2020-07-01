@@ -70,7 +70,7 @@ func (me LogFile) Close() {
 // InitLogger ...
 func InitLogger() LogFile {
 	r := &LogFileT{
-		path: filepath.Join(ExeDirectory(), "j2log.log"),
+		path: filepath.Join(ExeDirectory(), "jog.log"),
 	}
 	r.Open()
 	return r

@@ -21,11 +21,11 @@ type Config = *ConfigT
 
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
-	r := filepath.Join(dir, ".j2log.yaml")
+	r := filepath.Join(dir, ".jog.yaml")
 	if FileExists(r) {
 		return r
 	}
-	r = filepath.Join(dir, ".j2log.yml")
+	r = filepath.Join(dir, ".jog.yml")
 	if FileExists(r) {
 		return r
 	}
