@@ -4,5 +4,5 @@ package main
 type LogMediator interface {
 
 	// Populate method populate fields into the event. It should return amount of matched fields
-	PopulateFields(cfg Config, event LogEvent) int
+	PopulateFields(cfg Config, event LogEvent, fields map[string]interface{}) int
 }

@@ -14,7 +14,8 @@ import (
 
 // LogEventT ...
 type LogEventT struct {
-	LineNo     int
+	Index int
+
 	Timestamp  string
 	Version    string
 	Message    string
@@ -22,9 +23,13 @@ type LogEventT struct {
 	Thread     string
 	Level      string
 	StackTrace string
+	PID        string
+	Host       string
+	File       string
+	Method     string
+	Line       string
 
 	Others map[string]interface{}
-	All    map[string]interface{}
 	Raw    string
 
 	IsParsed      bool
@@ -96,13 +101,19 @@ func (me LogEvent) Println(cfg Config) {
 	}
 
 	fields := map[string]string{
+		"index":      colors.Index.Render(me.Index),
 		"timestamp":  colors.Timestamp.Render(me.Timestamp),
-		"level":      determineLevelColor(me.Level, colors).Render(me.Level),
+		"level":      determineLevelColor(me.Level, colors.Levels).Render(me.Level),
 		"thread":     colors.Thread.Render(me.Thread),
 		"logger":     colors.Logger.Render(resolveLoggerName(&cfg.Output, me.Logger)),
 		"message":    colors.Message.Render(msg),
 		"others":     formatOthers(cfg, me.Others),
 		"stacktrace": colors.StackTrace.Render(me.StackTrace),
+		"pid":        colors.PID.Render(me.PID),
+		"host":       colors.Host.Render(me.Host),
+		"file":       colors.File.Render(me.File),
+		"method":     colors.StackTrace.Render(me.Method),
+		"line":       colors.Line.Render(me.Line),
 	}
 
 	fmt.Println(os.Expand(cfg.Output.Pattern, func(fieldName string) string {
@@ -114,35 +125,34 @@ func (me LogEvent) Println(cfg Config) {
 	}
 }
 
-func determineLevelColor(level string, colorsConfig *OutputColorsConfigT) ColorConfig {
+func determineLevelColor(level string, levelsConfig OutputLevelsColorsConfig) ColorConfig {
 	switch level {
 	case "debug":
-		return colorsConfig.Debug
+		return levelsConfig.Debug
 	case "info":
-		return colorsConfig.Info
+		return levelsConfig.Info
 	case "error":
-		return colorsConfig.Error
+		return levelsConfig.Error
 	case "warn":
-		return colorsConfig.Warn
+		return levelsConfig.Warn
 	case "warning":
-		return colorsConfig.Warn
+		return levelsConfig.Warn
 	case "trace":
-		return colorsConfig.Trace
+		return levelsConfig.Trace
 	case "fine":
-		return colorsConfig.Fine
+		return levelsConfig.Fine
 	case "fatal":
-		return colorsConfig.Fatal
+		return levelsConfig.Fatal
 	default:
-		return colorsConfig.Warn
+		return levelsConfig.Warn
 	}
 }
 
 // NewRawLogEvent ...
-func NewRawLogEvent(cfg Config, lineNo int, raw string) LogEvent {
+func NewRawLogEvent(cfg Config, index int, raw string) LogEvent {
 	return &LogEventT{
-		LineNo:        lineNo,
+		Index:         index,
 		Others:        make(map[string]interface{}),
-		All:           make(map[string]interface{}),
 		Raw:           raw,
 		IsParsed:      false,
 		IsStartedLine: false,
@@ -150,54 +160,52 @@ func NewRawLogEvent(cfg Config, lineNo int, raw string) LogEvent {
 }
 
 // NewLogEvent ...
-func NewLogEvent(cfg Config, lineNo int, raw string) LogEvent {
+func NewLogEvent(cfg Config, index int, raw string) (LogEvent, map[string]interface{}) {
 
 	line := strings.TrimSpace(raw)
 	if len(line) == 0 {
-		log.Printf("line %d is blank\n", lineNo)
-		return NewRawLogEvent(cfg, lineNo, raw)
+		log.Printf("line %d is blank\n", index)
+		return NewRawLogEvent(cfg, index, raw), nil
 	}
 
-	all := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(line), &all); err != nil {
-		log.Printf("failed to parse line %d: <%s>\n\treason %v\n", lineNo, raw, errors.Wrap(err, ""))
-		return NewRawLogEvent(cfg, lineNo, raw)
+	fields := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(line), &fields); err != nil {
+		log.Printf("failed to parse line %d: <%s>\n\treason %v\n", index, raw, errors.Wrap(err, ""))
+		return NewRawLogEvent(cfg, index, raw), nil
 	}
 
 	return &LogEventT{
-		LineNo:        lineNo,
+		Index:         index,
 		Others:        make(map[string]interface{}),
-		All:           all,
 		Raw:           raw,
 		IsParsed:      true,
 		IsStartedLine: strings.Contains(raw, cfg.Output.StartedLine),
-	}
+	}, fields
 }
 
-var _logstashMediator LogstashMediator
+var _mediator GenerialMediator
 
 // ParseRawLine ...
-func ParseRawLine(cfg Config, lineNo int, raw string) LogEvent {
-	r := NewLogEvent(cfg, lineNo, raw)
+func ParseRawLine(cfg Config, index int, raw string) LogEvent {
+	r, fields := NewLogEvent(cfg, index, raw)
 	if !r.IsParsed {
 		return r
 	}
 
-	var mediator LogMediator
+	mediator := _mediator
 
-	mediator = _logstashMediator
-	amountOfFieldsPopulated := mediator.PopulateFields(cfg, r)
+	amountOfFieldsPopulated := mediator.PopulateFields(cfg, r, fields)
 	if amountOfFieldsPopulated <= 0 {
-		log.Printf("no fields populated. line %d: <%s>\n", lineNo, raw)
-		return NewRawLogEvent(cfg, lineNo, raw)
+		log.Printf("no fields populated. line %d: <%s>\n", index, raw)
+		return NewRawLogEvent(cfg, index, raw)
 	}
 
 	return r
 }
 
 // ProcessRawLine ...
-func ProcessRawLine(cfg Config, lineNo int, raw string) {
-	event := ParseRawLine(cfg, lineNo, raw)
+func ProcessRawLine(cfg Config, index int, raw string) {
+	event := ParseRawLine(cfg, index, raw)
 	event.Println(cfg)
 }
 
@@ -218,7 +226,7 @@ func ProcessLinesWithReader(cfg Config, reader io.Reader) {
 
 	buf := bufio.NewReader(reader)
 
-	for lineNo := 1; true; lineNo++ {
+	for i := 1; true; i++ {
 		raw, err := buf.ReadString('\n')
 
 		if len(raw) != 0 {
@@ -229,13 +237,13 @@ func ProcessLinesWithReader(cfg Config, reader io.Reader) {
 		}
 		if err != nil {
 			if err == io.EOF {
-				log.Printf("got EOF, line %d\n", lineNo)
-				ProcessRawLine(cfg, lineNo, raw)
+				log.Printf("got EOF, line %d\n", i)
+				ProcessRawLine(cfg, i, raw)
 				return
 			}
-			panic(errors.Wrapf(err, "failed to read line %d", lineNo))
+			panic(errors.Wrapf(err, "failed to read line %d", i))
 		}
 
-		ProcessRawLine(cfg, lineNo, raw)
+		ProcessRawLine(cfg, i, raw)
 	}
 }

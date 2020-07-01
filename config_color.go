@@ -75,9 +75,24 @@ func (me ColorConfig) Println(a ...interface{}) {
 	me.Style.Println(a...)
 }
 
+// OutputLevelsColorsConfigT ...
+type OutputLevelsColorsConfigT struct {
+	Debug ColorConfig
+	Info  ColorConfig
+	Error ColorConfig
+	Warn  ColorConfig
+	Trace ColorConfig
+	Fine  ColorConfig
+	Fatal ColorConfig
+}
+
+// OutputLevelsColorsConfig ...
+type OutputLevelsColorsConfig = *OutputLevelsColorsConfigT
+
 // OutputColorsConfigT ...
 type OutputColorsConfigT struct {
-	LineNo      ColorConfig `yaml:"line-no"`
+	Index ColorConfig
+
 	Timestamp   ColorConfig
 	Version     ColorConfig
 	Message     ColorConfig
@@ -86,13 +101,13 @@ type OutputColorsConfigT struct {
 	StackTrace  ColorConfig `yaml:"stack-trace"`
 	StartedLine ColorConfig `yaml:"started-line"`
 
-	Debug ColorConfig
-	Info  ColorConfig
-	Error ColorConfig
-	Warn  ColorConfig
-	Trace ColorConfig
-	Fine  ColorConfig
-	Fatal ColorConfig
+	PID    ColorConfig `yaml:"pid"`
+	Host   ColorConfig
+	File   ColorConfig
+	Method ColorConfig
+	Line   ColorConfig
+
+	Levels OutputLevelsColorsConfig
 
 	Raw             ColorConfig
 	OthersName      ColorConfig `yaml:"others-name"`

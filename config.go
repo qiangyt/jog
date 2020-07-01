@@ -12,8 +12,8 @@ import (
 
 // ConfigT ...
 type ConfigT struct {
-	Output   OutputConfigT
-	Logstash InputConfigT
+	Output OutputConfigT
+	Input  InputConfigT
 }
 
 // Config ...

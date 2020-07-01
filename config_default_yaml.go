@@ -7,7 +7,8 @@ output:
   compress-logger-name: true
 
   colors:
-    line-no: FgDefault
+    index: FgDefault, OpBold
+
     timestamp: FgDefault
     version: FgDefault
     message: FgDefault
@@ -15,14 +16,20 @@ output:
     thread: FgDefault
     stack-trace: FgDefault
     started-line: FgGreen, OpBold
+    pid: FgDefault
+    host: FgDefault
+    file: FgDefault
+    method: FgDefault
+    line: FgDefault
 
-    debug: FgBlue,OpBold
-    info: FgBlue,OpBold
-    error: FgRed,OpBold
-    warn: FgYellow,OpBold
-    trace: FgBlue,OpBold
-    fine: FgCyan,OpBold
-    fatal: FgRed,OpBold
+    levels:
+      debug: FgBlue,OpBold
+      info: FgBlue,OpBold
+      error: FgRed,OpBold
+      warn: FgYellow,OpBold
+      trace: FgBlue,OpBold
+      fine: FgCyan,OpBold
+      fatal: FgRed,OpBold
 
     raw: FgDefault
     others-name: FgDefault,OpBold
@@ -31,9 +38,9 @@ output:
 
   started-line: "Started Application in"
 
-logstash:
+input:
+  ignore-conversion-error: true
   field-names:
-    line-no:
     timestamp: "@timestamp"
     version: "@version"
     message: message
@@ -41,4 +48,9 @@ logstash:
     thread: thread_name
     level: level
     stack-trace: stack_trace
+    pid: pid
+    host: host
+    file: file
+    method: method
+    line: line
 `

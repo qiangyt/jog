@@ -2,7 +2,6 @@ package main
 
 // FieldNamesConfigT ...
 type FieldNamesConfigT struct {
-	LineNo     string `yaml:"line-no"`
 	Timestamp  string
 	Version    string
 	Message    string
@@ -10,6 +9,11 @@ type FieldNamesConfigT struct {
 	Thread     string
 	Level      string
 	StackTrace string `yaml:"stack-trace"`
+	PID        string `yaml:"pid"`
+	Host       string
+	File       string
+	Method     string
+	Line       string
 }
 
 // FieldNamesConfig ...
@@ -17,7 +21,8 @@ type FieldNamesConfig = *FieldNamesConfigT
 
 // InputConfigT ...
 type InputConfigT struct {
-	FieldNames FieldNamesConfig `yaml:"field-names"`
+	FieldNames            FieldNamesConfig `yaml:"field-names"`
+	IgnoreConversionError bool             `yaml:"ignore-conversion-error"`
 }
 
 // InputConfig ...
