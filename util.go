@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ExeDirectory ...
 func ExeDirectory() string {
 	exePath := os.Args[0]
 	r, err := filepath.Abs(filepath.Dir(exePath))
