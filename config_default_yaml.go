@@ -42,16 +42,16 @@ output:
 input:
   ignore-conversion-error: true
   field-names:
-    timestamp: "@timestamp"
-    version: "@version"
-    message: message
-    logger: logger_name
-    thread: thread_name
-    level: level
-    stack-trace: stack_trace
-    pid: pid
-    host: host
-    file: file
-    method: method
-    line: line
+    timestamp: "timestamp, Timestamp, @timestamp, @Timestamp"
+    version: "version, Version, @version, @Version"
+    message: "message, Message, @message, @message, @Message"
+    logger: "logger_name, logger-name, loggerName, LoggerName, logger, Logger, @logger_name, @logger-name, @loggerName, @LoggerName, @logger, @Logger"
+    thread: "thread_name, thread-name, threadName, ThreadName, thread, Thread, @thread, @Thread"
+    level: "level, Level, @level, @Level"
+    stack-trace: "stack_trace, stack-trace, stackTrace, StackTrace, stack, Stack, @stack_trace, @stack-trace, @stackTrace, @StackTrace, @stack, @Stack"
+    pid: "pid, PID, @pid, @PID"
+    host: "host, Host, @host, @Host"
+    file: "file, File, @file, @File"
+    method: "method, Method, @method, @Method"
+    line: "line, Line, @line, @Line"
 `

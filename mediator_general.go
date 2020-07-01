@@ -12,18 +12,24 @@ type GenerialMediatorT struct {
 // GenerialMediator is pointer of GenerialMediatorT
 type GenerialMediator = *GenerialMediatorT
 
-func extractField(cfg Config, fields map[string]interface{}, fieldName string, amountOfFieldsPopulated *int) interface{} {
-	r, has := fields[fieldName]
-	if has {
-		delete(fields, fieldName)
-		(*amountOfFieldsPopulated)++
-		return r
+func extractField(cfg Config, fields map[string]interface{}, fieldNames FieldName, amountOfFieldsPopulated *int) interface{} {
+	if fieldNames == nil || len(fieldNames.Names) == 0 {
+		return nil
+	}
+
+	for _, fieldName := range fieldNames.Names {
+		r, has := fields[fieldName]
+		if has {
+			delete(fields, fieldName)
+			(*amountOfFieldsPopulated)++
+			return r
+		}
 	}
 	return nil
 }
 
-func extractFieldString(cfg Config, fields map[string]interface{}, fieldName string, amountOfFieldsPopulated *int) string {
-	i := extractField(cfg, fields, fieldName, amountOfFieldsPopulated)
+func extractFieldString(cfg Config, fields map[string]interface{}, fieldNames FieldName, amountOfFieldsPopulated *int) string {
+	i := extractField(cfg, fields, fieldNames, amountOfFieldsPopulated)
 	if i == nil {
 		return ""
 	}
