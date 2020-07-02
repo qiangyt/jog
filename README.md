@@ -4,7 +4,7 @@ Convert and view structured (JSON) log
 
 ## Background
 
-Structured log, AKA. JSON line log, is great for log collectors but hard to read for developers themselves, usually during local development. This tool helps to on-the-fly convert those structured JSON log to traditional space-separated line log, friendly for developers. It then removes the effort to maintenain different output format for different environments (for ex. JSON log for test / production, but line log for local development).
+Structured log, AKA. JSON line log, is great for log collectors but hard to read by developers themselves, usually during local development. This tool helps to on-the-fly convert those structured JSON log to traditional space-separated flat line log, friendly for developers. It then removes the effort to maintenain different output format for different environments (for ex. JSON log for test / production, but flat line log for local development).
 
 ## Features
 
