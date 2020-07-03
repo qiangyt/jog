@@ -11,8 +11,16 @@ import (
 
 // ConfigT ...
 type ConfigT struct {
-	Output OutputConfigT
-	Input  InputConfigT
+	Output OutputConfig
+	Input  InputConfig
+}
+
+// DefaultConfig ...
+func DefaultConfig() Config {
+	return &ConfigT{
+		Output: DefaultOutputConfig(),
+		Input:  DefaultInputConfig(),
+	}
 }
 
 // Config ...
@@ -66,9 +74,9 @@ func ConfigWithYamlFile(path string) Config {
 
 // ConfigWithYaml ...
 func ConfigWithYaml(yamlText string) Config {
-	var r ConfigT
+	r := DefaultConfig()
 	if err := yaml.UnmarshalStrict([]byte(yamlText), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))
 	}
-	return &r
+	return r
 }

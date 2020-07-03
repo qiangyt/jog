@@ -20,13 +20,15 @@ type ColorConfig = *ColorConfigT
 
 // NewColorConfig ...
 func NewColorConfig(label string) ColorConfig {
-	var r ColorConfigT
-
-	if err := yaml.UnmarshalStrict([]byte(label), &r); err != nil {
-		panic(errors.Wrap(err, "failed to unmarshal color: "+label))
+	style, err := ColorsFromLabel(label)
+	if err != nil {
+		panic(errors.Wrap(err, ""))
 	}
 
-	return &r
+	return &ColorConfigT{
+		Label: label,
+		Style: style,
+	}
 }
 
 // UnmarshalYAML ...
@@ -89,10 +91,25 @@ type OutputLevelsColorsConfigT struct {
 // OutputLevelsColorsConfig ...
 type OutputLevelsColorsConfig = *OutputLevelsColorsConfigT
 
+// DefaultOutputLevelsColorsConfig ...
+func DefaultOutputLevelsColorsConfig() OutputLevelsColorsConfig {
+	return &OutputLevelsColorsConfigT{
+		Debug: NewColorConfig("FgBlue,OpBold"),
+		Info:  NewColorConfig("FgBlue,OpBold"),
+		Error: NewColorConfig("FgRed,OpBold"),
+		Warn:  NewColorConfig("FgYellow,OpBold"),
+		Trace: NewColorConfig("FgBlue,OpBold"),
+		Fine:  NewColorConfig("FgCyan,OpBold"),
+		Fatal: NewColorConfig("FgRed,OpBold"),
+	}
+}
+
 // OutputColorsConfigT ...
 type OutputColorsConfigT struct {
-	Index ColorConfig
+	Index  ColorConfig
+	Prefix ColorConfig
 
+	App         ColorConfig
 	Timestamp   ColorConfig
 	Version     ColorConfig
 	Message     ColorConfig
@@ -117,3 +134,33 @@ type OutputColorsConfigT struct {
 
 // OutputColorsConfig ...
 type OutputColorsConfig = *OutputColorsConfigT
+
+// DefaultOutputColorsConfig ...
+func DefaultOutputColorsConfig() OutputColorsConfig {
+	return &OutputColorsConfigT{
+		Index:  NewColorConfig("FgDefault, OpBold"),
+		Prefix: NewColorConfig("FgCyan"),
+
+		App:         NewColorConfig("FgDefault"),
+		Timestamp:   NewColorConfig("FgDefault"),
+		Version:     NewColorConfig("FgDefault"),
+		Message:     NewColorConfig("FgDefault"),
+		Logger:      NewColorConfig("FgDefault"),
+		Thread:      NewColorConfig("FgDefault"),
+		StackTrace:  NewColorConfig("FgDefault"),
+		StartedLine: NewColorConfig("FgGreen, OpBold"),
+
+		PID:    NewColorConfig("FgDefault"),
+		Host:   NewColorConfig("FgDefault"),
+		File:   NewColorConfig("FgDefault"),
+		Method: NewColorConfig("FgDefault"),
+		Line:   NewColorConfig("FgDefault"),
+
+		Levels: DefaultOutputLevelsColorsConfig(),
+
+		Raw:             NewColorConfig("FgDefault"),
+		OthersName:      NewColorConfig("FgDefault,OpBold"),
+		OthersSeparator: NewColorConfig("FgDefault"),
+		OthersValue:     NewColorConfig("FgDefault"),
+	}
+}

@@ -11,3 +11,14 @@ type OutputConfigT struct {
 
 // OutputConfig ...
 type OutputConfig = *OutputConfigT
+
+// DefaultOutputConfig ...
+func DefaultOutputConfig() OutputConfig {
+	return &OutputConfigT{
+		Pattern:            "${prefix} | ${timestamp} ${level} <${thread}> ${logger}: ${message} ${others} ${stacktrace}",
+		CompressLoggerName: true,
+		Colors:             DefaultOutputColorsConfig(),
+		StartedLine:        "Started Application in",
+		StartedLineAppend:  "\n\n",
+	}
+}

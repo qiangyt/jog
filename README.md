@@ -21,6 +21,8 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Supports customized fields
 
+   - [ ] Supports nested JSON fields
+
    - [x] Customizable output pattern
 
    - [x] Customizable output colorization

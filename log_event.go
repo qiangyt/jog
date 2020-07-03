@@ -16,6 +16,8 @@ import (
 type LogEventT struct {
 	Index int
 
+	Prefix     string
+	App        string
 	Timestamp  string
 	Version    string
 	Message    string
@@ -102,10 +104,12 @@ func (me LogEvent) Println(cfg Config) {
 
 	fields := map[string]string{
 		"index":      colors.Index.Render(me.Index),
+		"prefix":     colors.Prefix.Render(me.Prefix),
+		"app":        colors.App.Render(me.App),
 		"timestamp":  colors.Timestamp.Render(me.Timestamp),
 		"level":      determineLevelColor(me.Level, colors.Levels).Render(me.Level),
 		"thread":     colors.Thread.Render(me.Thread),
-		"logger":     colors.Logger.Render(resolveLoggerName(&cfg.Output, me.Logger)),
+		"logger":     colors.Logger.Render(resolveLoggerName(cfg.Output, me.Logger)),
 		"message":    colors.Message.Render(msg),
 		"others":     formatOthers(cfg, me.Others),
 		"stacktrace": colors.StackTrace.Render(me.StackTrace),
@@ -170,6 +174,20 @@ func NewLogEvent(cfg Config, index int, raw string) (LogEvent, map[string]interf
 		return NewRawLogEvent(cfg, index, raw), nil
 	}
 
+	posOfLeftBracket := strings.IndexByte(line, '{')
+	if posOfLeftBracket < 0 {
+		log.Printf("line %d is not JSON line: <%s>\n", index, raw)
+		return NewRawLogEvent(cfg, index, raw), nil
+	}
+
+	var prefix string
+	if posOfLeftBracket > 0 {
+		prefix = line[:posOfLeftBracket]
+		line = line[posOfLeftBracket:]
+	} else {
+		prefix = ""
+	}
+
 	fields := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(line), &fields); err != nil {
 		log.Printf("failed to parse line %d: <%s>\n\treason %v\n", index, raw, errors.Wrap(err, ""))
@@ -178,6 +196,7 @@ func NewLogEvent(cfg Config, index int, raw string) (LogEvent, map[string]interf
 
 	return &LogEventT{
 		Index:         index,
+		Prefix:        prefix,
 		Others:        make(map[string]interface{}),
 		Raw:           raw,
 		IsParsed:      true,

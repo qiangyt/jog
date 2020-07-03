@@ -3,12 +3,13 @@ package main
 // ConfigDefaultYAML ...
 const ConfigDefaultYAML = `
 output:
-  pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} ${others} ${stacktrace}"
+  pattern: "${prefix} | ${timestamp} ${level} <${thread}> ${logger}: ${message} ${others} ${stacktrace}"
   compress-logger-name: true
 
   colors:
     index: FgDefault, OpBold
-
+    prefix: FgCyan
+    app: FgDefault
     timestamp: FgDefault
     version: FgDefault
     message: FgDefault
@@ -42,15 +43,16 @@ output:
 input:
   ignore-conversion-error: true
   field-names:
-    timestamp: "timestamp, Timestamp, @timestamp, @Timestamp"
+    app: "name, Name, app, App, @name, @Name, @app, @App"
+    timestamp: "time, Time, timestamp, Timestamp, @time, @Time, @timestamp, @Timestamp"
     version: "version, Version, @version, @Version"
-    message: "message, Message, @message, @message, @Message"
-    logger: "logger_name, logger-name, loggerName, LoggerName, logger, Logger, @logger_name, @logger-name, @loggerName, @LoggerName, @logger, @Logger"
+    message: "msg, message, Message, @msg, @message, @Message"
+    logger: "id, Id, ID, logger_name, logger-name, loggerName, LoggerName, logger, Logger, @id, @Id, @ID, @logger_name, @logger-name, @loggerName, @LoggerName, @logger, @Logger"
     thread: "thread_name, thread-name, threadName, ThreadName, thread, Thread, @thread, @Thread"
     level: "level, Level, @level, @Level"
     stack-trace: "stack_trace, stack-trace, stackTrace, StackTrace, stack, Stack, @stack_trace, @stack-trace, @stackTrace, @StackTrace, @stack, @Stack"
     pid: "pid, PID, @pid, @PID"
-    host: "host, Host, @host, @Host"
+    host: "host, Host, @host, @Host, hostname, Hostname, hostName, HostName, @Hostname, @Hostname, @hostName, @HostName"
     file: "file, File, @file, @File"
     method: "method, Method, @method, @Method"
     line: "line, Line, @line, @Line"
