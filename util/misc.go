@@ -1,11 +1,13 @@
-package main
+package util
 
 import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
+	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 )
 
 // ExeDirectory ...
@@ -54,5 +56,35 @@ func ReadFile(path string) []byte {
 	if err != nil {
 		panic(errors.Wrap(err, ""))
 	}
+	return r
+}
+
+// UnmashalYAMLAgain ...
+func UnmashalYAMLAgain(in interface{}, out interface{}) error {
+	yml, err := yaml.Marshal(in)
+	if err != nil {
+		return err
+	}
+	err = yaml.Unmarshal(yml, out)
+	return err
+}
+
+// ToBool ...
+func ToBool(v interface{}) bool {
+	switch v.(type) {
+	case bool:
+		return v.(bool)
+	default:
+		return strutil.MustBool(strutil.MustString(v))
+	}
+}
+
+// ExtractFromMap ...
+func ExtractFromMap(m map[string]interface{}, key string) interface{} {
+	r, has := m[key]
+	if !has {
+		return nil
+	}
+	delete(m, key)
 	return r
 }

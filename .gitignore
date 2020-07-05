@@ -15,7 +15,6 @@
 # vendor/
 
 /jog
-/example_logs/
 /jog.log
 /.vscode
 /target

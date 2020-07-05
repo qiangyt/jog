@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"fmt"
@@ -20,13 +20,13 @@ type LogFileT struct {
 type LogFile = *LogFileT
 
 // Write ...
-func (me LogFile) Write(p []byte) (int, error) {
-	return me.file.Write(p)
+func (i LogFile) Write(p []byte) (int, error) {
+	return i.file.Write(p)
 }
 
 // Open ...
-func (me LogFile) Open() {
-	p := me.path
+func (i LogFile) Open() {
+	p := i.path
 
 	create := true
 	if fi := FileStat(p, false); fi != nil {
@@ -49,21 +49,21 @@ func (me LogFile) Open() {
 		panic(errors.Wrapf(err, "failed to create/open log file: %s", p))
 	}
 
-	me.file = f
+	i.file = f
 
-	log.SetOutput(me)
+	log.SetOutput(i)
 	log.SetPrefix(fmt.Sprintf("[%5d] ", os.Getpid()))
 
 	if !create {
-		me.file.Write([]byte("-------------------------------------------------------------------------------\n"))
+		i.file.Write([]byte("-------------------------------------------------------------------------------\n"))
 	}
 	log.Printf("started at: %v\n", time.Now())
 }
 
 // Close ...
-func (me LogFile) Close() {
-	if me.file != nil {
-		me.file.Close()
+func (i LogFile) Close() {
+	if i.file != nil {
+		i.file.Close()
 	}
 }
 

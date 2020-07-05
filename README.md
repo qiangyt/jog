@@ -1,5 +1,5 @@
 # jog
-Convert and view structured (JSON) log
+CLI tool to convert structured (JSON) log and pretty print as regular flag format
 
 
 ## Background
@@ -10,18 +10,22 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    Feature request is welcomed, for ex. new JSON log format. Submit issue for that please.
 
-   - [ ] Supports as many as possible formats:
+   - [x] Detect format, automatically
+
+   - [x] Most-likely know unknow format via customizeable dictionary
+
+   - [ ] Built-in supports as many as possible formats:
 
       - [x] Logstash
       - [ ] Uber zap
-      - [ ] Bunyan
-      - [x] Actually you could define your own format. Run `jog -t` to see configuration example. Most-likely your JSON log format is already supported, automatically
+      - [ ] Bunyan (https://github.com/trentm/node-bunyan)
+      - [x] Customizable format. Run `jog -t` to see configuration example.
 
    - [x] Support Mac OSX, Windows, Linux
 
    - [x] Supports customized fields
 
-   - [ ] Supports nested JSON fields
+   - [x] Supports nested JSON fields
 
    - [x] Customizable output pattern
 
@@ -44,7 +48,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x]  Compressed logger name - only first letters of package names are outputed
 
-   - [ ]  Filtering, both command line and embedded Web UI
+   - [ ]  Filtering by level and field
 
 ## Usage:
   Download the executable binary to $PATH. For ex.

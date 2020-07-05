@@ -6,21 +6,21 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
 
 // ConfigT ...
 type ConfigT struct {
-	Output OutputConfig
-	Input  InputConfig
-}
-
-// DefaultConfig ...
-func DefaultConfig() Config {
-	return &ConfigT{
-		Output: DefaultOutputConfig(),
-		Input:  DefaultInputConfig(),
-	}
+	// TODO: configurable
+	Replacer    map[string]string
+	Pattern     string
+	StartupLine config.StartupLine `yaml:"startup-line"`
+	LineNo      config.Element     `yaml:"line-no"`
+	UnknownLine config.Element     `yaml:"unknown-line"`
+	Prefix      config.Prefix
+	Fields      config.FieldMap
 }
 
 // Config ...
@@ -29,11 +29,11 @@ type Config = *ConfigT
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
 	r := filepath.Join(dir, ".jog.yaml")
-	if FileExists(r) {
+	if util.FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, ".jog.yml")
-	if FileExists(r) {
+	if util.FileExists(r) {
 		return r
 	}
 	return ""
@@ -41,7 +41,7 @@ func lookForConfigFile(dir string) string {
 
 // DetermineConfigFilePath return (file path)
 func DetermineConfigFilePath() string {
-	dir := ExeDirectory()
+	dir := util.ExeDirectory()
 	r := lookForConfigFile(dir)
 	if len(r) != 0 {
 		return r
@@ -57,7 +57,7 @@ func ConfigWithDefaultYamlFile() Config {
 
 	if len(path) == 0 {
 		log.Println("Config file not found, take default config")
-		return ConfigWithYaml(ConfigDefaultYAML)
+		return ConfigWithYaml(config.DefaultYAML)
 	}
 
 	log.Printf("Config file: %s\n", path)
@@ -68,14 +68,28 @@ func ConfigWithDefaultYamlFile() Config {
 func ConfigWithYamlFile(path string) Config {
 	log.Printf("Config file: %s\n", path)
 
-	yamlText := string(ReadFile(path))
+	yamlText := string(util.ReadFile(path))
 	return ConfigWithYaml(yamlText)
 }
 
 // ConfigWithYaml ...
 func ConfigWithYaml(yamlText string) Config {
-	r := DefaultConfig()
-	if err := yaml.UnmarshalStrict([]byte(yamlText), &r); err != nil {
+	r := &ConfigT{
+		Replacer: map[string]string{
+			"\\\"": "\"",
+			"\\'":  "'",
+			"\\\n": "\n",
+			"\\\r": "",
+			"\\\t": "\t",
+		},
+		Pattern:     "",
+		StartupLine: &config.StartupLineT{},
+		LineNo:      &config.ElementT{},
+		UnknownLine: &config.ElementT{},
+		Prefix:      &config.PrefixT{},
+		Fields:      &config.FieldMapT{},
+	}
+	if err := yaml.Unmarshal([]byte(yamlText), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))
 	}
 	return r

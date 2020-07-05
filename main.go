@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/gookit/color"
+	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/util"
 )
 
 const (
@@ -20,7 +22,7 @@ func PrintVersion() {
 
 // PrintConfigTemplate ...
 func PrintConfigTemplate() {
-	fmt.Println(ConfigDefaultYAML)
+	fmt.Println(config.DefaultYAML)
 }
 
 // PrintHelp ...
@@ -49,7 +51,6 @@ func main() {
 	var configFilePath string
 	var logFilePath string
 	var debug bool
-	// logFilePath = "./example_logs/logstash.log"
 
 	for i := 0; i < len(os.Args); i++ {
 		if i == 0 {
@@ -101,7 +102,7 @@ func main() {
 		}()
 	}
 
-	logFile := InitLogger()
+	logFile := util.InitLogger()
 	defer logFile.Close()
 
 	var cfg Config
@@ -113,10 +114,10 @@ func main() {
 
 	if len(logFilePath) == 0 {
 		log.Println("Read JSON log lines from stdin")
-		ProcessLinesWithReader(cfg, os.Stdin)
+		ProcessReader(cfg, os.Stdin)
 	} else {
 		log.Printf("processing local JSON log file: %s\n", logFilePath)
-		ProcessLinesWithLocalFile(cfg, logFilePath)
+		ProcessLocalFile(cfg, logFilePath)
 	}
 
 	fmt.Println()
