@@ -18,7 +18,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
       - [x] Logstash
       - [ ] Uber zap
-      - [ ] Bunyan (https://github.com/trentm/node-bunyan)
+      - [x] Bunyan (https://github.com/trentm/node-bunyan)
       - [x] Customizable format. Run `jog -t` to see configuration example.
 
    - [x] Support Mac OSX, Windows, Linux
@@ -40,11 +40,11 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [x] local file
       - [ ] remote file (HTTP/HTTPs/FTP/SFTP)
       - [ ] k8s log
-      - [ ] docker-compose log
-      - [ ] docker log
+      - [x] docker-compose log
+      - [x] docker log
       - [ ] aggregate multiple log
 
-   - [ ]  Friendly to multi-containers log outputted by docker-compose
+   - [x]  Friendly to multi-containers log outputted by docker-compose
 
    - [x]  Compressed logger name - only first letters of package names are outputed
 
@@ -54,7 +54,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary to $PATH. For ex.
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.0/jog.darwin -o /usr/local/bin/jog
+     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.2/jog.darwin -o /usr/local/bin/jog
      chmod +x /usr/local/bin/jog
   ```
 
