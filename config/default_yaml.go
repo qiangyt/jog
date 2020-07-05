@@ -64,6 +64,10 @@ fields:
     alias: "classname, class-name, @class_name, @classname, @class-name, @class_name"
     case-sensitive: false
     color: FgDefault
+  env:
+    alias: "environment, @env, @environment"
+    case-sensitive: false
+    color: FgDefault
   file:
     alias: "filename, file-name, file_name, @file, @filename, @file-name, @file_name"
     case-sensitive: false
@@ -93,6 +97,14 @@ fields:
     alias: "process, process-id, processid, process_id, @pid, @process, @process-id, @processid, @process_id"
     case-sensitive: false
     color: FgDefault
+  request:
+    alias: "req, @req, @request"
+    case-sensitive: false
+    color: FgDefault
+  response:
+    alias: "res, resp, @res, @resp, @response"
+    case-sensitive: false
+    color: FgDefault
   stack-trace:
     alias: "stack, stack_trace, stacktrace, @stack, @stack_trace, @stack-trace, @stacktrace"
     case-sensitive: false
@@ -104,6 +116,10 @@ fields:
     color: FgDefault
   timestamp:
     alias: "time, date, datetime, date-time, date_time, @time, @timestamp, @date, @datetime, @date-time, @date_time"
+    case-sensitive: false
+    color: FgDefault
+  user:
+    alias: "usr, username, user-name, user_name, @usr, @username, @user-name, @user_name, @user"
     case-sensitive: false
     color: FgDefault
   version:
