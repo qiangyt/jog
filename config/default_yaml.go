@@ -69,7 +69,7 @@ fields:
     case-sensitive: false
     color: FgDefault
   file:
-    alias: "filename, file-name, file_name, @file, @filename, @file-name, @file_name"
+    alias: "src, source, filename, file-name, file_name, @src, @source, @file, @filename, @file-name, @file_name"
     case-sensitive: false
     color: FgDefault
   host:
