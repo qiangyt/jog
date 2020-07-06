@@ -11,8 +11,8 @@ type LoggerNameCompressT struct {
 	yaml.Unmarshaler
 	yaml.Marshaler
 
-	enabled   bool
-	separator string
+	Enabled   bool
+	Separator string
 }
 
 // LoggerNameCompress ..
@@ -20,28 +20,28 @@ type LoggerNameCompress = *LoggerNameCompressT
 
 // Set ...
 func (i LoggerNameCompress) Set(valuesText string) {
-	i.separator = "."
+	i.Separator = "."
 
 	t := strings.ToLower(valuesText)
 	if "true" == t || "t" == t || "yes" == t || "y" == t {
-		i.enabled = true
+		i.Enabled = true
 	} else if "false" == t || "f" == t || "no" == t || "n" == t {
-		i.enabled = false
+		i.Enabled = false
 	} else {
-		i.enabled = true
-		i.separator = t
+		i.Enabled = true
+		i.Separator = t
 	}
 }
 
 // Reset ...
 func (i LoggerNameCompress) Reset() {
-	i.separator = ""
-	i.enabled = false
+	i.Separator = ""
+	i.Enabled = false
 }
 
 func (i LoggerNameCompress) String() string {
-	if i.enabled {
-		return i.separator
+	if i.Enabled {
+		return i.Separator
 	}
 	return "false"
 }
@@ -67,7 +67,7 @@ func (i LoggerNameCompress) MarshalYAML() (interface{}, error) {
 var _loggerNameCache = make(map[string]string)
 
 func (i LoggerNameCompress) compressIfEnabled(loggerName string) string {
-	if !i.enabled {
+	if !i.Enabled {
 		return loggerName
 	}
 
@@ -75,13 +75,13 @@ func (i LoggerNameCompress) compressIfEnabled(loggerName string) string {
 		return existingOne
 	}
 
-	pkgList := strings.Split(loggerName, i.separator)
+	pkgList := strings.Split(loggerName, i.Separator)
 	indexLast := len(pkgList) - 1
 	for index, pkg := range pkgList[:indexLast] {
 		pkgList[index] = string([]byte(pkg)[0])
 	}
 
-	r := strings.Join(pkgList, i.separator)
+	r := strings.Join(pkgList, i.Separator)
 	_loggerNameCache[loggerName] = r
 	return r
 }

@@ -65,12 +65,13 @@ func (i Element) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i Element) ToMap(m map[string]interface{}) error {
-	m["color"] = i.Color
-	m["print"] = i.Print
-	m["before"] = i.Before
-	m["after"] = i.After
-	return nil
+func (i Element) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["color"] = i.Color.String()
+	r["print"] = i.Print
+	r["before"] = i.Before
+	r["after"] = i.After
+	return r
 }
 
 // Reset ...

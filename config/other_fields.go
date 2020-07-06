@@ -46,13 +46,10 @@ func (i SeparatorField) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i SeparatorField) ToMap(m map[string]interface{}) error {
-	if err := i.ElementT.ToMap(m); err != nil {
-		return err
-	}
-
-	m["label"] = i.Label
-	return nil
+func (i SeparatorField) ToMap() map[string]interface{} {
+	r := i.ElementT.ToMap()
+	r["label"] = i.Label
+	return r
 }
 
 // OtherFieldsT ...
@@ -75,4 +72,13 @@ func (i OtherFields) Reset() {
 
 	i.Value = &ElementT{}
 	i.Value.Reset()
+}
+
+// ToMap ...
+func (i OtherFields) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["name"] = i.Name.ToMap()
+	r["separator"] = i.Separator.ToMap()
+	r["value"] = i.Value.ToMap()
+	return r
 }

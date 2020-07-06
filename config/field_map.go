@@ -85,11 +85,12 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i FieldMap) ToMap(m map[string]interface{}) error {
-	m["others"] = i.Others
+func (i FieldMap) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["others"] = i.Others.ToMap()
 
 	for k, v := range i.Standards {
-		m[k] = v
+		r[k] = v.ToMap()
 	}
-	return nil
+	return r
 }

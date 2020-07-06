@@ -4,7 +4,7 @@ package util
 type YAMLMap interface {
 	Reset()
 	FromMap(m map[string]interface{}) error
-	ToMap(m map[string]interface{}) error
+	ToMap() map[string]interface{}
 }
 
 // UnmarshalYAML ...
@@ -21,7 +21,5 @@ func UnmarshalYAML(i YAMLMap, unmarshal func(interface{}) error) error {
 
 // MarshalYAML ...
 func MarshalYAML(i YAMLMap) (interface{}, error) {
-	r := make(map[string]interface{})
-	err := i.ToMap(r)
-	return r, err
+	return i.ToMap(), nil
 }

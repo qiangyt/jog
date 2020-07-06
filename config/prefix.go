@@ -25,8 +25,8 @@ func (i Prefix) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i Prefix) ToMap(m map[string]interface{}) error {
-	return i.ElementT.ToMap(m)
+func (i Prefix) ToMap() map[string]interface{} {
+	return i.ElementT.ToMap()
 }
 
 // UnmarshalYAML ...

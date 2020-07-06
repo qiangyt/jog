@@ -59,14 +59,8 @@ func (i StartupLine) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i StartupLine) ToMap(m map[string]interface{}) error {
-	if err := i.ToMap(m); err != nil {
-		return err
-	}
-
-	m["before"] = i.Before
-	m["after"] = i.After
-	m["contains"] = i.Contains
-
-	return nil
+func (i StartupLine) ToMap() map[string]interface{} {
+	r := i.ElementT.ToMap()
+	r["contains"] = i.Contains
+	return r
 }

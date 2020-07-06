@@ -60,11 +60,11 @@ func (i Enum) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i Enum) ToMap(m map[string]interface{}) error {
-	m["alias"] = i.Alias
-	m["color"] = i.Color
-
-	return nil
+func (i Enum) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["alias"] = i.Alias.String()
+	r["color"] = i.Color.String()
+	return r
 }
 
 // EnumMapT ...
@@ -72,8 +72,7 @@ type EnumMapT struct {
 	CaseSensitive bool `yaml:"case-sensitive"`
 	Default       string
 	Values        map[string]Enum
-
-	ValueMap map[string]Enum
+	ValueMap      map[string]Enum
 }
 
 // EnumMap ...
@@ -167,15 +166,16 @@ func (i EnumMap) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i EnumMap) ToMap(m map[string]interface{}) error {
-	m["case-sensitive"] = i.CaseSensitive
-	m["default"] = i.Default
+func (i EnumMap) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["case-sensitive"] = i.CaseSensitive
+	r["default"] = i.Default
 
 	for k, v := range i.Values {
-		m[k] = v
+		r[k] = v.ToMap()
 	}
 
-	return nil
+	return r
 }
 
 // FieldT ...
@@ -227,17 +227,15 @@ func (i Field) NotEnum() bool {
 }
 
 // ToMap ...
-func (i Field) ToMap(m map[string]interface{}) error {
-	if err := i.ElementT.ToMap(m); err != nil {
-		return err
-	}
+func (i Field) ToMap() map[string]interface{} {
+	r := i.ElementT.ToMap()
 
-	m["case-sensitive"] = i.CaseSensitive
-	m["alias"] = i.Alias
-	m["logger-name-compress"] = i.LoggerNameCompress
-	m["enums"] = i.Enums
+	r["case-sensitive"] = i.CaseSensitive
+	r["alias"] = i.Alias.String()
+	r["logger-name-compress"] = i.LoggerNameCompress.String()
+	r["enums"] = i.Enums.ToMap()
 
-	return nil
+	return r
 }
 
 // FromMap ...
