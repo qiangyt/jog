@@ -209,7 +209,7 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 				v = v[:len(v)-1]
 			}
 		}
-		v = strutil.Replaces(v, cfg.Replacer)
+		v = strutil.Replaces(v, cfg.Replace)
 
 		if alreadyNormalized == false {
 			var obj interface{}

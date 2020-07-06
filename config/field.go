@@ -232,9 +232,10 @@ func (i Field) ToMap() map[string]interface{} {
 
 	r["case-sensitive"] = i.CaseSensitive
 	r["alias"] = i.Alias.String()
-	r["logger-name-compress"] = i.LoggerNameCompress.String()
-	r["enums"] = i.Enums.ToMap()
-
+	r["logger-name-compress"] = i.LoggerNameCompress.Value()
+	if !i.NotEnum() {
+		r["enums"] = i.Enums.ToMap()
+	}
 	return r
 }
 

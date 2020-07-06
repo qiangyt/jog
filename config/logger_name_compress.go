@@ -39,11 +39,12 @@ func (i LoggerNameCompress) Reset() {
 	i.Enabled = false
 }
 
-func (i LoggerNameCompress) String() string {
+// Value ...
+func (i LoggerNameCompress) Value() interface{} {
 	if i.Enabled {
 		return i.Separator
 	}
-	return "false"
+	return false
 }
 
 // UnmarshalYAML ...
@@ -61,7 +62,7 @@ func (i LoggerNameCompress) UnmarshalYAML(unmarshal func(interface{}) error) err
 
 // MarshalYAML ...
 func (i LoggerNameCompress) MarshalYAML() (interface{}, error) {
-	return i.String(), nil
+	return i.Value(), nil
 }
 
 var _loggerNameCache = make(map[string]string)

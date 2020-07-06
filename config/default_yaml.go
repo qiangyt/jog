@@ -3,7 +3,6 @@ package config
 // DefaultYAML ...
 const DefaultYAML = `
 pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${stacktrace}"
-
 startup-line:
   color: FgGreen, OpBold
   contains: "Started Application in"

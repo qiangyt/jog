@@ -10,6 +10,7 @@ import (
 	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -40,16 +41,17 @@ func PrintHelp() {
 	fmt.Println()
 
 	color.OpBold.Println("Options:")
-	fmt.Printf("  -c, --config <config file path>     Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml \n")
-	fmt.Printf("  -cset, --config-set <config item path>=<config item value>    Set value to specified config item \n")
-	fmt.Printf("  -cget, --config-get <config item path>                        Get value to specified config item \n")
-	fmt.Printf("  -t, --template                      Print a config YAML file template\n")
-	fmt.Printf("  -h, --help                          Display this information\n")
-	fmt.Printf("  -V, --version                       Display app version information\n")
-	fmt.Printf("  -d, --debug                         Print more error detail\n")
+	fmt.Printf("  -c,  --config <config file path>     Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml \n")
+	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
+	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
+	fmt.Printf("  -t,  --template                      Print a config YAML file template\n")
+	fmt.Printf("  -h,  --help                          Display this information\n")
+	fmt.Printf("  -V,  --version                       Display app version information\n")
+	fmt.Printf("  -d,  --debug                         Print more error detail\n")
 	fmt.Println()
 }
 
+// ParseConfigExpression ...
 func ParseConfigExpression(expr string) (string, string, error) {
 	arr := strings.Split(expr, "=")
 	if len(arr) != 2 {
@@ -93,7 +95,7 @@ func main() {
 					configFilePath = os.Args[i+1]
 				}
 				i++
-			} else if arg == "-cset" || arg == "--config-set" {
+			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(os.Args) {
 					color.Red.Println("Missing config item expression\n")
 					PrintHelp()
@@ -109,7 +111,7 @@ func main() {
 					}
 				}
 				i++
-			} else if arg == "-cget" || arg == "--config-get" {
+			} else if arg == "-cg" || arg == "--config-get" {
 				if i+1 >= len(os.Args) {
 					color.Red.Println("Missing config item path\n")
 					PrintHelp()
@@ -157,10 +159,21 @@ func main() {
 	cfg := ReadConfig(configFilePath)
 
 	if len(configItemPath) > 0 {
+		m := cfg.ToMap()
 		if len(configItemValue) > 0 {
 			jsonpath.Set(cfg, configItemPath, configItemValue)
 		} else {
-			fmt.Println(jsonpath.Get(cfg, configItemPath))
+			item, err := jsonpath.Get(m, configItemPath)
+			if err != nil {
+				color.Red.Printf("%v\n\n", err)
+				os.Exit(1)
+			}
+			out, err := yaml.Marshal(item)
+			if err != nil {
+				color.Red.Printf("%v\n\n", err)
+				os.Exit(1)
+			}
+			fmt.Print(string(out))
 			return
 		}
 	}

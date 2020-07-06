@@ -14,7 +14,7 @@ import (
 // ConfigT ...
 type ConfigT struct {
 	// TODO: configurable
-	Replacer    map[string]string
+	Replace     map[string]string
 	Pattern     string
 	StartupLine config.StartupLine `yaml:"startup-line"`
 	LineNo      config.Element     `yaml:"line-no"`
@@ -25,6 +25,19 @@ type ConfigT struct {
 
 // Config ...
 type Config = *ConfigT
+
+// ToMap ...
+func (i Config) ToMap() map[string]interface{} {
+	r := make(map[string]interface{})
+	r["replace"] = i.Replace
+	r["pattern"] = i.Pattern
+	r["startup-line"] = i.StartupLine.ToMap()
+	r["line-no"] = i.LineNo.ToMap()
+	r["unknown-line"] = i.UnknownLine.ToMap()
+	r["prefix"] = i.Prefix.ToMap()
+	r["fields"] = i.Fields.ToMap()
+	return r
+}
 
 func lookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
@@ -75,7 +88,7 @@ func ConfigWithYamlFile(path string) Config {
 // ConfigWithYaml ...
 func ConfigWithYaml(yamlText string) Config {
 	r := &ConfigT{
-		Replacer: map[string]string{
+		Replace: map[string]string{
 			"\\\"": "\"",
 			"\\'":  "'",
 			"\\\n": "\n",
