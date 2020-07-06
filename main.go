@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
+	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
@@ -161,17 +162,20 @@ func main() {
 	if len(configItemPath) > 0 {
 		m := cfg.ToMap()
 		if len(configItemValue) > 0 {
-			jsonpath.Set(cfg, configItemPath, configItemValue)
+			if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
+				panic(errors.Wrap(err, ""))
+			}
+			if err := cfg.FromMap(m); err != nil {
+				panic(errors.Wrap(err, ""))
+			}
 		} else {
 			item, err := jsonpath.Get(m, configItemPath)
 			if err != nil {
-				color.Red.Printf("%v\n\n", err)
-				os.Exit(1)
+				panic(errors.Wrap(err, ""))
 			}
 			out, err := yaml.Marshal(item)
 			if err != nil {
-				color.Red.Printf("%v\n\n", err)
-				os.Exit(1)
+				panic(errors.Wrap(err, ""))
 			}
 			fmt.Print(string(out))
 			return

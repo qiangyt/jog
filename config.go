@@ -26,6 +26,79 @@ type ConfigT struct {
 // Config ...
 type Config = *ConfigT
 
+// UnmarshalYAML ...
+func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	return util.UnmarshalYAML(i, unmarshal)
+}
+
+// MarshalYAML ...
+func (i Config) MarshalYAML() (interface{}, error) {
+	return util.MarshalYAML(i)
+}
+
+// Reset ...
+func (i Config) Reset() {
+	i.Replace = make(map[string]string)
+	i.Pattern = ""
+	i.StartupLine.Reset()
+	i.LineNo.Reset()
+	i.UnknownLine.Reset()
+	i.Prefix.Reset()
+	i.Fields.Reset()
+}
+
+// FromMap ...
+func (i Config) FromMap(m map[string]interface{}) error {
+	var v interface{}
+
+	v = util.ExtractFromMap(m, "replace")
+	if v != nil {
+		i.Replace = v.(map[string]string)
+	}
+
+	v = util.ExtractFromMap(m, "pattern")
+	if v != nil {
+		i.Pattern = v.(string)
+	}
+
+	v = util.ExtractFromMap(m, "startup-line")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.StartupLine); err != nil {
+			return err
+		}
+	}
+
+	v = util.ExtractFromMap(m, "line-no")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.LineNo); err != nil {
+			return err
+		}
+	}
+
+	v = util.ExtractFromMap(m, "unknown-line")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.UnknownLine); err != nil {
+			return err
+		}
+	}
+
+	v = util.ExtractFromMap(m, "prefix")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.Prefix); err != nil {
+			return err
+		}
+	}
+
+	v = util.ExtractFromMap(m, "fields")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.Fields); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ToMap ...
 func (i Config) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
