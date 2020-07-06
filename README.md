@@ -1,5 +1,5 @@
-# jog
-CLI tool to convert structured (JSON) log and pretty print as regular flag format
+# jog [![Build Status](https://api.travis-ci.org/qiangyt/jog.svg?branch=master&style=flat)](https://travis-ci.org/qiangyt/jog)
+Command line tool to view structured (JSON) log, as regular flat line format
 
 
 ## Background
