@@ -71,16 +71,26 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       v0.9.0
 
       Usage:
-          jog  [option...]  <your JSON log file path>
-          or
-          cat  <your JSON file path>  |  jog  [option...]
+        jog  [option...]  <your JSON log file path>
+           or
+        cat  <your JSON file path>  |  jog  [option...]
+
+      Examples:
+        1) view a json log:                                               jog app-20200701-1.log
+        2) view a json log with specified config file:                    jog -c another.jog.yml app-20200701-1.log
+        3) view docker-compose log:                                       docker-compose logs | jog
+        4) print the default template:                                    jog -t
+        5) view the json log with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
+        6) view the WARN level config item:                               jog -cg fields.level.enums.WARN
 
       Options:
-          -c, --config <config file path>  Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
-          -t, --template                   Print a config YAML file template
-          -h, --help                       Display this information
-          -V, --version                    Display app version information
-          -d, --debug                      Print more error detail
+        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
+        -cs, --config-set <config item path>=<config item value>    Set value to specified config item
+        -cg, --config-get <config item path>                        Get value to specified config item
+        -t,  --template                                             Print a config YAML file template
+        -h,  --help                                                 Display this information
+        -V,  --version                                              Display app version information
+        -d,  --debug                                                Print more error detail
      ```
 
 ## Build
