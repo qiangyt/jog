@@ -186,37 +186,39 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 
 		alreadyNormalized := false
 
-		kind := reflect.TypeOf(fValue).Kind()
-		if kind == reflect.Map {
-			json, err := json.MarshalIndent(fValue, "", "  ")
-			if err != nil {
-				log.Printf("line %v: failed to json format: %v\n", lineNo, fValue)
-			} else {
-				v = string(json)
-			}
-			alreadyNormalized = true
-		} else {
-			v = strutil.MustString(fValue)
-		}
-
-		if len(v) >= 1 {
-			if v[:1] == "\"" || v[:1] == "'" {
-				v = v[1:]
-			}
-		}
-		if len(v) >= 1 {
-			if v[len(v)-1:] == "\"" || v[len(v)-1:] == "'" {
-				v = v[:len(v)-1]
-			}
-		}
-		v = strutil.Replaces(v, cfg.Replace)
-
-		if alreadyNormalized == false {
-			var obj interface{}
-			if err := json.Unmarshal([]byte(v), &obj); err == nil {
-				json, err := json.MarshalIndent(obj, "", "  ")
-				if err == nil {
+		if fValue != nil {
+			kind := reflect.TypeOf(fValue).Kind()
+			if kind == reflect.Map {
+				json, err := json.MarshalIndent(fValue, "", "  ")
+				if err != nil {
+					log.Printf("line %v: failed to json format: %v\n", lineNo, fValue)
+				} else {
 					v = string(json)
+				}
+				alreadyNormalized = true
+			} else {
+				v = strutil.MustString(fValue)
+			}
+
+			if len(v) >= 1 {
+				if v[:1] == "\"" || v[:1] == "'" {
+					v = v[1:]
+				}
+			}
+			if len(v) >= 1 {
+				if v[len(v)-1:] == "\"" || v[len(v)-1:] == "'" {
+					v = v[:len(v)-1]
+				}
+			}
+			v = strutil.Replaces(v, cfg.Replace)
+
+			if alreadyNormalized == false {
+				var obj interface{}
+				if err := json.Unmarshal([]byte(v), &obj); err == nil {
+					json, err := json.MarshalIndent(obj, "", "  ")
+					if err == nil {
+						v = string(json)
+					}
 				}
 			}
 		}
