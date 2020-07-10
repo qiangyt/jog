@@ -17,7 +17,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    - [ ] Built-in supports as many as possible formats:
 
       - [x] Logstash
-      - [ ] Uber zap
+      - [x] Uber zap
       - [x] Bunyan (https://github.com/trentm/node-bunyan)
       - [x] Customizable format. Run `jog -t` to see configuration example.
 
