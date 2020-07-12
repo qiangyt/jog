@@ -41,7 +41,7 @@ fields:
         alias: info,30
         color: FgBlue,OpBold
       ERROR:
-        alias: error,err,50
+        alias: error,err,critical,50
         color: FgRed
       WARN:
         alias: warn,warning,40
