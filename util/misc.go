@@ -88,3 +88,10 @@ func ExtractFromMap(m map[string]interface{}, key string) interface{} {
 	delete(m, key)
 	return r
 }
+
+// MkdirAll ...
+func MkdirAll(path string) {
+	if err := os.MkdirAll(path, os.ModePerm); err != nil {
+		panic(errors.Wrapf(err, "failed to create directory: %s", path))
+	}
+}

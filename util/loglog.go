@@ -69,8 +69,11 @@ func (i LogFile) Close() {
 
 // InitLogger ...
 func InitLogger() LogFile {
+	dir := os.ExpandEnv("${HOME}/.jog/log")
+	MkdirAll(dir)
+
 	r := &LogFileT{
-		path: filepath.Join(ExeDirectory(), "jog.log"),
+		path: filepath.Join(dir, "jog.log"),
 	}
 	r.Open()
 	return r
