@@ -37,20 +37,20 @@ __/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
 
 pm2 launched in no-daemon mode (you can add DEBUG="*" env variable to get more messages)
 2020-06-16T11:54:50: PM2 log: Launching in no daemon mode
-2020-06-16T11:54:50: PM2 log: [PM2][WARN] Applications tca_amplicon_admin.uat not running, starting...
-2020-06-16T11:54:50: PM2 log: [Watch] Start watching tca_amplicon_admin.uat
-2020-06-16T11:54:50: PM2 log: App [tca_amplicon_admin.uat:0] starting in -cluster mode-
+2020-06-16T11:54:50: PM2 log: [PM2][WARN] Applications amplieer_admin.uat not running, starting...
+2020-06-16T11:54:50: PM2 log: [Watch] Start watching amplieer_admin.uat
+2020-06-16T11:54:50: PM2 log: App [amplieer_admin.uat:0] starting in -cluster mode-
 Debugger listening on ws://0.0.0.0:9230/fb9adaef-34eb-4696-8045-712f199c2adc
 For help see https://nodejs.org/en/docs/inspector
-2020-06-16T11:54:50: PM2 log: App [tca_amplicon_admin.uat:0] online
+2020-06-16T11:54:50: PM2 log: App [amplieer_admin.uat:0] online
 2020-06-16T11:54:50: PM2 error: (node:6) [DEP0007] DeprecationWarning: worker.suicide is deprecated. Please use worker.exitedAfterDisconnect.
-2020-06-16T11:54:50: PM2 log: [PM2] App [tca_amplicon_admin.uat] launched (1 instances)
+2020-06-16T11:54:50: PM2 log: [PM2] App [amplieer_admin.uat] launched (1 instances)
 2020-06-16T11:54:50: PM2 log: ┌─────┬───────────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id  │ name                      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├─────┼───────────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 0   │ tca_amplicon_admin.uat    │ default     │ 0.0.1   │ cluster │ 16       │ 0s     │ 0    │ online    │ 0%       │ 29.6mb   │ root     │ enabled  │
+│ 0   │ amplieer_admin.uat    │ default     │ 0.0.1   │ cluster │ 16       │ 0s     │ 0    │ online    │ 0%       │ 29.6mb   │ root     │ enabled  │
 └─────┴───────────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
 2020-06-16T11:54:50: PM2 log: [--no-daemon] Continue to stream logs
 2020-06-16T11:54:50: PM2 log: [--no-daemon] Exit on target PM2 exit pid=6
-11:54:50 0|tca_amplicon_admin.uat  | 2020-06-16 11:54 -07:00: base logger config file: /usr/src/app/config/logger.json
-11:54:50 0|tca_amplicon_admin.uat  | 2020-06-16 11:54 -07:00: env logger config file: /usr/src/app/config/logger.uat.json
+11:54:50 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: base logger config file: /usr/src/app/config/logger.json
+11:54:50 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: env logger config file: /usr/src/app/config/logger.uat.json
