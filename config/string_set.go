@@ -16,6 +16,7 @@ type StringSetT struct {
 	CaseSensitive      bool
 	ValueMap           map[string]bool
 	LowercasedValueMap map[string]bool
+	UppercasedValueMap map[string]bool
 }
 
 // StringSet ...
@@ -43,6 +44,7 @@ func (i StringSet) Parse(input interface{}) {
 				i.ValueMap[v] = true
 				if i.CaseSensitive == false {
 					i.LowercasedValueMap[strings.ToLower(v)] = true
+					i.UppercasedValueMap[strings.ToUpper(v)] = true
 				}
 			}
 		}
@@ -53,6 +55,7 @@ func (i StringSet) Parse(input interface{}) {
 				i.ValueMap[v] = true
 				if i.CaseSensitive == false {
 					i.LowercasedValueMap[strings.ToLower(v)] = true
+					i.UppercasedValueMap[strings.ToUpper(v)] = true
 				}
 			}
 		}
@@ -65,6 +68,7 @@ func (i StringSet) Parse(input interface{}) {
 func (i StringSet) Reset() {
 	i.ValueMap = make(map[string]bool)
 	i.LowercasedValueMap = make(map[string]bool)
+	i.UppercasedValueMap = make(map[string]bool)
 }
 
 // Contains ...
@@ -74,7 +78,7 @@ func (i StringSet) Contains(v string) bool {
 		return true
 	}
 	if i.CaseSensitive == false {
-		return i.LowercasedValueMap[v]
+		return i.LowercasedValueMap[strings.ToLower(v)]
 	}
 	return false
 }

@@ -119,17 +119,25 @@ var _compressCache4RemoveNonFirstLetter = make(map[string]string)
 var _compressCache4Remove = make(map[string]string)
 
 func (i CompressPrefix) detectSeparator(text string) (string, []string) {
-	var sepMap map[string]bool
-	if i.Separators.CaseSensitive {
-		sepMap = i.Separators.ValueMap
-	} else {
-		sepMap = i.Separators.LowercasedValueMap
-	}
-
-	for separator := range sepMap {
+	for separator := range i.Separators.ValueMap {
 		separated := strings.Split(text, separator)
 		if len(separated) > 1 {
 			return separator, separated
+		}
+	}
+
+	if i.Separators.CaseSensitive == false {
+		for separator := range i.Separators.LowercasedValueMap {
+			separated := strings.Split(text, separator)
+			if len(separated) > 1 {
+				return separator, separated
+			}
+		}
+		for separator := range i.Separators.UppercasedValueMap {
+			separated := strings.Split(text, separator)
+			if len(separated) > 1 {
+				return separator, separated
+			}
 		}
 	}
 
