@@ -143,18 +143,22 @@ func (i CompressPrefix) Compress(text string) string {
 			return existingOne
 		}
 
-		separator, separated := i.detectSeparator(text)
-
 		var r string
-		if len(separated) > 1 {
-			indexOfLast := len(separated) - 1
-			for index, item := range separated[:indexOfLast] {
-				separated[index] = string([]byte(item)[0])
-			}
-
-			r = strings.Join(separated, separator)
-		} else {
+		if i.WhiteList.ContainsPrefixOf(text) {
 			r = text
+		} else {
+			separator, separated := i.detectSeparator(text)
+
+			if len(separated) > 1 {
+				indexOfLast := len(separated) - 1
+				for index, item := range separated[:indexOfLast] {
+					separated[index] = string([]byte(item)[0])
+				}
+
+				r = strings.Join(separated, separator)
+			} else {
+				r = text
+			}
 		}
 
 		_compressCache4RemoveNonFirstLetter[text] = r
@@ -166,13 +170,17 @@ func (i CompressPrefix) Compress(text string) string {
 			return existingOne
 		}
 
-		_, separated := i.detectSeparator(text)
-
 		var r string
-		if len(separated) > 1 {
-			r = separated[len(separated)-1]
-		} else {
+		if i.WhiteList.ContainsPrefixOf(text) {
 			r = text
+		} else {
+			_, separated := i.detectSeparator(text)
+
+			if len(separated) > 1 {
+				r = separated[len(separated)-1]
+			} else {
+				r = text
+			}
 		}
 		_compressCache4Remove[text] = r
 		return r

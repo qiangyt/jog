@@ -79,6 +79,30 @@ func (i StringSet) Contains(v string) bool {
 	return false
 }
 
+// ContainsPrefixOf ...
+func (i StringSet) ContainsPrefixOf(v string) bool {
+	if len(i.ValueMap) == 0 {
+		return false
+	}
+
+	for prefix := range i.ValueMap {
+		if strings.HasPrefix(v, prefix) {
+			return true
+		}
+	}
+
+	if i.CaseSensitive == false {
+		var lowercasedV = strings.ToLower(v)
+		for prefix := range i.LowercasedValueMap {
+			if strings.HasPrefix(lowercasedV, prefix) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func (i StringSet) String() string {
 	buf := &strings.Builder{}
 
