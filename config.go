@@ -142,17 +142,17 @@ func ConfigWithDefaultYamlFile() Config {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
-		log.Println("Config file not found, take default config")
+		log.Println("config file not found, take default config")
 		return ConfigWithYaml(config.DefaultYAML)
 	}
 
-	log.Printf("Config file: %s\n", path)
+	log.Printf("config file: %s\n", path)
 	return ConfigWithYaml(path)
 }
 
 // ConfigWithYamlFile ...
 func ConfigWithYamlFile(path string) Config {
-	log.Printf("Config file: %s\n", path)
+	log.Printf("config file: %s\n", path)
 
 	yamlText := string(util.ReadFile(path))
 	return ConfigWithYaml(yamlText)
