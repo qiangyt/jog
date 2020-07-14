@@ -182,11 +182,11 @@ func (i EnumMap) ToMap() map[string]interface{} {
 type FieldT struct {
 	ElementT
 
-	Name               string
-	Alias              MultiString
-	CaseSensitive      bool               `yaml:"case-sensitive"`
-	LoggerNameCompress LoggerNameCompress `yaml:"logger-name-compress"`
-	Enums              EnumMap
+	Name           string
+	Alias          MultiString
+	CaseSensitive  bool `yaml:"case-sensitive"`
+	CompressPrefix `yaml:"compress-prefix"`
+	Enums          EnumMap
 }
 
 // Field ...
@@ -203,8 +203,8 @@ func (i Field) Reset() {
 
 	i.CaseSensitive = false
 
-	i.LoggerNameCompress = &LoggerNameCompressT{}
-	i.LoggerNameCompress.Reset()
+	i.CompressPrefix = &CompressPrefixT{}
+	i.CompressPrefix.Reset()
 
 	i.Enums = &EnumMapT{}
 	i.Enums.Reset()
@@ -232,7 +232,7 @@ func (i Field) ToMap() map[string]interface{} {
 
 	r["case-sensitive"] = i.CaseSensitive
 	r["alias"] = i.Alias.String()
-	r["logger-name-compress"] = i.LoggerNameCompress.Value()
+	r["compress-prefix"] = i.CompressPrefix.ToMap()
 	if !i.NotEnum() {
 		r["enums"] = i.Enums.ToMap()
 	}
@@ -255,9 +255,11 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		i.Alias.Set(strutil.MustString(aliasV))
 	}
 
-	loggerNameCompressV := util.ExtractFromMap(m, "logger-name-compress")
-	if loggerNameCompressV != nil {
-		i.LoggerNameCompress.Set(strutil.MustString(loggerNameCompressV))
+	compressPrefixV := util.ExtractFromMap(m, "compress-prefix")
+	if compressPrefixV != nil {
+		if err := util.UnmashalYAMLAgain(compressPrefixV, &i.CompressPrefix); err != nil {
+			return err
+		}
 	}
 
 	enumsV := util.ExtractFromMap(m, "enums")
@@ -280,7 +282,11 @@ func (i Field) GetColor(value string) util.Color {
 
 // PrintBody ...
 func (i Field) PrintBody(color util.Color, builder *strings.Builder, a string) {
-	if !i.NotEnum() {
+	if i.NotEnum() {
+		if i.CompressPrefix.Enabled {
+			a = i.CompressPrefix.Compress(a)
+		}
+	} else {
 		a = i.Enums.GetEnum(a).Name
 	}
 	builder.WriteString(color.Sprint(a))

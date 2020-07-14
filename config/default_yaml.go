@@ -63,14 +63,22 @@ fields:
     alias: "classname, class-name, @class_name, @classname, @class-name, @class_name"
     case-sensitive: false
     color: FgDefault
+    compress-prefix:
+      enabled: true
+      separators: ., /, \
+      action: remove
   env:
     alias: "environment, @env, @environment"
     case-sensitive: false
     color: FgDefault
   file:
-    alias: "src, source, filename, file-name, file_name, @src, @source, @file, @filename, @file-name, @file_name"
+    alias: "src, source, filename, file-name, file_name, filepath,file-path, file_path, @src, @source, @file, @filename, @file-name, @file_name, @filepath, @file-path, @file_path"
     case-sensitive: false
     color: FgDefault
+    compress-prefix:
+      enabled: true
+      separators: /, \
+      action: remove
   host:
     alias: "hostname, host-name, host_name, @host, @hostname, @host-name, @host_name"
     case-sensitive: false
@@ -83,7 +91,11 @@ fields:
     alias: "id, logger_name, logger-name, loggername, @id, @logger_name, @logger-name, @loggername, @logger"
     case-sensitive: false
     color: FgDefault
-    logger-name-compress: "."
+    compress-prefix:
+      enabled: true
+      separators: . , /
+      white-list: com.wxcount
+      action: remove-non-first-letter
   message:
     alias: "msg, @msg, @message"
     case-sensitive: false
