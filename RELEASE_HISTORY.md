@@ -1,3 +1,6 @@
+# v0.9.6
+1. Feature: field compress feature now supports white-list
+
 # v0.9.5
 1. Feature: Finish field prefix compress
 2. Fix: bunyan logs with stacktrace should not be ignored
