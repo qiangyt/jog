@@ -174,8 +174,11 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 
 	allFields := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
-		log.Printf("failed to parse line %d: <%s>\n\treason %v\n", lineNo, rawLine, errors.Wrap(err, ""))
-		return r
+		line = strings.ReplaceAll(line, "\\\"", "\"")
+		if err := json.Unmarshal([]byte(line), &allFields); err != nil {
+			log.Printf("failed to parse line %d: <%s>\n\treason %v\n", lineNo, rawLine, errors.Wrap(err, ""))
+			return r
+		}
 	}
 
 	r.Unknown = false
