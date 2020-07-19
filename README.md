@@ -42,6 +42,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [ ] k8s log
       - [x] docker-compose log
       - [x] docker log
+      - [x] OMS-docker (https://github.com/microsoft/OMS-docker)
       - [ ] aggregate multiple log
 
    - [x]  Friendly to multi-containers log outputted by docker-compose
