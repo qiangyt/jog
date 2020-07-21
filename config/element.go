@@ -96,19 +96,31 @@ func (i Element) IsEnabled() bool {
 
 // PrintBody ...
 func (i Element) PrintBody(color util.Color, builder *strings.Builder, a string) {
-	builder.WriteString(color.Sprint(a))
+	if color == nil {
+		builder.WriteString(a)
+	} else {
+		builder.WriteString(color.Sprint(a))
+	}
 }
 
 // PrintBefore ...
 func (i Element) PrintBefore(color util.Color, builder *strings.Builder) {
 	if len(i.Before) > 0 {
-		builder.WriteString(color.Sprint(i.Before))
+		if color == nil {
+			builder.WriteString(i.Before)
+		} else {
+			builder.WriteString(color.Sprint(i.Before))
+		}
 	}
 }
 
 // PrintAfter ...
 func (i Element) PrintAfter(color util.Color, builder *strings.Builder) {
 	if len(i.After) > 0 {
-		builder.WriteString(color.Sprint(i.After))
+		if color == nil {
+			builder.WriteString(i.After)
+		} else {
+			builder.WriteString(color.Sprint(i.After))
+		}
 	}
 }

@@ -48,6 +48,7 @@ func PrintHelp() {
 	fmt.Println("  4) print the default template:                                    jog -t")
 	fmt.Println("  5) view the json log with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
 	fmt.Println("  6) view the WARN level config item:                               jog -cg fields.level.enums.WARN")
+	fmt.Println("  7) disable colorization:                                          jog -cs colorization=false app-20200701-1.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")

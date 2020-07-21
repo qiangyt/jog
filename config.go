@@ -14,13 +14,14 @@ import (
 // ConfigT ...
 type ConfigT struct {
 	// TODO: configurable
-	Replace     map[string]string
-	Pattern     string
-	StartupLine config.StartupLine `yaml:"startup-line"`
-	LineNo      config.Element     `yaml:"line-no"`
-	UnknownLine config.Element     `yaml:"unknown-line"`
-	Prefix      config.Prefix
-	Fields      config.FieldMap
+	Colorization bool
+	Replace      map[string]string
+	Pattern      string
+	StartupLine  config.StartupLine `yaml:"startup-line"`
+	LineNo       config.Element     `yaml:"line-no"`
+	UnknownLine  config.Element     `yaml:"unknown-line"`
+	Prefix       config.Prefix
+	Fields       config.FieldMap
 }
 
 // Config ...
@@ -38,6 +39,7 @@ func (i Config) MarshalYAML() (interface{}, error) {
 
 // Reset ...
 func (i Config) Reset() {
+	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
 	i.StartupLine.Reset()
@@ -50,6 +52,11 @@ func (i Config) Reset() {
 // FromMap ...
 func (i Config) FromMap(m map[string]interface{}) error {
 	var v interface{}
+
+	v = util.ExtractFromMap(m, "colorization")
+	if v != nil {
+		i.Colorization = util.ToBool(v)
+	}
 
 	v = util.ExtractFromMap(m, "replace")
 	if v != nil {

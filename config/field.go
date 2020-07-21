@@ -289,5 +289,10 @@ func (i Field) PrintBody(color util.Color, builder *strings.Builder, a string) {
 	} else {
 		a = i.Enums.GetEnum(a).Name
 	}
-	builder.WriteString(color.Sprint(a))
+
+	if color == nil {
+		builder.WriteString(a)
+	} else {
+		builder.WriteString(color.Sprint(a))
+	}
 }

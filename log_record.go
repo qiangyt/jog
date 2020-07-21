@@ -48,10 +48,14 @@ func (i LogRecord) PrintElement(config Config, element config.Printable, builder
 	}
 
 	var color util.Color
-	if i.StartupLine {
-		color = config.StartupLine.Color
+	if config.Colorization {
+		if i.StartupLine {
+			color = config.StartupLine.Color
+		} else {
+			color = element.GetColor(a)
+		}
 	} else {
-		color = element.GetColor(a)
+		color = nil
 	}
 
 	element.PrintBefore(color, builder)
@@ -104,7 +108,13 @@ func (i LogRecord) AsFlatLine(cfg Config) string {
 	builder := &strings.Builder{}
 
 	printStartLine := i.StartupLine && cfg.StartupLine.IsEnabled()
-	startupLineColor := cfg.StartupLine.GetColor("")
+
+	var startupLineColor util.Color
+	if cfg.Colorization {
+		startupLineColor = cfg.StartupLine.GetColor("")
+	} else {
+		startupLineColor = nil
+	}
 	if printStartLine {
 		cfg.StartupLine.PrintBefore(startupLineColor, builder)
 	}
@@ -130,7 +140,6 @@ func (i LogRecord) AsFlatLine(cfg Config) string {
 
 	if printStartLine {
 		cfg.StartupLine.PrintAfter(startupLineColor, builder)
-		startupLineColor.Sprint(builder.String)
 	}
 
 	return builder.String()

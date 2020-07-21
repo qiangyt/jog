@@ -2,6 +2,7 @@ package config
 
 // DefaultYAML ...
 const DefaultYAML = `
+colorization: true
 pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${stacktrace}"
 startup-line:
   color: FgGreen, OpBold
