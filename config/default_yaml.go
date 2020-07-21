@@ -29,7 +29,7 @@ fields:
     value:
       color: FgDefault
   level:
-    alias: "level, @level"
+    alias: "level, @level, severity, @severity"
     case-sensitive: false
     enums:
       case-sensitive: false
