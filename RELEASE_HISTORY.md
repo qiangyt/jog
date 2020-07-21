@@ -1,5 +1,5 @@
 # v0.9.8
-1. Feature: able to enable/disable colorization (see example #7 running `jog -t`)
+1. Feature: able to enable/disable colorization (see example #7 running `jog -h`)
 
 # v0.9.7
 1. Feature: support to remove escaped double quote as possible as we can, for ex., for log outputted by OMS-docker (https://github.com/microsoft/OMS-docker)
