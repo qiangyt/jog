@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
 	"path/filepath"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/util"
@@ -140,7 +140,11 @@ func DetermineConfigFilePath() string {
 		return r
 	}
 
-	dir = os.ExpandEnv("${HOME}")
+	dir, err := homedir.Dir()
+	if err != nil {
+		log.Printf("failed to get home dir: %v\n", err)
+		return ""
+	}
 	return lookForConfigFile(dir)
 }
 

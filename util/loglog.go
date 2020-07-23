@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 )
 
@@ -69,7 +70,11 @@ func (i LogFile) Close() {
 
 // InitLogger ...
 func InitLogger() LogFile {
-	dir := os.ExpandEnv("${HOME}/.jog/log")
+	dir, err := homedir.Expand("~/.jog/log")
+	if err != nil {
+		panic(fmt.Errorf("failed to get home dir: %v", err))
+	}
+
 	MkdirAll(dir)
 
 	r := &LogFileT{
