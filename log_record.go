@@ -177,10 +177,6 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 		line = line[posOfLeftBracket:]
 	}
 
-	if lineNo == 360 {
-		lineNo = 360
-	}
-
 	allFields := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
 		line = strings.ReplaceAll(line, "\\\"", "\"")
