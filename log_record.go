@@ -185,7 +185,6 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 			return r
 		}
 	}
-
 	r.Unknown = false
 
 	standardsFieldConfig := cfg.Fields.StandardsMap
