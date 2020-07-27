@@ -1,3 +1,10 @@
+# v0.9.9
+1. Refactor the command line argument handling
+2. Enhancement: use github.com/mitchellh/go-homedir to detect user home directory, which works better in Windows
+3. Enhancement: Update dependencies
+4. Enhancement: Remove a debug code
+5. Fix: embedded stacktraxce is not printed
+
 # v0.9.8
 1. Feature: able to enable/disable colorization (see example #7 running `jog -h`)
 
