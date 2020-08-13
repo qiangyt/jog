@@ -38,8 +38,6 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    - [ ] Able to directly read many sources:
       - [x] stdin & stream
       - [x] local file
-      - [ ] remote file (HTTP/HTTPs/FTP/SFTP)
-      - [ ] k8s log
       - [x] docker-compose log
       - [x] docker log
       - [x] OMS-docker (https://github.com/microsoft/OMS-docker)
