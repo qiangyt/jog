@@ -85,7 +85,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         6) view the WARN level config item:                               jog -cg fields.level.enums.WARN
 
       Options:
-        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml
+        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml
         -cs, --config-set <config item path>=<config item value>    Set value to specified config item
         -cg, --config-get <config item path>                        Get value to specified config item
         -t,  --template                                             Print a config YAML file template

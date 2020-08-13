@@ -46,7 +46,7 @@ func PrintHelp() {
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
-	fmt.Printf("  -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.job.yaml \n")
+	fmt.Printf("  -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
