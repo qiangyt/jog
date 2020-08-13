@@ -53,7 +53,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary to $PATH. For ex.
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.9/jog.darwin -o /usr/local/bin/jog
+     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.10/jog.darwin -o /usr/local/bin/jog
      chmod +x /usr/local/bin/jog
   ```
 
@@ -64,10 +64,6 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    * From stdin steam: `tail -f sample.log | ./jog`
 
    * Check full usage: `jog -h`
-
-     ```
-      Convert and view structured (JSON) log
-      v0.9.0
 
       Usage:
         jog  [option...]  <your JSON log file path>
