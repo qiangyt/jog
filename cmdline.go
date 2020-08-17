@@ -36,7 +36,7 @@ func PrintHelp() {
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Examples:")
-	fmt.Println("  1) view a json log:                                               jog app-20200701-1.log")
+	fmt.Println("  1) view a json log, with follow mode:                             jog -f app-20200701-1.log")
 	fmt.Println("  2) view a json log with specified config file:                    jog -c another.jog.yml app-20200701-1.log")
 	fmt.Println("  3) view docker-compose log:                                       docker-compose logs | jog")
 	fmt.Println("  4) print the default template:                                    jog -t")
@@ -49,6 +49,7 @@ func PrintHelp() {
 	fmt.Printf("  -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
+	fmt.Printf("  -f,  --follow                                               Follow log output\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
@@ -63,6 +64,7 @@ type CommandLineT struct {
 	Debug           bool
 	ConfigItemPath  string
 	ConfigItemValue string
+	FollowMode      bool
 }
 
 // CommandLine ...
@@ -120,6 +122,8 @@ func ParseCommandLine() (bool, CommandLine) {
 					r.ConfigItemPath = os.Args[i+1]
 				}
 				i++
+			} else if arg == "-f" || arg == "--follow" {
+				r.FollowMode = true
 			} else if arg == "-t" || arg == "--template" {
 				PrintConfigTemplate()
 				return false, nil
