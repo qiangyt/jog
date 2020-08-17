@@ -30,6 +30,29 @@ func ReadConfig(configFilePath string) Config {
 	return ConfigWithYamlFile(configFilePath)
 }
 
+// PrintConfigItem ...
+func PrintConfigItem(m map[string]interface{}, configItemPath string) {
+	item, err := jsonpath.Get(m, configItemPath)
+	if err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	out, err := yaml.Marshal(item)
+	if err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	fmt.Print(string(out))
+}
+
+// SetConfigItem ...
+func SetConfigItem(cfg Config, m map[string]interface{}, configItemPath string, configItemValue string) {
+	if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	if err := cfg.FromMap(m); err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+}
+
 func main() {
 	ok, cmdLine := ParseCommandLine()
 	if !ok {
@@ -54,22 +77,9 @@ func main() {
 	if len(cmdLine.ConfigItemPath) > 0 {
 		m := cfg.ToMap()
 		if len(cmdLine.ConfigItemValue) > 0 {
-			if err := jsonpath.Set(m, cmdLine.ConfigItemPath, cmdLine.ConfigItemValue); err != nil {
-				panic(errors.Wrap(err, ""))
-			}
-			if err := cfg.FromMap(m); err != nil {
-				panic(errors.Wrap(err, ""))
-			}
+			SetConfigItem(cfg, m, cmdLine.ConfigItemPath, cmdLine.ConfigItemValue)
 		} else {
-			item, err := jsonpath.Get(m, cmdLine.ConfigItemPath)
-			if err != nil {
-				panic(errors.Wrap(err, ""))
-			}
-			out, err := yaml.Marshal(item)
-			if err != nil {
-				panic(errors.Wrap(err, ""))
-			}
-			fmt.Print(string(out))
+			PrintConfigItem(m, cmdLine.ConfigItemPath)
 			return
 		}
 	}
