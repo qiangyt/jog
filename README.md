@@ -53,7 +53,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary to $PATH. For ex., for Mac OSX,
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.10/jog.darwin -o /usr/local/bin/jog
+     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.11/jog.darwin -o /usr/local/bin/jog
      chmod +x /usr/local/bin/jog
   ```
 

@@ -1,3 +1,6 @@
+# v0.9.11
+1. Enhancement: support -f option for local file (follow mode like `tail -f`)
+
 # v0.9.10
 1. Fix: typo in README and help text
 2. Update README.md to remove deprecated feature plan
