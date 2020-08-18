@@ -9,6 +9,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
@@ -252,23 +253,61 @@ func ProcessRawLine(cfg Config, lineNo int, rawLine string) {
 }
 
 // ProcessLocalFile ...
-func ProcessLocalFile(cfg Config, localFilePath string) {
+func ProcessLocalFile(cfg Config, follow bool, localFilePath string) {
+	var offset int64 = 0
+	var lineNo int = 1
+
+	if !follow {
+		ReadLocalFile(cfg, localFilePath, offset, lineNo)
+		return
+	}
+
+	ticker := time.NewTicker(time.Millisecond * 500)
+	for range ticker.C {
+		offset, lineNo = ReadLocalFile(cfg, localFilePath, offset, lineNo)
+	}
+}
+
+// ReadLocalFile ...
+func ReadLocalFile(cfg Config, localFilePath string, offset int64, lineNo int) (int64, int) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
-		panic(errors.Wrap(err, ""))
+		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
 	}
-	log.Printf("file is opened: %s\n", localFilePath)
 	defer f.Close()
 
-	ProcessReader(cfg, f)
+	fi, err := f.Stat()
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to stat: %s", localFilePath))
+	}
+	fSize := fi.Size()
+
+	if offset > 0 {
+		if fSize == offset {
+			return fSize, lineNo
+		}
+
+		_, err := f.Seek(offset, 0)
+		if err != nil {
+			panic(errors.Wrapf(err, "failed to seek: %s/%v", localFilePath, offset))
+		}
+	}
+
+	lineNo = ProcessReader(cfg, f, lineNo)
+
+	fi, err = f.Stat()
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to stat: %s", localFilePath))
+	}
+	return fi.Size(), lineNo
 }
 
 // ProcessReader ...
-func ProcessReader(cfg Config, reader io.Reader) {
+func ProcessReader(cfg Config, reader io.Reader, lineNo int) int {
 
 	buf := bufio.NewReader(reader)
 
-	for lineNo := 1; true; lineNo++ {
+	for ; true; lineNo++ {
 		rawLine, err := buf.ReadString('\n')
 		len := len(rawLine)
 
@@ -283,11 +322,13 @@ func ProcessReader(cfg Config, reader io.Reader) {
 			if err == io.EOF {
 				log.Printf("got EOF, line %d\n", lineNo)
 				ProcessRawLine(cfg, lineNo, rawLine)
-				return
+				return lineNo + 1
 			}
 			panic(errors.Wrapf(err, "failed to read line %d", lineNo))
 		}
 
 		ProcessRawLine(cfg, lineNo, rawLine)
 	}
+
+	return lineNo
 }
