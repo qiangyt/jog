@@ -7,15 +7,6 @@ import (
 	"github.com/qiangyt/jog/util"
 )
 
-// Printable ...
-type Printable interface {
-	IsEnabled() bool
-	GetColor(value string) util.Color
-	PrintBefore(color util.Color, builder *strings.Builder)
-	PrintBody(color util.Color, builder *strings.Builder, body string)
-	PrintAfter(color util.Color, builder *strings.Builder)
-}
-
 // ElementT ...
 type ElementT struct {
 	Color  util.Color
@@ -95,11 +86,11 @@ func (i Element) IsEnabled() bool {
 }
 
 // PrintBody ...
-func (i Element) PrintBody(color util.Color, builder *strings.Builder, a string) {
+func (i Element) PrintBody(color util.Color, builder *strings.Builder, body string) {
 	if color == nil {
-		builder.WriteString(a)
+		builder.WriteString(body)
 	} else {
-		builder.WriteString(color.Sprint(a))
+		builder.WriteString(color.Sprint(body))
 	}
 }
 

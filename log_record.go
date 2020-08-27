@@ -43,7 +43,7 @@ type LogRecordT struct {
 type LogRecord = *LogRecordT
 
 // PrintElement ...
-func (i LogRecord) PrintElement(config Config, element config.Printable, builder *strings.Builder, a string) {
+func (i LogRecord) PrintElement(config Config, element util.Printable, builder *strings.Builder, a string) {
 	if !element.IsEnabled() {
 		return
 	}

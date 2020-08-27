@@ -110,18 +110,18 @@ func (i Field) GetColor(value string) util.Color {
 }
 
 // PrintBody ...
-func (i Field) PrintBody(color util.Color, builder *strings.Builder, a string) {
+func (i Field) PrintBody(color util.Color, builder *strings.Builder, body string) {
 	if i.NotEnum() {
 		if i.CompressPrefix.Enabled {
-			a = i.CompressPrefix.Compress(a)
+			body = i.CompressPrefix.Compress(body)
 		}
 	} else {
-		a = i.Enums.GetEnum(a).Name
+		body = i.Enums.GetEnum(body).Name
 	}
 
 	if color == nil {
-		builder.WriteString(a)
+		builder.WriteString(body)
 	} else {
-		builder.WriteString(color.Sprint(a))
+		builder.WriteString(color.Sprint(body))
 	}
 }
