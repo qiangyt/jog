@@ -1,10 +1,22 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/util"
+)
+
+// FieldType ...
+type FieldType int
+
+const (
+	// FieldTypeAuto ...
+	FieldTypeAuto FieldType = iota
+
+	// FieldTypeTime ...
+	FieldTypeTime
 )
 
 // FieldT ...
@@ -16,6 +28,8 @@ type FieldT struct {
 	CaseSensitive  bool `yaml:"case-sensitive"`
 	CompressPrefix `yaml:"compress-prefix"`
 	Enums          EnumMap
+	Type           FieldType
+	TimeFormat     string `yaml:"time-format"`
 }
 
 // Field ...
@@ -37,6 +51,9 @@ func (i Field) Reset() {
 
 	i.Enums = &EnumMapT{}
 	i.Enums.Reset()
+
+	i.Type = FieldTypeAuto
+	i.TimeFormat = ""
 }
 
 // UnmarshalYAML ...
@@ -65,6 +82,17 @@ func (i Field) ToMap() map[string]interface{} {
 	if !i.NotEnum() {
 		r["enums"] = i.Enums.ToMap()
 	}
+
+	if i.Type != FieldTypeAuto {
+		if i.Type == FieldTypeTime {
+			r["type"] = "time"
+		}
+	}
+
+	if len(i.TimeFormat) > 0 {
+		r["time-format"] = i.TimeFormat
+	}
+
 	return r
 }
 
@@ -96,6 +124,23 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		if err := util.UnmashalYAMLAgain(enumsV, &i.Enums); err != nil {
 			return err
 		}
+	}
+
+	typeV := util.ExtractFromMap(m, "type")
+	if typeV != nil {
+		typeT := strutil.MustString(typeV)
+		if typeT == "time" {
+			i.Type = FieldTypeTime
+		} else if typeT == "auto" {
+			i.Type = FieldTypeAuto
+		} else {
+			return fmt.Errorf("unknown field type: %s", typeT)
+		}
+	}
+
+	timeFormatV := util.ExtractFromMap(m, "time-format")
+	if timeFormatV != nil {
+		i.TimeFormat = strutil.MustString(timeFormatV)
 	}
 
 	return nil

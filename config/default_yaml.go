@@ -130,6 +130,8 @@ fields:
     alias: "time, date, datetime, date-time, date_time, @time, @timestamp, @date, @datetime, @date-time, @date_time"
     case-sensitive: false
     color: FgDefault
+    #type: time
+    #time-format: 2006-01-02 15:04:05.000 # must present 2006-1-2 3:04pm
   user:
     alias: "usr, username, user-name, user_name, @usr, @username, @user-name, @user_name, @user"
     case-sensitive: false

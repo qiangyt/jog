@@ -1,15 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"os"
-	"reflect"
 	"strings"
-	"time"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
@@ -19,7 +15,7 @@ import (
 
 // StandardFieldT ...
 type StandardFieldT struct {
-	Value  string
+	Value  util.AnyValue
 	Config config.Field
 }
 
@@ -32,7 +28,7 @@ type LogRecordT struct {
 
 	Prefix         string
 	StandardFields []StandardField
-	OtherFields    map[string]interface{}
+	OtherFields    map[string]util.AnyValue
 	Raw            string
 
 	Unknown     bool
@@ -84,7 +80,7 @@ func (i LogRecord) PopulateOtherFields(cfg Config, result map[string]string) {
 
 		i.PrintElement(cfg, n, builder, fName)
 		i.PrintElement(cfg, s, builder, "=")
-		i.PrintElement(cfg, v, builder, strutil.MustString(fValue))
+		i.PrintElement(cfg, v, builder, fValue.String())
 	}
 
 	result["others"] = builder.String()
@@ -98,7 +94,7 @@ func (i LogRecord) PopulateStandardFields(cfg Config, result map[string]string) 
 
 	for _, f := range i.StandardFields {
 		builder := &strings.Builder{}
-		i.PrintElement(cfg, f.Config, builder, f.Value)
+		i.PrintElement(cfg, f.Config, builder, f.Value.String())
 
 		result[f.Config.Name] = builder.String()
 	}
@@ -151,11 +147,11 @@ func isStartupLine(cfg Config, raw string) bool {
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
-// ParseRawLine ...
-func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
+// ParseAsRecord ...
+func ParseAsRecord(cfg Config, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
-		OtherFields:    make(map[string]interface{}),
+		OtherFields:    make(map[string]util.AnyValue),
 		StandardFields: make([]StandardField, 0, 16),
 		Raw:            rawLine,
 		Unknown:        true,
@@ -180,9 +176,10 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 
 	allFields := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
+		log.Printf("parse round 1 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
 		line = strings.ReplaceAll(line, "\\\"", "\"")
 		if err := json.Unmarshal([]byte(line), &allFields); err != nil {
-			log.Printf("failed to parse line %d: <%s>\n\treason %v\n", lineNo, rawLine, errors.Wrap(err, ""))
+			log.Printf("parse round 2 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
 			return r
 		}
 	}
@@ -190,46 +187,7 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 
 	standardsFieldConfig := cfg.Fields.StandardsMap
 	for fName, fValue := range allFields {
-		var v string
-
-		alreadyNormalized := false
-
-		if fValue != nil {
-			kind := reflect.TypeOf(fValue).Kind()
-			if kind == reflect.Map {
-				json, err := json.MarshalIndent(fValue, "", "  ")
-				if err != nil {
-					log.Printf("line %v: failed to json format: %v\n", lineNo, fValue)
-				} else {
-					v = string(json)
-				}
-				alreadyNormalized = true
-			} else {
-				v = strutil.MustString(fValue)
-			}
-
-			if len(v) >= 1 {
-				if v[:1] == "\"" || v[:1] == "'" {
-					v = v[1:]
-				}
-			}
-			if len(v) >= 1 {
-				if v[len(v)-1:] == "\"" || v[len(v)-1:] == "'" {
-					v = v[:len(v)-1]
-				}
-			}
-			v = strutil.Replaces(v, cfg.Replace)
-
-			if alreadyNormalized == false {
-				var obj interface{}
-				if err := json.Unmarshal([]byte(v), &obj); err == nil {
-					json, err := json.MarshalIndent(obj, "", "  ")
-					if err == nil {
-						v = string(json)
-					}
-				}
-			}
-		}
+		v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
@@ -241,94 +199,4 @@ func ParseRawLine(cfg Config, lineNo int, rawLine string) LogRecord {
 	}
 
 	return r
-}
-
-// ProcessRawLine ...
-func ProcessRawLine(cfg Config, lineNo int, rawLine string) {
-	event := ParseRawLine(cfg, lineNo, rawLine)
-	var line = event.AsFlatLine(cfg)
-	if len(line) > 0 {
-		fmt.Println(line)
-	}
-}
-
-// ProcessLocalFile ...
-func ProcessLocalFile(cfg Config, follow bool, localFilePath string) {
-	var offset int64 = 0
-	var lineNo int = 1
-
-	if !follow {
-		ReadLocalFile(cfg, localFilePath, offset, lineNo)
-		return
-	}
-
-	ticker := time.NewTicker(time.Millisecond * 500)
-	for range ticker.C {
-		offset, lineNo = ReadLocalFile(cfg, localFilePath, offset, lineNo)
-	}
-}
-
-// ReadLocalFile ...
-func ReadLocalFile(cfg Config, localFilePath string, offset int64, lineNo int) (int64, int) {
-	f, err := os.Open(localFilePath)
-	if err != nil {
-		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
-	}
-	defer f.Close()
-
-	fi, err := f.Stat()
-	if err != nil {
-		panic(errors.Wrapf(err, "failed to stat: %s", localFilePath))
-	}
-	fSize := fi.Size()
-
-	if offset > 0 {
-		if fSize == offset {
-			return fSize, lineNo
-		}
-
-		_, err := f.Seek(offset, 0)
-		if err != nil {
-			panic(errors.Wrapf(err, "failed to seek: %s/%v", localFilePath, offset))
-		}
-	}
-
-	lineNo = ProcessReader(cfg, f, lineNo)
-
-	fi, err = f.Stat()
-	if err != nil {
-		panic(errors.Wrapf(err, "failed to stat: %s", localFilePath))
-	}
-	return fi.Size(), lineNo
-}
-
-// ProcessReader ...
-func ProcessReader(cfg Config, reader io.Reader, lineNo int) int {
-
-	buf := bufio.NewReader(reader)
-
-	for ; true; lineNo++ {
-		rawLine, err := buf.ReadString('\n')
-		len := len(rawLine)
-
-		if len != 0 {
-			// trim the tail \n
-			if rawLine[len-1] == '\n' {
-				rawLine = rawLine[:len-1]
-			}
-		}
-
-		if err != nil {
-			if err == io.EOF {
-				log.Printf("got EOF, line %d\n", lineNo)
-				ProcessRawLine(cfg, lineNo, rawLine)
-				return lineNo + 1
-			}
-			panic(errors.Wrapf(err, "failed to read line %d", lineNo))
-		}
-
-		ProcessRawLine(cfg, lineNo, rawLine)
-	}
-
-	return lineNo
 }
