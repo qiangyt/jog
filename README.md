@@ -4,7 +4,7 @@ Command line tool to view structured (JSON) log, as regular flat line format
 
 ## Background
 
-Structured log, AKA. JSON line log, is great for log collectors but hard to read by developers themselves, usually during local development. This tool helps to on-the-fly convert those structured JSON log to traditional space-separated flat line log, friendly for developers. It then removes the effort to maintenain different output format for different environments (for ex. JSON log for test / production, but flat line log for local development).
+Structured log, AKA. JSON line log, is great for log collectors but hard to read by developers themselves, usually during local development. Jog helps to on-the-fly convert those structured JSON log to traditional space-separated flat line log, friendly for developers. It then removes the effort to maintenain different output format for different environments (for ex. JSON log for test / production, but flat line log for local development).
 
 ## Features
 
@@ -50,11 +50,11 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    - [ ]  Filtering by level and field
 
 ## Usage:
-  Download the executable binary to $PATH. For ex., for Mac OSX,
+  Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.11/jog.darwin -o /usr/local/bin/jog
-     chmod +x /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.11/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     sudo chmod +x /usr/local/bin/jog
   ```
 
    * View a local JSON log file: `jog sample.log`
