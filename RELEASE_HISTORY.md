@@ -1,5 +1,10 @@
+# v0.9.12
+1. Fix: array value should not be ignored
+2. Refactor the code for ongoing data type support
+3. Initial time data type format
+
 # v0.9.11
-1. Enhancement: support -f option for local file (follow mode like `tail -f`)
+1. Enhancement: support -f argument for local file (follow mode like `tail -f`)
 
 # v0.9.10
 1. Fix: typo in README and help text
