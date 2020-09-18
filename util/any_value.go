@@ -33,7 +33,7 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 	}
 
 	kind := reflect.TypeOf(raw).Kind()
-	if kind == reflect.Map {
+	if kind == reflect.Map || kind == reflect.Slice || kind == reflect.Array {
 		json, err := json.MarshalIndent(raw, "", "  ")
 		if err != nil {
 			log.Printf("line %v: failed to json format: %v\n", lineNo, raw)
