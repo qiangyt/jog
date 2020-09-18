@@ -19,48 +19,48 @@ func NewTailQueueWithSize(size int) TailQueue {
 }
 
 // Clear ...
-func (me TailQueue) Clear() {
-	me.frontIndex = 0
-	me.rearIndex = 0
-	me.count = 0
+func (i TailQueue) Clear() {
+	i.frontIndex = 0
+	i.rearIndex = 0
+	i.count = 0
 }
 
 // Count ...
-func (me TailQueue) Count() int {
-	return me.count
+func (i TailQueue) Count() int {
+	return i.count
 }
 
 // IsEmpty ...
-func (me TailQueue) IsEmpty() bool {
-	return me.count == 0
+func (i TailQueue) IsEmpty() bool {
+	return i.count == 0
 }
 
 // IsFull ...
-func (me TailQueue) IsFull() bool {
-	return me.count == len(me.items)
+func (i TailQueue) IsFull() bool {
+	return i.count == len(i.items)
 }
 
 // Add ...
-func (me TailQueue) Add(element interface{}) {
-	if me.IsFull() {
-		me.Kick()
+func (i TailQueue) Add(element interface{}) {
+	if i.IsFull() {
+		i.Kick()
 	}
 
-	me.items[me.rearIndex] = element
-	me.rearIndex = (me.rearIndex + 1) % len(me.items)
-	me.count = me.count + 1
+	i.items[i.rearIndex] = element
+	i.rearIndex = (i.rearIndex + 1) % len(i.items)
+	i.count = i.count + 1
 }
 
 // Kick ...
-func (me TailQueue) Kick() interface{} {
-	if me.IsEmpty() {
+func (i TailQueue) Kick() interface{} {
+	if i.IsEmpty() {
 		return nil
 	}
 
-	r := me.items[me.frontIndex]
+	r := i.items[i.frontIndex]
 
-	me.frontIndex = (me.frontIndex + 1) % len(me.items)
-	me.count = me.count - 1
+	i.frontIndex = (i.frontIndex + 1) % len(i.items)
+	i.count = i.count - 1
 
 	return r
 }
