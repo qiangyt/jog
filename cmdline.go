@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gookit/color"
+	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/config"
 )
 
@@ -36,13 +37,14 @@ func PrintHelp() {
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Examples:")
-	fmt.Println("  1) view a json log, with follow mode:                             jog -f app-20200701-1.log")
-	fmt.Println("  2) view a json log with specified config file:                    jog -c another.jog.yml app-20200701-1.log")
-	fmt.Println("  3) view docker-compose log:                                       docker-compose logs | jog")
-	fmt.Println("  4) print the default template:                                    jog -t")
-	fmt.Println("  5) view the json log with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
-	fmt.Println("  6) view the WARN level config item:                               jog -cg fields.level.enums.WARN")
-	fmt.Println("  7) disable colorization:                                          jog -cs colorization=false app-20200701-1.log")
+	fmt.Println("  1) view a json log, with follow mode, with last 10 lines:         jog -f app-20200701-1.log")
+	fmt.Println("  2) view a json log, with follow mode, with specified lines:       jog -n 100 -f app-20200701-1.log")
+	fmt.Println("  3) view a json log with specified config file:                    jog -c another.jog.yml app-20200701-1.log")
+	fmt.Println("  4) view docker-compose log:                                       docker-compose logs | jog")
+	fmt.Println("  5) print the default template:                                    jog -t")
+	fmt.Println("  6) view the json log with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
+	fmt.Println("  7) view the WARN level config item:                               jog -cg fields.level.enums.WARN")
+	fmt.Println("  8) disable colorization:                                          jog -cs colorization=false app-20200701-1.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
@@ -50,6 +52,7 @@ func PrintHelp() {
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -f,  --follow                                               Follow log output\n")
+	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
@@ -65,6 +68,7 @@ type CommandLineT struct {
 	ConfigItemPath  string
 	ConfigItemValue string
 	FollowMode      bool
+	NumberOfLines   int
 }
 
 // CommandLine ...
@@ -73,8 +77,13 @@ type CommandLine = *CommandLineT
 // ParseCommandLine ...
 func ParseCommandLine() (bool, CommandLine) {
 
-	r := &CommandLineT{}
+	r := &CommandLineT{
+		Debug:         false,
+		FollowMode:    false,
+		NumberOfLines: -1,
+	}
 	var err error
+	var hasNumberOfLines = false
 
 	for i := 0; i < len(os.Args); i++ {
 		if i == 0 {
@@ -91,9 +100,7 @@ func ParseCommandLine() (bool, CommandLine) {
 					return false, nil
 				}
 
-				if i+1 < len(os.Args) {
-					r.ConfigFilePath = os.Args[i+1]
-				}
+				r.ConfigFilePath = os.Args[i+1]
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(os.Args) {
@@ -102,13 +109,11 @@ func ParseCommandLine() (bool, CommandLine) {
 					return false, nil
 				}
 
-				if i+1 < len(os.Args) {
-					r.ConfigItemPath, r.ConfigItemValue, err = ParseConfigExpression(os.Args[i+1])
-					if err != nil {
-						color.Red.Println("%v\n", err)
-						PrintHelp()
-						return false, nil
-					}
+				r.ConfigItemPath, r.ConfigItemValue, err = ParseConfigExpression(os.Args[i+1])
+				if err != nil {
+					color.Red.Println("%v\n", err)
+					PrintHelp()
+					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
@@ -118,12 +123,20 @@ func ParseCommandLine() (bool, CommandLine) {
 					return false, nil
 				}
 
-				if i+1 < len(os.Args) {
-					r.ConfigItemPath = os.Args[i+1]
-				}
+				r.ConfigItemPath = os.Args[i+1]
 				i++
 			} else if arg == "-f" || arg == "--follow" {
 				r.FollowMode = true
+			} else if arg == "-n" || arg == "--lines" {
+				if i+1 >= len(os.Args) {
+					color.Red.Println("Missing lines argument\n")
+					PrintHelp()
+					return false, nil
+				}
+
+				r.NumberOfLines = strutil.MustInt(os.Args[i+1])
+				hasNumberOfLines = true
+				i++
 			} else if arg == "-t" || arg == "--template" {
 				PrintConfigTemplate()
 				return false, nil
@@ -142,6 +155,12 @@ func ParseCommandLine() (bool, CommandLine) {
 			}
 		} else {
 			r.LogFilePath = arg
+		}
+	}
+
+	if !hasNumberOfLines {
+		if r.FollowMode {
+			r.NumberOfLines = 10
 		}
 	}
 
