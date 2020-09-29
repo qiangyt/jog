@@ -99,7 +99,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
 ## Build
 
-   *  Install GOLANG
+   *  Install GOLANG version >= 1.13
 
    *  In current directory, run `./build.sh`
 
