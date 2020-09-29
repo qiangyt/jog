@@ -11,8 +11,8 @@ type TailQueueT struct {
 // TailQueue ...
 type TailQueue = *TailQueueT
 
-// NewTailQueueWithSize ...
-func NewTailQueueWithSize(size int) TailQueue {
+// NewTailQueue ...
+func NewTailQueue(size int) TailQueue {
 	r := &TailQueueT{items: make([]interface{}, size)}
 	r.Clear()
 	return r
@@ -51,13 +51,34 @@ func (i TailQueue) Add(element interface{}) {
 	i.count = i.count + 1
 }
 
+// Head ...
+func (i TailQueue) Head() interface{} {
+	if i.IsEmpty() {
+		return nil
+	}
+
+	return i.items[i.frontIndex]
+}
+
+// Tail ...
+func (i TailQueue) Tail() interface{} {
+	if i.IsEmpty() {
+		return nil
+	}
+
+	if i.rearIndex == 0 {
+		return i.items[len(i.items)-1]
+	}
+	return i.items[i.rearIndex-1]
+}
+
 // Kick ...
 func (i TailQueue) Kick() interface{} {
 	if i.IsEmpty() {
 		return nil
 	}
 
-	r := i.items[i.frontIndex]
+	r := i.Head()
 
 	i.frontIndex = (i.frontIndex + 1) % len(i.items)
 	i.count = i.count - 1
