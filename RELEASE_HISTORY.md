@@ -1,3 +1,10 @@
+# v0.9.14
+1. Enhancement: support -n option to specifiy amount of tail lines, like `tail -f`
+2. Refine README and help messages
+
+# v0.9.13
+  skipped due to mis-operation
+
 # v0.9.12
 1. Fix: array value should not be ignored
 2. Refactor the code for ongoing data type support
