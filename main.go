@@ -86,10 +86,10 @@ func main() {
 
 	if len(cmdLine.LogFilePath) == 0 {
 		log.Println("read JSON log lines from stdin")
-		ProcessReader(cfg, os.Stdin, 1)
+		ProcessReader(cfg, cmdLine, os.Stdin, 1)
 	} else {
 		log.Printf("processing local JSON log file: %s\n", cmdLine.LogFilePath)
-		ProcessLocalFile(cfg, cmdLine.FollowMode, cmdLine.LogFilePath)
+		ProcessLocalFile(cfg, cmdLine, cmdLine.FollowMode, cmdLine.LogFilePath)
 	}
 
 	fmt.Println()

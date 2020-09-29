@@ -12,7 +12,7 @@ import (
 )
 
 // ProcessRawLine ...
-func ProcessRawLine(cfg Config, lineNo int, rawLine string) {
+func ProcessRawLine(cfg Config, cmdLine CommandLine, lineNo int, rawLine string) {
 	event := ParseAsRecord(cfg, lineNo, rawLine)
 	var line = event.AsFlatLine(cfg)
 	if len(line) > 0 {
@@ -21,23 +21,23 @@ func ProcessRawLine(cfg Config, lineNo int, rawLine string) {
 }
 
 // ProcessLocalFile ...
-func ProcessLocalFile(cfg Config, follow bool, localFilePath string) {
+func ProcessLocalFile(cfg Config, cmdLine CommandLine, follow bool, localFilePath string) {
 	var offset int64 = 0
 	var lineNo int = 1
 
 	if !follow {
-		ReadLocalFile(cfg, localFilePath, offset, lineNo)
+		ReadLocalFile(cfg, cmdLine, localFilePath, offset, lineNo)
 		return
 	}
 
 	ticker := time.NewTicker(time.Millisecond * 500)
 	for range ticker.C {
-		offset, lineNo = ReadLocalFile(cfg, localFilePath, offset, lineNo)
+		offset, lineNo = ReadLocalFile(cfg, cmdLine, localFilePath, offset, lineNo)
 	}
 }
 
 // ReadLocalFile ...
-func ReadLocalFile(cfg Config, localFilePath string, offset int64, lineNo int) (int64, int) {
+func ReadLocalFile(cfg Config, cmdLine CommandLine, localFilePath string, offset int64, lineNo int) (int64, int) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
@@ -61,7 +61,7 @@ func ReadLocalFile(cfg Config, localFilePath string, offset int64, lineNo int) (
 		}
 	}
 
-	lineNo = ProcessReader(cfg, f, lineNo)
+	lineNo = ProcessReader(cfg, cmdLine, f, lineNo)
 
 	fi, err = f.Stat()
 	if err != nil {
@@ -71,7 +71,7 @@ func ReadLocalFile(cfg Config, localFilePath string, offset int64, lineNo int) (
 }
 
 // ProcessReader ...
-func ProcessReader(cfg Config, reader io.Reader, lineNo int) int {
+func ProcessReader(cfg Config, cmdLine CommandLine, reader io.Reader, lineNo int) int {
 
 	buf := bufio.NewReader(reader)
 
@@ -89,13 +89,13 @@ func ProcessReader(cfg Config, reader io.Reader, lineNo int) int {
 		if err != nil {
 			if err == io.EOF {
 				log.Printf("got EOF, line %d\n", lineNo)
-				ProcessRawLine(cfg, lineNo, rawLine)
+				ProcessRawLine(cfg, cmdLine, lineNo, rawLine)
 				return lineNo + 1
 			}
 			panic(errors.Wrapf(err, "failed to read line %d", lineNo))
 		}
 
-		ProcessRawLine(cfg, lineNo, rawLine)
+		ProcessRawLine(cfg, cmdLine, lineNo, rawLine)
 	}
 
 	return lineNo
