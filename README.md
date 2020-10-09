@@ -12,6 +12,8 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Detect format, automatically
 
+   - [x] Follow mode, just like `tail -f`, with optional amount of tail lines specified.
+   
    - [x] Most-likely know unknow format via customizeable dictionary
 
    - [ ] Built-in supports as many as possible formats:
@@ -33,12 +35,12 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Hightlight startup line
 
-   - [x]  Support JSON log mixed with non-JSON log line (for ex., springboot banner) - just directly print them
+   - [x]  Support JSON log mixed with non-JSON log line (for ex., springboot banner)
 
    - [ ] Able to directly read many sources:
       - [x] stdin & stream
       - [x] local file
-      - [x] docker-compose log
+      - [x] multi-services docker-compose log
       - [x] docker log
       - [x] OMS-docker (https://github.com/microsoft/OMS-docker)
       - [ ] aggregate multiple log
