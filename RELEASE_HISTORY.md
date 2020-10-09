@@ -1,3 +1,7 @@
+# v0.9.15
+1. Fix: failed to load default configuration file due to a stupid error that takes path as yaml.
+   Thanks @https://github.com/nseba for reporting and @https://github.com/frudolph77 for reproducing.
+
 # v0.9.14
 1. Enhancement: support -n option to specifiy amount of tail lines, like `tail -f`
 2. Refine README and help messages
