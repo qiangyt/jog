@@ -1,3 +1,6 @@
+# v0.9.15.1
+1. Fix: regression by regression by https://github.com/qiangyt/jog/commit/cea3edbb5f6c19079e21688d657a85a5587d4394
+
 # v0.9.15
 1. Fix: failed to load default configuration file due to a stupid error that takes path as yaml.
    Thanks @https://github.com/nseba for reporting and @https://github.com/frudolph77 for reproducing.
