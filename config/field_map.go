@@ -36,6 +36,11 @@ func (i FieldMap) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i FieldMap) Init(cfg StaticConfig) {
+
+}
+
 // FromMap ...
 func (i FieldMap) FromMap(m map[string]interface{}) error {
 	othersV := util.ExtractFromMap(m, "others")

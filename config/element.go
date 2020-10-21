@@ -28,6 +28,11 @@ func (i Element) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i Element) Init(cfg StaticConfig) {
+
+}
+
 // FromMap ...
 func (i Element) FromMap(m map[string]interface{}) error {
 	colorV := util.ExtractFromMap(m, "color")

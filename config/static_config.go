@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"path/filepath"
 	"strings"
@@ -36,6 +37,19 @@ func (i StaticConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 // MarshalYAML ...
 func (i StaticConfig) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
+}
+
+// Init ...
+func (i StaticConfig) Init(cfg StaticConfig) {
+	if cfg != nil {
+		panic(fmt.Errorf("root configure initialization"))
+	}
+
+	i.StartupLine.Init(i)
+	i.LineNo.Init(i)
+	i.UnknownLine.Init(i)
+	i.Prefix.Init(i)
+	i.Fields.Init(i)
 }
 
 // Reset ...
@@ -202,8 +216,12 @@ func WithYaml(yamlText string) StaticConfig {
 		Prefix:      &PrefixT{},
 		Fields:      &FieldMapT{},
 	}
+
 	if err := yaml.Unmarshal([]byte(yamlText), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))
 	}
+
+	r.Init(nil)
+
 	return r
 }

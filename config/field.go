@@ -67,6 +67,11 @@ func (i Field) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i Field) Init(cfg StaticConfig) {
+
+}
+
 // NotEnum ...
 func (i Field) NotEnum() bool {
 	return i.Enums.IsEmpty()

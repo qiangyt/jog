@@ -39,6 +39,11 @@ func (i EnumMap) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i EnumMap) Init(cfg StaticConfig) {
+
+}
+
 // IsEmpty ...
 func (i EnumMap) IsEmpty() bool {
 	return len(i.Values) == 0

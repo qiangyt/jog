@@ -24,6 +24,11 @@ func (i Enum) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i Enum) Init(cfg StaticConfig) {
+
+}
+
 // Reset ...
 func (i Enum) Reset() {
 	i.Name = ""

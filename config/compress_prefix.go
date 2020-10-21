@@ -71,6 +71,11 @@ func (i CompressPrefix) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
+// Init ...
+func (i CompressPrefix) Init(cfg StaticConfig) {
+
+}
+
 // FromMap ...
 func (i CompressPrefix) FromMap(m map[string]interface{}) error {
 
