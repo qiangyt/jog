@@ -1,9 +1,5 @@
 package config
 
-import (
-	"github.com/qiangyt/jog/util"
-)
-
 // PrefixT ...
 type PrefixT struct {
 	ElementT
@@ -31,10 +27,10 @@ func (i Prefix) ToMap() map[string]interface{} {
 
 // UnmarshalYAML ...
 func (i Prefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.UnmarshalYAML(i, unmarshal)
+	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Prefix) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }

@@ -1,4 +1,4 @@
-package util
+package config
 
 // YAMLMap ...
 type YAMLMap interface {

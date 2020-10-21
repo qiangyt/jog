@@ -63,12 +63,12 @@ type CompressPrefix = *CompressPrefixT
 
 // UnmarshalYAML ...
 func (i CompressPrefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.UnmarshalYAML(i, unmarshal)
+	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i CompressPrefix) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }
 
 // FromMap ...

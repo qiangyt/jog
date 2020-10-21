@@ -8,6 +8,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
@@ -23,11 +24,11 @@ func ParseConfigExpression(expr string) (string, string, error) {
 }
 
 // ReadConfig ...
-func ReadConfig(configFilePath string) Config {
+func ReadConfig(configFilePath string) config.Config {
 	if len(configFilePath) == 0 {
-		return ConfigWithDefaultYamlFile()
+		return config.WithDefaultYamlFile()
 	}
-	return ConfigWithYamlFile(configFilePath)
+	return config.WithYamlFile(configFilePath)
 }
 
 // PrintConfigItem ...
@@ -44,7 +45,7 @@ func PrintConfigItem(m map[string]interface{}, configItemPath string) {
 }
 
 // SetConfigItem ...
-func SetConfigItem(cfg Config, m map[string]interface{}, configItemPath string, configItemValue string) {
+func SetConfigItem(cfg config.Config, m map[string]interface{}, configItemPath string, configItemValue string) {
 	if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
 		panic(errors.Wrap(err, ""))
 	}

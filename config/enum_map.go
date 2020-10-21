@@ -30,13 +30,13 @@ func (i EnumMap) Reset() {
 
 // UnmarshalYAML ...
 func (i EnumMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := util.UnmarshalYAML(i, unmarshal)
+	e := UnmarshalYAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i EnumMap) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }
 
 // IsEmpty ...

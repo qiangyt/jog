@@ -1,12 +1,12 @@
-package main
+package config
 
 import (
 	"log"
 	"path/filepath"
+	"strings"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
@@ -14,14 +14,15 @@ import (
 // ConfigT ...
 type ConfigT struct {
 	// TODO: configurable
-	Colorization bool
-	Replace      map[string]string
-	Pattern      string
-	StartupLine  config.StartupLine `yaml:"startup-line"`
-	LineNo       config.Element     `yaml:"line-no"`
-	UnknownLine  config.Element     `yaml:"unknown-line"`
-	Prefix       config.Prefix
-	Fields       config.FieldMap
+	Colorization    bool
+	Replace         map[string]string
+	Pattern         string
+	fieldsInPattern map[string]bool
+	StartupLine     StartupLine `yaml:"startup-line"`
+	LineNo          Element     `yaml:"line-no"`
+	UnknownLine     Element     `yaml:"unknown-line"`
+	Prefix          Prefix
+	Fields          FieldMap
 }
 
 // Config ...
@@ -29,12 +30,12 @@ type Config = *ConfigT
 
 // UnmarshalYAML ...
 func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.UnmarshalYAML(i, unmarshal)
+	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Config) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }
 
 // Reset ...
@@ -42,11 +43,24 @@ func (i Config) Reset() {
 	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
+	i.fieldsInPattern = make(map[string]bool)
 	i.StartupLine.Reset()
 	i.LineNo.Reset()
 	i.UnknownLine.Reset()
 	i.Prefix.Reset()
 	i.Fields.Reset()
+}
+
+// HasFieldInPattern ...
+func (i Config) HasFieldInPattern(fieldName string) bool {
+	r, contains := i.fieldsInPattern[fieldName]
+	if contains {
+		return r
+	}
+
+	r = strings.Contains(i.Pattern, "${"+fieldName+"}")
+	i.fieldsInPattern[fieldName] = r
+	return r
 }
 
 // FromMap ...
@@ -67,6 +81,8 @@ func (i Config) FromMap(m map[string]interface{}) error {
 	if v != nil {
 		i.Pattern = v.(string)
 	}
+
+	i.fieldsInPattern = make(map[string]bool)
 
 	v = util.ExtractFromMap(m, "startup-line")
 	if v != nil {
@@ -148,29 +164,29 @@ func DetermineConfigFilePath() string {
 	return lookForConfigFile(dir)
 }
 
-// ConfigWithDefaultYamlFile ...
-func ConfigWithDefaultYamlFile() Config {
+// WithDefaultYamlFile ...
+func WithDefaultYamlFile() Config {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
 		log.Println("config file not found, take default config")
-		return ConfigWithYaml(config.DefaultYAML)
+		return WithYaml(DefaultYAML)
 	}
 
 	log.Printf("config file: %s\n", path)
-	return ConfigWithYamlFile(path)
+	return WithYamlFile(path)
 }
 
-// ConfigWithYamlFile ...
-func ConfigWithYamlFile(path string) Config {
+// WithYamlFile ...
+func WithYamlFile(path string) Config {
 	log.Printf("config file: %s\n", path)
 
 	yamlText := string(util.ReadFile(path))
-	return ConfigWithYaml(yamlText)
+	return WithYaml(yamlText)
 }
 
-// ConfigWithYaml ...
-func ConfigWithYaml(yamlText string) Config {
+// WithYaml ...
+func WithYaml(yamlText string) Config {
 	r := &ConfigT{
 		Replace: map[string]string{
 			"\\\"": "\"",
@@ -180,11 +196,11 @@ func ConfigWithYaml(yamlText string) Config {
 			"\\\t": "\t",
 		},
 		Pattern:     "",
-		StartupLine: &config.StartupLineT{},
-		LineNo:      &config.ElementT{},
-		UnknownLine: &config.ElementT{},
-		Prefix:      &config.PrefixT{},
-		Fields:      &config.FieldMapT{},
+		StartupLine: &StartupLineT{},
+		LineNo:      &ElementT{},
+		UnknownLine: &ElementT{},
+		Prefix:      &PrefixT{},
+		Fields:      &FieldMapT{},
 	}
 	if err := yaml.Unmarshal([]byte(yamlText), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))

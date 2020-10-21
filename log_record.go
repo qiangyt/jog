@@ -39,15 +39,15 @@ type LogRecordT struct {
 type LogRecord = *LogRecordT
 
 // PrintElement ...
-func (i LogRecord) PrintElement(config Config, element util.Printable, builder *strings.Builder, a string) {
+func (i LogRecord) PrintElement(cfg config.Config, element util.Printable, builder *strings.Builder, a string) {
 	if !element.IsEnabled() {
 		return
 	}
 
 	var color util.Color
-	if config.Colorization {
+	if cfg.Colorization {
 		if i.StartupLine {
-			color = config.StartupLine.Color
+			color = cfg.StartupLine.Color
 		} else {
 			color = element.GetColor(a)
 		}
@@ -61,7 +61,7 @@ func (i LogRecord) PrintElement(config Config, element util.Printable, builder *
 }
 
 // PopulateOtherFields ...
-func (i LogRecord) PopulateOtherFields(cfg Config, result map[string]string) {
+func (i LogRecord) PopulateOtherFields(cfg config.Config, result map[string]string) {
 	if len(i.OtherFields) == 0 {
 		return
 	}
@@ -87,7 +87,7 @@ func (i LogRecord) PopulateOtherFields(cfg Config, result map[string]string) {
 }
 
 // PopulateStandardFields ...
-func (i LogRecord) PopulateStandardFields(cfg Config, result map[string]string) {
+func (i LogRecord) PopulateStandardFields(cfg config.Config, result map[string]string) {
 	if len(i.StandardFields) == 0 {
 		return
 	}
@@ -101,7 +101,7 @@ func (i LogRecord) PopulateStandardFields(cfg Config, result map[string]string) 
 }
 
 // AsFlatLine ...
-func (i LogRecord) AsFlatLine(cfg Config) string {
+func (i LogRecord) AsFlatLine(cfg config.Config) string {
 	builder := &strings.Builder{}
 
 	printStartLine := i.StartupLine && cfg.StartupLine.IsEnabled()
@@ -142,13 +142,13 @@ func (i LogRecord) AsFlatLine(cfg Config) string {
 	return builder.String()
 }
 
-func isStartupLine(cfg Config, raw string) bool {
+func isStartupLine(cfg config.Config, raw string) bool {
 	contains := cfg.StartupLine.Contains
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(cfg Config, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(cfg config.Config, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		OtherFields:    make(map[string]util.AnyValue),

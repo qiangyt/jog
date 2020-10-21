@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/config"
 	"github.com/qiangyt/jog/util"
 )
 
@@ -17,7 +18,7 @@ var readTimeout time.Duration = time.Millisecond * 200
 var followCheckInterval = time.Millisecond * 200
 
 // ProcessRawLine ...
-func ProcessRawLine(cfg Config, cmdLine CommandLine, lineNo int, rawLine string) {
+func ProcessRawLine(cfg config.Config, cmdLine CommandLine, lineNo int, rawLine string) {
 	event := ParseAsRecord(cfg, lineNo, rawLine)
 	var line = event.AsFlatLine(cfg)
 	if len(line) > 0 {
@@ -26,7 +27,7 @@ func ProcessRawLine(cfg Config, cmdLine CommandLine, lineNo int, rawLine string)
 }
 
 // ProcessLocalFile ...
-func ProcessLocalFile(cfg Config, cmdLine CommandLine, follow bool, localFilePath string) {
+func ProcessLocalFile(cfg config.Config, cmdLine CommandLine, follow bool, localFilePath string) {
 	var offset int64 = 0
 	var lineNo int = 1
 
@@ -42,7 +43,7 @@ func ProcessLocalFile(cfg Config, cmdLine CommandLine, follow bool, localFilePat
 }
 
 // ReadLocalFile ...
-func ReadLocalFile(cfg Config, cmdLine CommandLine, localFilePath string, offset int64, lineNo int) (int64, int) {
+func ReadLocalFile(cfg config.Config, cmdLine CommandLine, localFilePath string, offset int64, lineNo int) (int64, int) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
@@ -112,7 +113,7 @@ func readRawLine(buf *bufio.Reader) (string, error) {
 }
 
 // ProcessReader ...
-func ProcessReader(cfg Config, cmdLine CommandLine, reader io.Reader, lineNo int) int {
+func ProcessReader(cfg config.Config, cmdLine CommandLine, reader io.Reader, lineNo int) int {
 	buf := bufio.NewReader(reader)
 	isEOF := false
 

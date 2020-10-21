@@ -58,13 +58,13 @@ func (i Field) Reset() {
 
 // UnmarshalYAML ...
 func (i Field) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := util.UnmarshalYAML(i, unmarshal)
+	e := UnmarshalYAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i Field) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }
 
 // NotEnum ...

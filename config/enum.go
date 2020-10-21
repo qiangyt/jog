@@ -16,12 +16,12 @@ type Enum = *EnumT
 
 // UnmarshalYAML ...
 func (i Enum) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.UnmarshalYAML(i, unmarshal)
+	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Enum) MarshalYAML() (interface{}, error) {
-	return util.MarshalYAML(i)
+	return MarshalYAML(i)
 }
 
 // Reset ...
