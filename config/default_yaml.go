@@ -21,8 +21,7 @@ prefix:
   color: FgBlue
 
 fields:
-  others:
-    include-hidden-fields: true
+  unknown:
     name:
       color: FgDefault,OpBold
     separator:

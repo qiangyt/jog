@@ -13,22 +13,22 @@ import (
 	"github.com/qiangyt/jog/util"
 )
 
-// StandardFieldT ...
-type StandardFieldT struct {
+// FieldValueT ...
+type FieldValueT struct {
 	Value  util.AnyValue
 	Config config.Field
 }
 
-// StandardField ...
-type StandardField = *StandardFieldT
+// FieldValue ...
+type FieldValue = *FieldValueT
 
 // LogRecordT ...
 type LogRecordT struct {
 	LineNo int
 
 	Prefix         string
-	StandardFields []StandardField
-	OtherFields    map[string]util.AnyValue
+	StandardFields map[string]FieldValue
+	UnknownFields  map[string]util.AnyValue
 	Raw            string
 
 	Unknown     bool
@@ -60,19 +60,19 @@ func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable
 	element.PrintAfter(color, builder)
 }
 
-// PopulateOtherFields ...
-func (i LogRecord) PopulateOtherFields(cfg config.Configuration, result map[string]string) {
-	if len(i.OtherFields) == 0 {
+// PopulateUnknownFields ...
+func (i LogRecord) PopulateUnknownFields(cfg config.Configuration, unknownFields map[string]util.AnyValue, result map[string]string) {
+	if len(unknownFields) == 0 {
 		return
 	}
 
-	n := cfg.Fields.Others.Name
-	s := cfg.Fields.Others.Separator
-	v := cfg.Fields.Others.Value
+	n := cfg.Fields.Unknown.Name
+	s := cfg.Fields.Unknown.Separator
+	v := cfg.Fields.Unknown.Value
 
 	builder := &strings.Builder{}
 	first := true
-	for fName, fValue := range i.OtherFields {
+	for fName, fValue := range unknownFields {
 		if !first {
 			builder.WriteString(", ")
 		}
@@ -83,16 +83,16 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, result map[stri
 		i.PrintElement(cfg, v, builder, fValue.String())
 	}
 
-	result["others"] = builder.String()
+	result["unknown"] = builder.String()
 }
 
 // PopulateStandardFields ...
-func (i LogRecord) PopulateStandardFields(cfg config.Configuration, result map[string]string) {
-	if len(i.StandardFields) == 0 {
+func (i LogRecord) PopulateStandardFields(cfg config.Configuration, standardFields map[string]FieldValue, result map[string]string) {
+	if len(standardFields) == 0 {
 		return
 	}
 
-	for _, f := range i.StandardFields {
+	for _, f := range standardFields {
 		builder := &strings.Builder{}
 		i.PrintElement(cfg, f.Config, builder, f.Value.String())
 
@@ -127,8 +127,8 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 
 		result := make(map[string]string)
 
-		i.PopulateOtherFields(cfg, result)
-		i.PopulateStandardFields(cfg, result)
+		i.PopulateUnknownFields(cfg, i.UnknownFields, result)
+		i.PopulateStandardFields(cfg, i.StandardFields, result)
 
 		builder.WriteString(os.Expand(cfg.Pattern, func(fieldName string) string {
 			return result[fieldName]
@@ -151,8 +151,8 @@ func isStartupLine(cfg config.Configuration, raw string) bool {
 func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
-		OtherFields:    make(map[string]util.AnyValue),
-		StandardFields: make([]StandardField, 0, 16),
+		UnknownFields:  make(map[string]util.AnyValue),
+		StandardFields: make(map[string]FieldValue),
 		Raw:            rawLine,
 		Unknown:        true,
 		StartupLine:    isStartupLine(cfg, rawLine),
@@ -191,10 +191,10 @@ func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogReco
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
-			f := &StandardFieldT{Value: v, Config: fConfig}
-			r.StandardFields = append(r.StandardFields, f)
+			f := &FieldValueT{Value: v, Config: fConfig}
+			r.StandardFields[fName] = f
 		} else {
-			r.OtherFields[fName] = v
+			r.UnknownFields[fName] = v
 		}
 	}
 
