@@ -185,7 +185,7 @@ func ParseAsRecord(cfg config.StaticConfig, lineNo int, rawLine string) LogRecor
 	}
 	r.Unknown = false
 
-	standardsFieldConfig := cfg.Fields.StandardsMap
+	standardsFieldConfig := cfg.Fields.Standards
 	for fName, fValue := range allFields {
 		v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
 
