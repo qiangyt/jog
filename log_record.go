@@ -85,7 +85,7 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields m
 	}
 
 	for fName, fValue := range implicitStandardFields {
-		if !nameElement.IsEnabled() {
+		if !fValue.Config.IsEnabled() {
 			continue
 		}
 
