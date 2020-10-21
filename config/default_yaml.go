@@ -122,7 +122,7 @@ fields:
     case-sensitive: false
     color: FgDefault
   stacktrace:
-    alias: "err, error, stack, stack_trace, stack-trace, @stack, @stack_trace, @stack-trace, @stacktrace"
+    alias: "err, error, stack, stack_trace, stack-trace, @stack, @stack_trace, @stack-trace, @stacktrace, error.stack_trace, @error.stack_trace"
     case-sensitive: false
     color: FgRed
     before: "\nStack trace: \n"

@@ -6,6 +6,8 @@
 2. Refine default template: some fields are printed with different color and style, some fields are hidden if be implicit.
 3. Fix: should not print a implicit field if its print attribute is false.
 4. Fix: for bunyan logger, it logger field takes 'id' as name, but then not printed.
+5. Enhancement: ${others} fields are sorted by alphabet order.
+6. Enhancement: detect logback error stacktrace.
 
 # v0.9.15.1
 1. Fix: regression by regression by https://github.com/qiangyt/jog/commit/cea3edbb5f6c19079e21688d657a85a5587d4394
