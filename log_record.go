@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/gookit/goutil/strutil"
@@ -66,35 +67,46 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields m
 	separatorElement := cfg.Fields.Others.Separator
 	unknownFieldValueElement := cfg.Fields.Others.Value
 
+	// sort field names
+	var fNames []string
+	for fName := range unknownFields {
+		fNames = append(fNames, fName)
+	}
+	for fName := range implicitStandardFields {
+		fNames = append(fNames, fName)
+	}
+	sort.Strings(fNames)
+
 	builder := &strings.Builder{}
 	first := true
 
-	for fName, fValue := range unknownFields {
-		if !first {
-			builder.WriteString(", ")
+	for _, fName := range fNames {
+		fValueUnknown := unknownFields[fName]
+		if fValueUnknown != nil {
+			if !first {
+				builder.WriteString(", ")
+			}
+			first = false
+
+			i.PrintElement(cfg, nameElement, builder, fName)
+			i.PrintElement(cfg, separatorElement, builder, "=")
+			i.PrintElement(cfg, unknownFieldValueElement, builder, fValueUnknown.String())
+		} else {
+			fValueImplicit := implicitStandardFields[fName]
+
+			if !fValueImplicit.Config.IsEnabled() {
+				continue
+			}
+
+			if !first {
+				builder.WriteString(", ")
+			}
+			first = false
+
+			i.PrintElement(cfg, nameElement, builder, fName)
+			i.PrintElement(cfg, separatorElement, builder, "=")
+			i.PrintElement(cfg, fValueImplicit.Config, builder, fValueImplicit.Value.String())
 		}
-		first = false
-
-		i.PrintElement(cfg, nameElement, builder, fName)
-		i.PrintElement(cfg, separatorElement, builder, "=")
-		i.PrintElement(cfg, unknownFieldValueElement, builder, fValue.String())
-	}
-
-	for fName, fValue := range implicitStandardFields {
-		if !fValue.Config.IsEnabled() {
-			continue
-		}
-
-		if !first {
-			builder.WriteString(", ")
-		}
-		first = false
-
-		i.PrintElement(cfg, nameElement, builder, fName)
-		i.PrintElement(cfg, separatorElement, builder, "=")
-		i.PrintElement(cfg, fValue.Config, builder, fValue.Value.String())
-
-		first = false
 	}
 
 	result["others"] = builder.String()
