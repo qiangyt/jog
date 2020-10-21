@@ -1,3 +1,12 @@
+# v0.9.16
+1. Enhancement: if a field doesnot explicitly appears in output print pattern, I name such field as `implicit field`,
+   and now implicit field will be printed in `${others}`.
+   This is incompatible behavior - for old versions, implicit fields are hidden. Now begins from this version, to hide
+   the implicit field, must set `print` attribute as `false`. There're examples in default configuration template.
+2. Refine default template: some fields are printed with different color and style, some fields are hidden if be implicit.
+3. Fix: should not print a implicit field if its print attribute is false.
+4. Fix: for bunyan logger, it logger field takes 'id' as name, but then not printed.
+
 # v0.9.15.1
 1. Fix: regression by regression by https://github.com/qiangyt/jog/commit/cea3edbb5f6c19079e21688d657a85a5587d4394
 
