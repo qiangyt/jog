@@ -85,7 +85,7 @@ func ColorsFromLabel(label string) (color.Style, error) {
 	for _, colorNai := range colorNais {
 		c, has := Colors[colorNai]
 		if !has {
-			return nil, fmt.Errorf("unknown color nai '%s' in '%s'. allowed: %v", colorNai, label, Colors)
+			return nil, fmt.Errorf("unknown color name '%s' in '%s'. allowed: %v", colorNai, label, Colors)
 		}
 		r = append(r, c)
 	}

@@ -10,7 +10,7 @@ startup-line:
 
 line-no:
   print: true
-  color: FgDefault
+  color: FgGray
 
 unknown-line:
   print: true
@@ -37,22 +37,22 @@ fields:
       default: WARN
       DEBUG:
         alias: debug,20
-        color: FgBlue
+        color: FgBlue,OpBold
       INFO:
         alias: info,30
         color: FgBlue,OpBold
       ERROR:
         alias: error,err,critical,50
-        color: FgRed
+        color: FgRed,OpBold
       WARN:
         alias: warn,warning,40
         color: FgYellow,OpBold
       TRACE:
         alias: trace,10
-        color: FgCyan
+        color: FgGreen,OpBold
       FINE:
         alias: fine
-        color: FgCyan
+        color: FgCyan,OpBold
       FATAL:
         alias: fatal,60
         color: FgRed,OpBold
@@ -94,7 +94,7 @@ fields:
   logger:
     alias: "id, logger_name, logger-name, loggername, @id, @logger_name, @logger-name, @loggername, @logger"
     case-sensitive: false
-    color: FgDefault
+    color: FgDefault, OpUnderscore
     compress-prefix:
       enabled: true
       separators: . , /
@@ -103,7 +103,7 @@ fields:
   message:
     alias: "msg, @msg, @message"
     case-sensitive: false
-    color: FgBlue
+    color: FgCyan
   method:
     alias: "methodname, method-name, method_name, func, funcname, func-name, func_name, function, functionname, function-name, function_name,  @method, @methodname, @method-name, @method_name, @func, @funcname, @func-name, @func_name, @function, @functionname, @function-name, @function_name"
     case-sensitive: false
@@ -124,7 +124,7 @@ fields:
   stacktrace:
     alias: "err, error, stack, stack_trace, stack-trace, @stack, @stack_trace, @stack-trace, @stacktrace"
     case-sensitive: false
-    color: FgDefault
+    color: FgRed
     before: "\nStack trace: \n"
   thread:
     alias: "thread_name, thread-name, threadname, @thread, @thread_name, @thread-name, @threadname"
