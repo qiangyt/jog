@@ -21,9 +21,9 @@ prefix:
   color: FgBlue
 
 fields:
-  unknown:
+  others:
     name:
-      color: FgDefault,OpBold
+      color: FgYellow
     separator:
       label: =
       color: FgDefault
@@ -57,10 +57,12 @@ fields:
         alias: fatal,60
         color: FgRed,OpBold
   app:
+    print: false
     alias: "name, @name, @app"
     case-sensitive: false
     color: FgDefault
   class:
+    print: false
     alias: "classname, class-name, @class_name, @classname, @class-name, @class_name"
     case-sensitive: false
     color: FgDefault
@@ -81,6 +83,7 @@ fields:
       separators: /, \
       action: remove
   host:
+    print: false
     alias: "hostname, host-name, host_name, @host, @hostname, @host-name, @host_name"
     case-sensitive: false
     color: FgDefault
@@ -100,12 +103,13 @@ fields:
   message:
     alias: "msg, @msg, @message"
     case-sensitive: false
-    color: FgDefault
+    color: FgBlue
   method:
     alias: "methodname, method-name, method_name, func, funcname, func-name, func_name, function, functionname, function-name, function_name,  @method, @methodname, @method-name, @method_name, @func, @funcname, @func-name, @func_name, @function, @functionname, @function-name, @function_name"
     case-sensitive: false
     color: FgDefault
   pid:
+    print: false
     alias: "process, process-id, processid, process_id, @pid, @process, @process-id, @processid, @process_id"
     case-sensitive: false
     color: FgDefault
