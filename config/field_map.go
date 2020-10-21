@@ -46,6 +46,10 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 	}
 
 	for k, v := range m {
+		//if i.config.HasFieldInPattern(k) == false {
+
+		//}
+
 		var f Field
 		if err := util.UnmashalYAMLAgain(v, &f); err != nil {
 			return err

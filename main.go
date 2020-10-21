@@ -24,7 +24,7 @@ func ParseConfigExpression(expr string) (string, string, error) {
 }
 
 // ReadConfig ...
-func ReadConfig(configFilePath string) config.Config {
+func ReadConfig(configFilePath string) config.StaticConfig {
 	if len(configFilePath) == 0 {
 		return config.WithDefaultYamlFile()
 	}
@@ -45,7 +45,7 @@ func PrintConfigItem(m map[string]interface{}, configItemPath string) {
 }
 
 // SetConfigItem ...
-func SetConfigItem(cfg config.Config, m map[string]interface{}, configItemPath string, configItemValue string) {
+func SetConfigItem(cfg config.StaticConfig, m map[string]interface{}, configItemPath string, configItemValue string) {
 	if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
 		panic(errors.Wrap(err, ""))
 	}

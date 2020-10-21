@@ -22,6 +22,7 @@ prefix:
 
 fields:
   others:
+    include-hidden-fields: true
     name:
       color: FgDefault,OpBold
     separator:

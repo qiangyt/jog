@@ -11,8 +11,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// ConfigT ...
-type ConfigT struct {
+// StaticConfigT ...
+type StaticConfigT struct {
 	// TODO: configurable
 	Colorization    bool
 	Replace         map[string]string
@@ -25,21 +25,21 @@ type ConfigT struct {
 	Fields          FieldMap
 }
 
-// Config ...
-type Config = *ConfigT
+// StaticConfig ...
+type StaticConfig = *StaticConfigT
 
 // UnmarshalYAML ...
-func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (i StaticConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
-func (i Config) MarshalYAML() (interface{}, error) {
+func (i StaticConfig) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
 // Reset ...
-func (i Config) Reset() {
+func (i StaticConfig) Reset() {
 	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
@@ -52,7 +52,7 @@ func (i Config) Reset() {
 }
 
 // HasFieldInPattern ...
-func (i Config) HasFieldInPattern(fieldName string) bool {
+func (i StaticConfig) HasFieldInPattern(fieldName string) bool {
 	r, contains := i.fieldsInPattern[fieldName]
 	if contains {
 		return r
@@ -64,7 +64,7 @@ func (i Config) HasFieldInPattern(fieldName string) bool {
 }
 
 // FromMap ...
-func (i Config) FromMap(m map[string]interface{}) error {
+func (i StaticConfig) FromMap(m map[string]interface{}) error {
 	var v interface{}
 
 	v = util.ExtractFromMap(m, "colorization")
@@ -123,7 +123,7 @@ func (i Config) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i Config) ToMap() map[string]interface{} {
+func (i StaticConfig) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["replace"] = i.Replace
 	r["pattern"] = i.Pattern
@@ -165,7 +165,7 @@ func DetermineConfigFilePath() string {
 }
 
 // WithDefaultYamlFile ...
-func WithDefaultYamlFile() Config {
+func WithDefaultYamlFile() StaticConfig {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
@@ -178,7 +178,7 @@ func WithDefaultYamlFile() Config {
 }
 
 // WithYamlFile ...
-func WithYamlFile(path string) Config {
+func WithYamlFile(path string) StaticConfig {
 	log.Printf("config file: %s\n", path)
 
 	yamlText := string(util.ReadFile(path))
@@ -186,8 +186,8 @@ func WithYamlFile(path string) Config {
 }
 
 // WithYaml ...
-func WithYaml(yamlText string) Config {
-	r := &ConfigT{
+func WithYaml(yamlText string) StaticConfig {
+	r := &StaticConfigT{
 		Replace: map[string]string{
 			"\\\"": "\"",
 			"\\'":  "'",
