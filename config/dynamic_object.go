@@ -1,7 +1,7 @@
 package config
 
-// Dynamic ...
-type Dynamic interface {
+// DynamicObject ...
+type DynamicObject interface {
 	Reset()
 	FromMap(m map[string]interface{}) error
 	ToMap() map[string]interface{}
@@ -9,7 +9,7 @@ type Dynamic interface {
 }
 
 // UnmarshalYAML ...
-func UnmarshalYAML(i Dynamic, unmarshal func(interface{}) error) error {
+func UnmarshalYAML(i DynamicObject, unmarshal func(interface{}) error) error {
 	m := make(map[string]interface{})
 	err := unmarshal(&m)
 	if err != nil {
@@ -21,6 +21,6 @@ func UnmarshalYAML(i Dynamic, unmarshal func(interface{}) error) error {
 }
 
 // MarshalYAML ...
-func MarshalYAML(i Dynamic) (interface{}, error) {
+func MarshalYAML(i DynamicObject) (interface{}, error) {
 	return i.ToMap(), nil
 }
