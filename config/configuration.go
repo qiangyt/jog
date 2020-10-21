@@ -15,15 +15,16 @@ import (
 // ConfigurationT ...
 type ConfigurationT struct {
 	// TODO: configurable
-	Colorization    bool
-	Replace         map[string]string
-	Pattern         string
-	fieldsInPattern map[string]bool
-	StartupLine     StartupLine `yaml:"startup-line"`
-	LineNo          Element     `yaml:"line-no"`
-	UnknownLine     Element     `yaml:"unknown-line"`
-	Prefix          Prefix
-	Fields          FieldMap
+	Colorization            bool
+	Replace                 map[string]string
+	Pattern                 string
+	fieldsInPattern         map[string]bool
+	HasOthersFieldInPattern bool
+	StartupLine             StartupLine `yaml:"startup-line"`
+	LineNo                  Element     `yaml:"line-no"`
+	UnknownLine             Element     `yaml:"unknown-line"`
+	Prefix                  Prefix
+	Fields                  FieldMap
 }
 
 // Configuration ...
@@ -57,6 +58,7 @@ func (i Configuration) Reset() {
 	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
+	i.HasOthersFieldInPattern = false
 	i.fieldsInPattern = make(map[string]bool)
 	i.StartupLine.Reset()
 	i.LineNo.Reset()
@@ -94,9 +96,8 @@ func (i Configuration) FromMap(m map[string]interface{}) error {
 	v = util.ExtractFromMap(m, "pattern")
 	if v != nil {
 		i.Pattern = v.(string)
+		i.HasOthersFieldInPattern = i.HasFieldInPattern("others")
 	}
-
-	i.fieldsInPattern = make(map[string]bool)
 
 	v = util.ExtractFromMap(m, "startup-line")
 	if v != nil {

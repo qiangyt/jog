@@ -60,39 +60,53 @@ func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable
 	element.PrintAfter(color, builder)
 }
 
-// PopulateUnknownFields ...
-func (i LogRecord) PopulateUnknownFields(cfg config.Configuration, unknownFields map[string]util.AnyValue, result map[string]string) {
-	if len(unknownFields) == 0 {
+// PopulateOtherFields ...
+func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields map[string]util.AnyValue, implicitStandardFields map[string]FieldValue, result map[string]string) {
+	if !cfg.HasOthersFieldInPattern {
 		return
 	}
 
-	n := cfg.Fields.Unknown.Name
-	s := cfg.Fields.Unknown.Separator
-	v := cfg.Fields.Unknown.Value
+	nameElement := cfg.Fields.Others.Name
+	separatorElement := cfg.Fields.Others.Separator
+	unknownFieldValueElement := cfg.Fields.Others.Value
 
 	builder := &strings.Builder{}
 	first := true
+
 	for fName, fValue := range unknownFields {
 		if !first {
 			builder.WriteString(", ")
 		}
 		first = false
 
-		i.PrintElement(cfg, n, builder, fName)
-		i.PrintElement(cfg, s, builder, "=")
-		i.PrintElement(cfg, v, builder, fValue.String())
+		i.PrintElement(cfg, nameElement, builder, fName)
+		i.PrintElement(cfg, separatorElement, builder, "=")
+		i.PrintElement(cfg, unknownFieldValueElement, builder, fValue.String())
 	}
 
-	result["unknown"] = builder.String()
+	for fName, fValue := range implicitStandardFields {
+		if !nameElement.IsEnabled() {
+			continue
+		}
+
+		if !first {
+			builder.WriteString(", ")
+		}
+		first = false
+
+		i.PrintElement(cfg, nameElement, builder, fName)
+		i.PrintElement(cfg, separatorElement, builder, "=")
+		i.PrintElement(cfg, fValue.Config, builder, fValue.Value.String())
+
+		first = false
+	}
+
+	result["others"] = builder.String()
 }
 
-// PopulateStandardFields ...
-func (i LogRecord) PopulateStandardFields(cfg config.Configuration, standardFields map[string]FieldValue, result map[string]string) {
-	if len(standardFields) == 0 {
-		return
-	}
-
-	for _, f := range standardFields {
+// PopulateExplicitStandardFields ...
+func (i LogRecord) PopulateExplicitStandardFields(cfg config.Configuration, explicitStandardFields map[string]FieldValue, result map[string]string) {
+	for _, f := range explicitStandardFields {
 		builder := &strings.Builder{}
 		i.PrintElement(cfg, f.Config, builder, f.Value.String())
 
@@ -125,10 +139,12 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 			i.PrintElement(cfg, cfg.Prefix, builder, strutil.MustString(i.Prefix))
 		}
 
+		explicitStandardFields, implicitStandardFields := i.ExtractStandardFields(cfg)
+
 		result := make(map[string]string)
 
-		i.PopulateUnknownFields(cfg, i.UnknownFields, result)
-		i.PopulateStandardFields(cfg, i.StandardFields, result)
+		i.PopulateOtherFields(cfg, i.UnknownFields, implicitStandardFields, result)
+		i.PopulateExplicitStandardFields(cfg, explicitStandardFields, result)
 
 		builder.WriteString(os.Expand(cfg.Pattern, func(fieldName string) string {
 			return result[fieldName]
@@ -140,6 +156,22 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 	}
 
 	return builder.String()
+}
+
+// ExtractStandardFields ...
+func (i LogRecord) ExtractStandardFields(cfg config.Configuration) (map[string]FieldValue, map[string]FieldValue) {
+	explicts := make(map[string]FieldValue)
+	implicits := make(map[string]FieldValue)
+
+	for n, f := range i.StandardFields {
+		if cfg.HasFieldInPattern(n) {
+			explicts[n] = f
+		} else {
+			implicits[n] = f
+		}
+	}
+
+	return explicts, implicits
 }
 
 func isStartupLine(cfg config.Configuration, raw string) bool {

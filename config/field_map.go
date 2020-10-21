@@ -9,7 +9,7 @@ import (
 
 // FieldMapT ...
 type FieldMapT struct {
-	Unknown           UnknownFields
+	Others            OtherFields
 	standardsOriginal map[string]Field
 	Standards         map[string]Field
 }
@@ -19,8 +19,8 @@ type FieldMap = *FieldMapT
 
 // Reset ...
 func (i FieldMap) Reset() {
-	i.Unknown = &UnknownFieldsT{}
-	i.Unknown.Reset()
+	i.Others = &OtherFieldsT{}
+	i.Others.Reset()
 
 	i.standardsOriginal = make(map[string]Field)
 	i.Standards = make(map[string]Field)
@@ -43,9 +43,9 @@ func (i FieldMap) Init(cfg Configuration) {
 
 // FromMap ...
 func (i FieldMap) FromMap(m map[string]interface{}) error {
-	unknownV := util.ExtractFromMap(m, "unknown")
-	if unknownV != nil {
-		if err := util.UnmashalYAMLAgain(unknownV, &i.Unknown); err != nil {
+	othersV := util.ExtractFromMap(m, "others")
+	if othersV != nil {
+		if err := util.UnmashalYAMLAgain(othersV, &i.Others); err != nil {
 			return err
 		}
 	}
@@ -96,7 +96,7 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 // ToMap ...
 func (i FieldMap) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
-	r["unknown"] = i.Unknown.ToMap()
+	r["others"] = i.Others.ToMap()
 
 	for k, v := range i.standardsOriginal {
 		r[k] = v.ToMap()

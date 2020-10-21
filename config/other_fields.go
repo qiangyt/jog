@@ -1,17 +1,17 @@
 package config
 
-// UnknownFieldsT ...
-type UnknownFieldsT struct {
+// OtherFieldsT ...
+type OtherFieldsT struct {
 	Name      Element
 	Separator SeparatorField
 	Value     Element
 }
 
-// UnknownFields ...
-type UnknownFields = *UnknownFieldsT
+// OtherFields ...
+type OtherFields = *OtherFieldsT
 
 // Reset ...
-func (i UnknownFields) Reset() {
+func (i OtherFields) Reset() {
 	i.Name = &ElementT{}
 	i.Name.Reset()
 
@@ -23,7 +23,7 @@ func (i UnknownFields) Reset() {
 }
 
 // ToMap ...
-func (i UnknownFields) ToMap() map[string]interface{} {
+func (i OtherFields) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["name"] = i.Name.ToMap()
 	r["separator"] = i.Separator.ToMap()
