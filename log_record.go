@@ -213,14 +213,14 @@ func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogReco
 	}
 	r.Unknown = false
 
-	standardsFieldConfig := cfg.Fields.Standards
+	standardsFieldConfig := cfg.Fields.StandardsWithAllAliases
 	for fName, fValue := range allFields {
 		v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
 			f := &FieldValueT{Value: v, Config: fConfig}
-			r.StandardFields[fName] = f
+			r.StandardFields[f.Config.Name] = f
 		} else {
 			r.UnknownFields[fName] = v
 		}

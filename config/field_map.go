@@ -9,9 +9,9 @@ import (
 
 // FieldMapT ...
 type FieldMapT struct {
-	Others            OtherFields
-	standardsOriginal map[string]Field
-	Standards         map[string]Field
+	Others                  OtherFields
+	StandardsWithAllAliases map[string]Field
+	Standards               map[string]Field
 }
 
 // FieldMap ...
@@ -22,8 +22,8 @@ func (i FieldMap) Reset() {
 	i.Others = &OtherFieldsT{}
 	i.Others.Reset()
 
-	i.standardsOriginal = make(map[string]Field)
 	i.Standards = make(map[string]Field)
+	i.StandardsWithAllAliases = make(map[string]Field)
 }
 
 // UnmarshalYAML ...
@@ -60,17 +60,20 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 			return err
 		}
 
+		if k == "logger" {
+			k = "logger"
+		}
 		f.Name = k
-		i.standardsOriginal[k] = f
+		i.StandardsWithAllAliases[k] = f
 		i.Standards[k] = f
 
 		if !f.CaseSensitive {
 			lk := strings.ToLower(k)
 			if lk != k {
-				if old, alreadyHas := i.Standards[lk]; old != f && alreadyHas {
+				if old, alreadyHas := i.StandardsWithAllAliases[lk]; old != f && alreadyHas {
 					return fmt.Errorf("duplicated field name: %s", lk)
 				}
-				i.Standards[lk] = f
+				i.StandardsWithAllAliases[lk] = f
 			}
 		}
 
@@ -81,10 +84,10 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 			aliases = f.Alias.LowercasedValues
 		}
 		for aliasName := range aliases {
-			if old, alreadyHas := i.Standards[aliasName]; old != f && alreadyHas {
+			if old, alreadyHas := i.StandardsWithAllAliases[aliasName]; old != f && alreadyHas {
 				return fmt.Errorf("duplicated field alias name: %s", aliasName)
 			}
-			i.Standards[aliasName] = f
+			i.StandardsWithAllAliases[aliasName] = f
 		}
 
 		delete(m, k)
@@ -98,7 +101,7 @@ func (i FieldMap) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["others"] = i.Others.ToMap()
 
-	for k, v := range i.standardsOriginal {
+	for k, v := range i.Standards {
 		r[k] = v.ToMap()
 	}
 	return r
