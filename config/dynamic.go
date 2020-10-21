@@ -5,7 +5,7 @@ type Dynamic interface {
 	Reset()
 	FromMap(m map[string]interface{}) error
 	ToMap() map[string]interface{}
-	Init(cfg StaticConfig)
+	Init(cfg Configuration)
 }
 
 // UnmarshalYAML ...

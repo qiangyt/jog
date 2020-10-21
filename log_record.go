@@ -39,7 +39,7 @@ type LogRecordT struct {
 type LogRecord = *LogRecordT
 
 // PrintElement ...
-func (i LogRecord) PrintElement(cfg config.StaticConfig, element util.Printable, builder *strings.Builder, a string) {
+func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable, builder *strings.Builder, a string) {
 	if !element.IsEnabled() {
 		return
 	}
@@ -61,7 +61,7 @@ func (i LogRecord) PrintElement(cfg config.StaticConfig, element util.Printable,
 }
 
 // PopulateOtherFields ...
-func (i LogRecord) PopulateOtherFields(cfg config.StaticConfig, result map[string]string) {
+func (i LogRecord) PopulateOtherFields(cfg config.Configuration, result map[string]string) {
 	if len(i.OtherFields) == 0 {
 		return
 	}
@@ -87,7 +87,7 @@ func (i LogRecord) PopulateOtherFields(cfg config.StaticConfig, result map[strin
 }
 
 // PopulateStandardFields ...
-func (i LogRecord) PopulateStandardFields(cfg config.StaticConfig, result map[string]string) {
+func (i LogRecord) PopulateStandardFields(cfg config.Configuration, result map[string]string) {
 	if len(i.StandardFields) == 0 {
 		return
 	}
@@ -101,7 +101,7 @@ func (i LogRecord) PopulateStandardFields(cfg config.StaticConfig, result map[st
 }
 
 // AsFlatLine ...
-func (i LogRecord) AsFlatLine(cfg config.StaticConfig) string {
+func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 	builder := &strings.Builder{}
 
 	printStartLine := i.StartupLine && cfg.StartupLine.IsEnabled()
@@ -142,13 +142,13 @@ func (i LogRecord) AsFlatLine(cfg config.StaticConfig) string {
 	return builder.String()
 }
 
-func isStartupLine(cfg config.StaticConfig, raw string) bool {
+func isStartupLine(cfg config.Configuration, raw string) bool {
 	contains := cfg.StartupLine.Contains
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(cfg config.StaticConfig, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		OtherFields:    make(map[string]util.AnyValue),

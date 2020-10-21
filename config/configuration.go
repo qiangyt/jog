@@ -12,8 +12,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// StaticConfigT ...
-type StaticConfigT struct {
+// ConfigurationT ...
+type ConfigurationT struct {
 	// TODO: configurable
 	Colorization    bool
 	Replace         map[string]string
@@ -26,21 +26,21 @@ type StaticConfigT struct {
 	Fields          FieldMap
 }
 
-// StaticConfig ...
-type StaticConfig = *StaticConfigT
+// Configuration ...
+type Configuration = *ConfigurationT
 
 // UnmarshalYAML ...
-func (i StaticConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (i Configuration) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return UnmarshalYAML(i, unmarshal)
 }
 
 // MarshalYAML ...
-func (i StaticConfig) MarshalYAML() (interface{}, error) {
+func (i Configuration) MarshalYAML() (interface{}, error) {
 	return MarshalYAML(i)
 }
 
 // Init ...
-func (i StaticConfig) Init(cfg StaticConfig) {
+func (i Configuration) Init(cfg Configuration) {
 	if cfg != nil {
 		panic(fmt.Errorf("root configure initialization"))
 	}
@@ -53,7 +53,7 @@ func (i StaticConfig) Init(cfg StaticConfig) {
 }
 
 // Reset ...
-func (i StaticConfig) Reset() {
+func (i Configuration) Reset() {
 	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
@@ -66,7 +66,7 @@ func (i StaticConfig) Reset() {
 }
 
 // HasFieldInPattern ...
-func (i StaticConfig) HasFieldInPattern(fieldName string) bool {
+func (i Configuration) HasFieldInPattern(fieldName string) bool {
 	r, contains := i.fieldsInPattern[fieldName]
 	if contains {
 		return r
@@ -78,7 +78,7 @@ func (i StaticConfig) HasFieldInPattern(fieldName string) bool {
 }
 
 // FromMap ...
-func (i StaticConfig) FromMap(m map[string]interface{}) error {
+func (i Configuration) FromMap(m map[string]interface{}) error {
 	var v interface{}
 
 	v = util.ExtractFromMap(m, "colorization")
@@ -137,7 +137,7 @@ func (i StaticConfig) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i StaticConfig) ToMap() map[string]interface{} {
+func (i Configuration) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["replace"] = i.Replace
 	r["pattern"] = i.Pattern
@@ -179,7 +179,7 @@ func DetermineConfigFilePath() string {
 }
 
 // WithDefaultYamlFile ...
-func WithDefaultYamlFile() StaticConfig {
+func WithDefaultYamlFile() Configuration {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
@@ -192,7 +192,7 @@ func WithDefaultYamlFile() StaticConfig {
 }
 
 // WithYamlFile ...
-func WithYamlFile(path string) StaticConfig {
+func WithYamlFile(path string) Configuration {
 	log.Printf("config file: %s\n", path)
 
 	yamlText := string(util.ReadFile(path))
@@ -200,8 +200,8 @@ func WithYamlFile(path string) StaticConfig {
 }
 
 // WithYaml ...
-func WithYaml(yamlText string) StaticConfig {
-	r := &StaticConfigT{
+func WithYaml(yamlText string) Configuration {
+	r := &ConfigurationT{
 		Replace: map[string]string{
 			"\\\"": "\"",
 			"\\'":  "'",

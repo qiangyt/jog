@@ -25,7 +25,7 @@ func (i Enum) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i Enum) Init(cfg StaticConfig) {
+func (i Enum) Init(cfg Configuration) {
 
 }
 

@@ -40,7 +40,7 @@ func (i EnumMap) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i EnumMap) Init(cfg StaticConfig) {
+func (i EnumMap) Init(cfg Configuration) {
 
 }
 

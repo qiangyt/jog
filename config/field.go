@@ -68,7 +68,7 @@ func (i Field) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i Field) Init(cfg StaticConfig) {
+func (i Field) Init(cfg Configuration) {
 
 }
 

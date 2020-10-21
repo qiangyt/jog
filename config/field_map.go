@@ -37,7 +37,7 @@ func (i FieldMap) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i FieldMap) Init(cfg StaticConfig) {
+func (i FieldMap) Init(cfg Configuration) {
 
 }
 

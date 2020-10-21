@@ -29,7 +29,7 @@ func (i Element) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i Element) Init(cfg StaticConfig) {
+func (i Element) Init(cfg Configuration) {
 
 }
 

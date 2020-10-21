@@ -72,7 +72,7 @@ func (i CompressPrefix) MarshalYAML() (interface{}, error) {
 }
 
 // Init ...
-func (i CompressPrefix) Init(cfg StaticConfig) {
+func (i CompressPrefix) Init(cfg Configuration) {
 
 }
 
