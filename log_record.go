@@ -40,10 +40,6 @@ type LogRecord = *LogRecordT
 
 // PrintElement ...
 func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable, builder *strings.Builder, a string) {
-	if !element.IsEnabled() {
-		return
-	}
-
 	var color util.Color
 	if cfg.Colorization {
 		if i.StartupLine {
