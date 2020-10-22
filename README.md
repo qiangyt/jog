@@ -97,7 +97,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
 ## Status
 
-   Not yet ready for firt release, still keep refactoring and fixing and adding new features. I create pre-release even for single bug fix or small feature. I won't test much before version 1.0 is ready.
+   Not yet ready for first release, still keep refactoring and fixing and adding new features. I create pre-release even for single bug fix or small feature. I won't test much before version 1.0 is ready.
    Just feel free to use it since it wouldn't affect something.
 
 ## License
