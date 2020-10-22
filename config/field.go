@@ -24,7 +24,7 @@ type FieldT struct {
 	ElementT
 
 	Name           string
-	Alias          MultiString
+	Alias          util.MultiString
 	CaseSensitive  bool `yaml:"case-sensitive"`
 	CompressPrefix `yaml:"compress-prefix"`
 	Enums          EnumMap
@@ -41,7 +41,7 @@ func (i Field) Reset() {
 
 	i.Name = ""
 
-	i.Alias = &MultiStringT{}
+	i.Alias = &util.MultiStringT{}
 	i.Alias.Set("")
 
 	i.CaseSensitive = false

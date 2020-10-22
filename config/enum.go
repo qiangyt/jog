@@ -7,7 +7,7 @@ import (
 // EnumT ...
 type EnumT struct {
 	Name  string
-	Alias MultiString
+	Alias util.MultiString
 	Color util.Color
 }
 
@@ -33,7 +33,7 @@ func (i Enum) Init(cfg Configuration) {
 func (i Enum) Reset() {
 	i.Name = ""
 
-	i.Alias = &MultiStringT{}
+	i.Alias = &util.MultiStringT{}
 	i.Alias.Reset()
 
 	i.Color = &util.ColorT{}
