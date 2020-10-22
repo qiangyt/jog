@@ -42,9 +42,10 @@ func PrintHelp() {
 	fmt.Println("  3) with specified config file:        jog -c another.jog.yml app-20200701-1.log")
 	fmt.Println("  4) view docker-compose log:           docker-compose logs | jog")
 	fmt.Println("  5) print the default template:        jog -t")
-	fmt.Println("  6) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
-	fmt.Println("  7) view the WARN level config item:   jog -cg fields.level.enums.WARN")
-	fmt.Println("  8) disable colorization:              jog -cs colorization=false app-20200701-1.log")
+	fmt.Println("  6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
+	fmt.Println("  7) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
+	fmt.Println("  8) view the WARN level config item:   jog -cg fields.level.enums.WARN")
+	fmt.Println("  9) disable colorization:              jog -cs colorization=false app-20200701-1.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
@@ -54,6 +55,7 @@ func PrintHelp() {
 	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
+	fmt.Printf("  -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
@@ -69,6 +71,7 @@ type CommandLineT struct {
 	ConfigItemValue string
 	FollowMode      bool
 	NumberOfLines   int
+	LevelFilters    []string
 }
 
 // CommandLine ...
@@ -81,6 +84,7 @@ func ParseCommandLine() (bool, CommandLine) {
 		Debug:         false,
 		FollowMode:    false,
 		NumberOfLines: -1,
+		LevelFilters:  make([]string, 0),
 	}
 	var err error
 	var hasNumberOfLines = false
@@ -148,6 +152,15 @@ func ParseCommandLine() (bool, CommandLine) {
 				return false, nil
 			} else if arg == "-d" || arg == "--debug" {
 				r.Debug = true
+			} else if arg == "-l" || arg == "--level" {
+				if i+1 >= len(os.Args) {
+					color.Red.Println("Missing level argument\n")
+					PrintHelp()
+					return false, nil
+				}
+
+				r.LevelFilters = append(r.LevelFilters, os.Args[i+1])
+				i++
 			} else {
 				color.Red.Printf("Unknown option: '%s'\n\n", arg)
 				PrintHelp()
