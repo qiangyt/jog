@@ -19,7 +19,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Read from stdin (stream) or local file
 
-   - [ ] Straightforard filtering:
+   - [ ] Straightforward filtering:
       - [x] by logger level
       - [ ] by time range, relative or absolute
 
