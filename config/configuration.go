@@ -25,6 +25,7 @@ type ConfigurationT struct {
 	UnknownLine             Element     `yaml:"unknown-line"`
 	Prefix                  Prefix
 	Fields                  FieldMap
+	LevelField              Field
 }
 
 // Configuration ...
@@ -51,6 +52,14 @@ func (i Configuration) Init(cfg Configuration) {
 	i.UnknownLine.Init(i)
 	i.Prefix.Init(i)
 	i.Fields.Init(i)
+
+	levelField := i.Fields.Standards["level"]
+	if levelField != nil {
+		if !levelField.IsEnum() {
+			panic(fmt.Errorf("invalid configuration: field 'level' must be enum"))
+		}
+	}
+	i.LevelField = levelField
 }
 
 // Reset ...
@@ -65,6 +74,7 @@ func (i Configuration) Reset() {
 	i.UnknownLine.Reset()
 	i.Prefix.Reset()
 	i.Fields.Reset()
+	i.LevelField = nil
 }
 
 // HasFieldInPattern ...
