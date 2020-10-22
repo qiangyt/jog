@@ -10,46 +10,39 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    Feature request is welcomed, for ex. new JSON log format. Submit issue for that please.
 
-   - [x] Detect format, automatically
-
-   - [x] Follow mode, just like `tail -f`, with optional amount of tail lines specified.
-
-   - [x] Most-likely know unknow format via customizeable dictionary
-
-   - [ ] Built-in supports as many as possible formats:
-
+   - [x] Automatically detect various of formats, by customizeable field aliases. For ex.:
       - [x] Logstash
-      - [x] Uber zap
-      - [x] Bunyan (https://github.com/trentm/node-bunyan)
-      - [x] Customizable format. Run `jog -t` to see configuration example.
+      - [x] GOLANG Uber zap
+      - [x] Node.js Bunyan (https://github.com/trentm/node-bunyan)
 
-   - [x] Support Mac OSX, Windows, Linux
+   - [x] Follow mode like `tail -f`, with optional begins from latest specified lines like `tail -n`.
 
-   - [x] Supports customized fields
+   - [x] Read from stdin (stream) or local file
 
-   - [x] Supports nested JSON fields
+   - [] Straightforard filtering:
+      - [x] by logger level
+      - [ ] by time range, relative or absolute
+      - [ ] by other fields (but I'm not quite sure it is needed because `grep` works too)
 
-   - [x] Customizable output pattern
+   - [x] Support JSON log mixed with non-JSON text, includes:
+      - [x] Mised with regular flat log lines, for ex., springboot banner, and PM2 banner
+      - [x] Extra non-JSON prefix, followed by JSON log, for ex., docker-compose multi-services log
 
-   - [x] Customizable output colorization
+   - [x] Supports nested escaped JSON value (escaped by `\"...\"`)
 
-   - [x] Hightlight startup line
+   - [x] Compressed logger name - only first letters of package names are outputed
 
-   - [x]  Support JSON log mixed with non-JSON log line (for ex., springboot banner)
+   - [x] Print line number prefix
 
-   - [ ] Able to directly read many sources:
-      - [x] stdin & stream
-      - [x] local file
-      - [x] multi-services docker-compose log
-      - [x] docker log
-      - [x] OMS-docker (https://github.com/microsoft/OMS-docker)
-      - [ ] aggregate multiple log
+   - [x] Customization. But I think most-likely you no need customization. Anyway, run `jog -t` to see configuration example.
+      - [x] Output pattern
+      - [x] Hightlight startup line
+      - [x] Colorization
+      - [x] Print unknown fields as 'others'
+      - [x] For fields that not explictly in output pattern, print as 'others'
+      - [x] Show/hide fields
 
-   - [x]  Friendly to multi-containers log outputted by docker-compose
-
-   - [x]  Compressed logger name - only first letters of package names are outputed
-
-   - [ ]  Filtering by level and field
+   - [x] A GOLANG application, so single across-platform executable binary, support Mac OSX, Windows, Linux.
 
 ## Usage:
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
@@ -61,13 +54,9 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    * View a local JSON log file: `jog sample.log`
 
-     And, with specified number of lines: `jog -n 20 -f sample.log`
+     Or follows begining from latest 20 lines: `jog -n 20 -f sample.log`
 
-   * Follow stdin stream, for ex. docker: `docker logs -f my.container | ./jog`
-
-     Also, with specified number of lines: `docker logs -f my.container | ./jog -n 20`
-
-   * From stdin steam: `tail -f sample.log | ./jog`
+   * Follow stdin stream, for ex. docker: `docker logs -f my.container | ./jog -n 20`
 
    * Check full usage: `jog -h`
 
@@ -78,25 +67,27 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         <stdin stream>  |  jog  [option...]
 
       Examples:
-         1) follow with last 10 lines:         jog -f app-20200701-1.log
-         2) follow with specified lines:       jog -n 100 -f app-20200701-1.log
-         3) with specified config file:        jog -c another.jog.yml app-20200701-1.log
-         4) view docker-compose log:           docker-compose logs | jog
-         5) print the default template:        jog -t
-         6) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
-         7) view the WARN level config item:   jog -cg fields.level.enums.WARN
-         8) disable colorization:              jog -cs colorization=false app-20200701-1.log
+        1) follow with last 10 lines:         jog -f app-20200701-1.log")
+        2) follow with specified lines:       jog -n 100 -f app-20200701-1.log")
+        3) with specified config file:        jog -c another.jog.yml app-20200701-1.log")
+        4) view docker-compose log:           docker-compose logs | jog")
+        5) print the default template:        jog -t")
+        6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
+        7) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
+        8) view the WARN level config item:   jog -cg fields.level.enums.WARN")
+        9) disable colorization:              jog -cs colorization=false app-20200701-1.log")
 
       Options:
-         -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml
-         -cs, --config-set <config item path>=<config item value>    Set value to specified config item
-         -cg, --config-get <config item path>                        Get value to specified config item
-         -f,  --follow                                               Follow mode - follow log output
-         -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode
-         -t,  --template                                             Print a config YAML file template
-         -h,  --help                                                 Display this information
-         -V,  --version                                              Display app version information
-         -d,  --debug                                                Print more error detail
+        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
+        -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
+        -cg, --config-get <config item path>                        Get value to specified config item \n")
+        -d,  --debug                                                Print more error detail\n")
+        -f,  --follow                                               Follow mode - follow log output\n")
+        -h,  --help                                                 Display this information\n")
+        -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
+        -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
+        -t,  --template                                             Print a config YAML file template\n")
+        -V,  --version                                              Display app version information\n")
      ```
 
 ## Build
