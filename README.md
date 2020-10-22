@@ -15,24 +15,24 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [x] GOLANG Uber zap
       - [x] Node.js Bunyan (https://github.com/trentm/node-bunyan)
 
-   - [x] Follow mode like `tail -f`, with optional begins from latest specified lines like `tail -n`.
+   - [x] Follow mode like `tail -f`, with optional beginning from latest specified lines like `tail -n`.
 
    - [x] Read from stdin (stream) or local file
 
-   - [] Straightforard filtering:
+   - [ ] Straightforard filtering:
       - [x] by logger level
       - [ ] by time range, relative or absolute
       - [ ] by other fields (but I'm not quite sure it is needed because `grep` works too)
 
    - [x] Support JSON log mixed with non-JSON text, includes:
-      - [x] Mised with regular flat log lines, for ex., springboot banner, and PM2 banner
+      - [x] Mixed with regular flat log lines, for ex., springboot banner, and PM2 banner
       - [x] Extra non-JSON prefix, followed by JSON log, for ex., docker-compose multi-services log
 
    - [x] Supports nested escaped JSON value (escaped by `\"...\"`)
 
    - [x] Compressed logger name - only first letters of package names are outputed
 
-   - [x] Print line number prefix
+   - [x] Print line number as line prefix
 
    - [x] Customization. But I think most-likely you no need customization. Anyway, run `jog -t` to see configuration example.
       - [x] Output pattern
@@ -48,7 +48,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.16/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.17/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      sudo chmod +x /usr/local/bin/jog
   ```
 
@@ -95,6 +95,11 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    *  Install GOLANG version >= 1.13
 
    *  In current directory, run `./build.sh`
+
+## Status
+
+   Not yet ready for firt release, still keep refactoring and fixing and adding new features. I create pre-release even for single bug fix or small feature. I won't test much before version 1.0 is ready.
+   Just feel free to use it since it wouldn't affect something.
 
 ## License
 

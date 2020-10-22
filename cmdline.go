@@ -11,7 +11,7 @@ import (
 
 const (
 	// AppVersion ...
-	AppVersion = "v0.9.16"
+	AppVersion = "v0.9.17"
 )
 
 // PrintVersion ...
