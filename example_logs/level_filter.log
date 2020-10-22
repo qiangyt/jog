@@ -1,0 +1,7 @@
+{"timestamp":"2020-07-02T03:16:35.001Z","logger":"jog.Application","level":"debug","message":"debug msg"}
+{"timestamp":"2020-07-02T03:16:35.002Z","logger":"jog.Application","level":"info","message":"info msg"}
+{"timestamp":"2020-07-02T03:16:35.003Z","logger":"jog.Application","level":"error","message":"error msg"}
+{"timestamp":"2020-07-02T03:16:35.004Z","logger":"jog.Application","level":"warn","message":"warn msg"}
+{"timestamp":"2020-07-02T03:16:35.005Z","logger":"jog.Application","level":"trace","message":"trace msg"}
+{"timestamp":"2020-07-02T03:16:35.006Z","logger":"jog.Application","level":"fine","message":"fine msg"}
+{"timestamp":"2020-07-02T03:16:35.007Z","logger":"jog.Application","level":"fatal","message":"fatal msg", "method": "jog"}
