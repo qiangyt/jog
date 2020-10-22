@@ -29,7 +29,8 @@ fields:
       color: FgDefault
     value:
       color: FgDefault
-  level:
+  level: # 'level' field is a hard-coded field used for level filter as well, so don't rename it
+         # And, it must be an enum.
     alias: "level, @level, severity, @severity"
     case-sensitive: false
     enums:
@@ -130,7 +131,7 @@ fields:
     alias: "thread_name, thread-name, threadname, @thread, @thread_name, @thread-name, @threadname"
     case-sensitive: false
     color: FgDefault
-  timestamp:
+  timestamp: # 'timestamp' field is a hard-coded field used for time range filter as well, so don't rename it
     alias: "time, date, datetime, date-time, date_time, @time, @timestamp, @date, @datetime, @date-time, @date_time"
     case-sensitive: false
     color: FgDefault
