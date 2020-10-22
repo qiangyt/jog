@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/util"
@@ -72,9 +71,9 @@ func (i Field) Init(cfg Configuration) {
 
 }
 
-// NotEnum ...
-func (i Field) NotEnum() bool {
-	return i.Enums.IsEmpty()
+// IsEnum ...
+func (i Field) IsEnum() bool {
+	return !i.Enums.IsEmpty()
 }
 
 // ToMap ...
@@ -84,7 +83,7 @@ func (i Field) ToMap() map[string]interface{} {
 	r["case-sensitive"] = i.CaseSensitive
 	r["alias"] = i.Alias.String()
 	r["compress-prefix"] = i.CompressPrefix.ToMap()
-	if !i.NotEnum() {
+	if i.IsEnum() {
 		r["enums"] = i.Enums.ToMap()
 	}
 
@@ -153,25 +152,8 @@ func (i Field) FromMap(m map[string]interface{}) error {
 
 // GetColor ...
 func (i Field) GetColor(value string) util.Color {
-	if i.NotEnum() {
-		return i.Color
+	if i.IsEnum() {
+		return i.Enums.GetEnum(value).Color
 	}
-	return i.Enums.GetEnum(value).Color
-}
-
-// PrintBody ...
-func (i Field) PrintBody(color util.Color, builder *strings.Builder, body string) {
-	if i.NotEnum() {
-		if i.CompressPrefix.Enabled {
-			body = i.CompressPrefix.Compress(body)
-		}
-	} else {
-		body = i.Enums.GetEnum(body).Name
-	}
-
-	if color == nil {
-		builder.WriteString(body)
-	} else {
-		builder.WriteString(color.Sprint(body))
-	}
+	return i.Color
 }

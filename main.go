@@ -85,6 +85,10 @@ func main() {
 		}
 	}
 
+	if cfg.LevelField != nil {
+		cmdLine.InitLevelFilters(cfg.LevelField.Enums)
+	}
+
 	if len(cmdLine.LogFilePath) == 0 {
 		log.Println("read JSON log lines from stdin")
 		ProcessReader(cfg, cmdLine, os.Stdin, 1)

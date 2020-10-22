@@ -64,27 +64,46 @@ func PrintHelp() {
 
 // CommandLineT ...
 type CommandLineT struct {
-	LogFilePath     string
-	ConfigFilePath  string
-	Debug           bool
-	ConfigItemPath  string
-	ConfigItemValue string
-	FollowMode      bool
-	NumberOfLines   int
-	LevelFilters    []string
+	LogFilePath      string
+	ConfigFilePath   string
+	Debug            bool
+	ConfigItemPath   string
+	ConfigItemValue  string
+	FollowMode       bool
+	NumberOfLines    int
+	levelFilterTexts []string
+	levelFilters     []config.Enum
 }
 
 // CommandLine ...
 type CommandLine = *CommandLineT
 
+// GetLevelFilters ...
+func (i CommandLine) GetLevelFilters() []config.Enum {
+	return i.levelFilters
+}
+
+// InitLevelFilters ...
+func (i CommandLine) InitLevelFilters(levelFieldEnums config.EnumMap) {
+	if len(i.levelFilterTexts) == 0 {
+		i.levelFilters = make([]config.Enum, 0)
+		return
+	}
+
+	for _, levelFilterText := range i.levelFilterTexts {
+		levelFilter := levelFieldEnums.GetEnum(levelFilterText)
+		i.levelFilters = append(i.levelFilters, levelFilter)
+	}
+}
+
 // ParseCommandLine ...
 func ParseCommandLine() (bool, CommandLine) {
 
 	r := &CommandLineT{
-		Debug:         false,
-		FollowMode:    false,
-		NumberOfLines: -1,
-		LevelFilters:  make([]string, 0),
+		Debug:            false,
+		FollowMode:       false,
+		NumberOfLines:    -1,
+		levelFilterTexts: make([]string, 0),
 	}
 	var err error
 	var hasNumberOfLines = false
@@ -159,7 +178,7 @@ func ParseCommandLine() (bool, CommandLine) {
 					return false, nil
 				}
 
-				r.LevelFilters = append(r.LevelFilters, os.Args[i+1])
+				r.levelFilterTexts = append(r.levelFilterTexts, os.Args[i+1])
 				i++
 			} else {
 				color.Red.Printf("Unknown option: '%s'\n\n", arg)

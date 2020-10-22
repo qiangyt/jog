@@ -14,15 +14,6 @@ import (
 	"github.com/qiangyt/jog/util"
 )
 
-// FieldValueT ...
-type FieldValueT struct {
-	Value  util.AnyValue
-	Config config.Field
-}
-
-// FieldValue ...
-type FieldValue = *FieldValueT
-
 // LogRecordT ...
 type LogRecordT struct {
 	LineNo int
@@ -105,7 +96,7 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields m
 
 			i.PrintElement(cfg, nameElement, builder, fName)
 			i.PrintElement(cfg, separatorElement, builder, "=")
-			i.PrintElement(cfg, fValueImplicit.Config, builder, fValueImplicit.Value.String())
+			i.PrintElement(cfg, fValueImplicit.Config, builder, fValueImplicit.Output)
 		}
 	}
 
@@ -116,7 +107,7 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields m
 func (i LogRecord) PopulateExplicitStandardFields(cfg config.Configuration, explicitStandardFields map[string]FieldValue, result map[string]string) {
 	for _, f := range explicitStandardFields {
 		builder := &strings.Builder{}
-		i.PrintElement(cfg, f.Config, builder, f.Value.String())
+		i.PrintElement(cfg, f.Config, builder, f.Output)
 
 		result[f.Config.Name] = builder.String()
 	}
@@ -182,6 +173,32 @@ func (i LogRecord) ExtractStandardFields(cfg config.Configuration) (map[string]F
 	return explicts, implicits
 }
 
+// MatchesLevelFilter ...
+func (i LogRecord) MatchesLevelFilter(cfg config.Configuration, levelFilters []config.Enum) bool {
+	levelFieldValue := i.StandardFields["level"]
+	if levelFieldValue != nil {
+		levelFieldEnum := levelFieldValue.enumValue
+		for _, levelFilter := range levelFilters {
+			if levelFieldEnum == levelFilter {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// MatchesFilters ...
+func (i LogRecord) MatchesFilters(cfg config.Configuration, cmdLine CommandLine) bool {
+	levelFilters := cmdLine.GetLevelFilters()
+
+	if len(cmdLine.levelFilters) > 0 {
+		if !i.MatchesLevelFilter(cfg, levelFilters) {
+			return false
+		}
+	}
+	return true
+}
+
 func isStartupLine(cfg config.Configuration, raw string) bool {
 	contains := cfg.StartupLine.Contains
 	return len(contains) > 0 && strings.Contains(raw, contains)
@@ -231,8 +248,8 @@ func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogReco
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
-			f := &FieldValueT{Value: v, Config: fConfig}
-			r.StandardFields[f.Config.Name] = f
+			fName = fConfig.Name // normalize field name
+			r.StandardFields[fName] = NewFieldValue(fConfig, v)
 		} else {
 			r.UnknownFields[fName] = v
 		}
