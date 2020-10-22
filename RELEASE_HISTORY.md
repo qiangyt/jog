@@ -1,4 +1,10 @@
-# v0.9.16
+# v0.9.17 (2020-10-23)
+1. New feature: filtering by logger level
+
+Comments:
+  The filtering feature initially works. So far it only supports filtering by logger level. Time range filtering should be ready soon (v0.9.18?). Then feature freezed before v1.0.0 ready.
+
+# v0.9.16 (2020-10-21)
 1. Enhancement: if a field doesnot explicitly appears in output print pattern, I name such field as `implicit field`,
    and now implicit field will be printed in `${others}`.
    This is incompatible behavior - for old versions, implicit fields are hidden. Now begins from this version, to hide

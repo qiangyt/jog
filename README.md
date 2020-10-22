@@ -22,7 +22,6 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    - [ ] Straightforard filtering:
       - [x] by logger level
       - [ ] by time range, relative or absolute
-      - [ ] by other fields (but I'm not quite sure it is needed because `grep` works too)
 
    - [x] Support JSON log mixed with non-JSON text, includes:
       - [x] Mixed with regular flat log lines, for ex., springboot banner, and PM2 banner
