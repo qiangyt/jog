@@ -13,8 +13,8 @@ import (
 type EnumMapT struct {
 	CaseSensitive bool `yaml:"case-sensitive"`
 	Default       string
-	Values        map[string]Enum
-	ValueMap      map[string]Enum
+	values        map[string]Enum // normalized name -> enum
+	allMap        map[string]Enum // normalized name + aliases -> enum
 }
 
 // EnumMap ...
@@ -24,8 +24,8 @@ type EnumMap = *EnumMapT
 func (i EnumMap) Reset() {
 	i.CaseSensitive = false
 	i.Default = ""
-	i.Values = make(map[string]Enum)
-	i.ValueMap = make(map[string]Enum)
+	i.values = make(map[string]Enum)
+	i.allMap = make(map[string]Enum)
 }
 
 // UnmarshalYAML ...
@@ -46,7 +46,7 @@ func (i EnumMap) Init(cfg Configuration) {
 
 // IsEmpty ...
 func (i EnumMap) IsEmpty() bool {
-	return len(i.Values) == 0
+	return len(i.values) == 0
 }
 
 // GetEnum ...
@@ -55,11 +55,11 @@ func (i EnumMap) GetEnum(value string) Enum {
 		value = strings.ToLower(value)
 	}
 
-	r, has := i.ValueMap[value]
+	r, has := i.allMap[value]
 	if has {
 		return r
 	}
-	return i.ValueMap[i.Default]
+	return i.allMap[i.Default]
 }
 
 // FromMap ...
@@ -81,17 +81,17 @@ func (i EnumMap) FromMap(m map[string]interface{}) error {
 		}
 
 		ev.Name = k
-		i.Values[k] = ev
+		i.values[k] = ev
 
-		i.ValueMap[k] = ev
+		i.allMap[k] = ev
 		if !i.CaseSensitive {
-			i.ValueMap[strings.ToLower(k)] = ev
+			i.allMap[strings.ToLower(k)] = ev
 		}
 
 		for aliasName := range ev.Alias.Values {
-			i.ValueMap[aliasName] = ev
+			i.allMap[aliasName] = ev
 			if !i.CaseSensitive {
-				i.ValueMap[strings.ToLower(aliasName)] = ev
+				i.allMap[strings.ToLower(aliasName)] = ev
 			}
 		}
 
@@ -105,7 +105,7 @@ func (i EnumMap) FromMap(m map[string]interface{}) error {
 	if len(i.Default) == 0 {
 		return errors.New("default enum not specified")
 	}
-	if _, defaultMatches := i.ValueMap[i.Default]; !defaultMatches {
+	if _, defaultMatches := i.allMap[i.Default]; !defaultMatches {
 		return fmt.Errorf("invalid default enum name: %s", i.Default)
 	}
 
@@ -118,7 +118,7 @@ func (i EnumMap) ToMap() map[string]interface{} {
 	r["case-sensitive"] = i.CaseSensitive
 	r["default"] = i.Default
 
-	for k, v := range i.Values {
+	for k, v := range i.values {
 		r[k] = v.ToMap()
 	}
 
