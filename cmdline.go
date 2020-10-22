@@ -51,12 +51,12 @@ func PrintHelp() {
 	fmt.Printf("  -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
+	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")
+	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
-	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
-	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Println()
 }
 
