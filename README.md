@@ -10,7 +10,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    Feature request is welcomed, for ex. new JSON log format. Submit issue for that please.
 
-   - [x] Automatically detect various of formats, by customizeable field aliases. For ex.:
+   - [x] Support various of formats without customization. For ex.:
       - [x] Logstash
       - [x] GOLANG Uber zap
       - [x] Node.js Bunyan (https://github.com/trentm/node-bunyan)
@@ -33,7 +33,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Print line number as line prefix
 
-   - [x] Customization. But I think most-likely you no need customization. Anyway, run `jog -t` to see configuration example.
+   - [x] Customizable although usually you no need it. Run `jog -t` to export default configuration.
       - [x] Output pattern
       - [x] Hightlight startup line
       - [x] Colorization
@@ -85,7 +85,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         -h,  --help                                                 Display this information\n")
         -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
         -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
-        -t,  --template                                             Print a config YAML file template\n")
+        -t,  --template                                             Print a configuration YAML file template\n")
         -V,  --version                                              Display app version information\n")
      ```
 
