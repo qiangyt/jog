@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
@@ -187,6 +188,27 @@ func (i LogRecord) MatchesLevelFilter(cfg config.Configuration, levelFilters []c
 	return false
 }
 
+// MatchesTimestampFilter ...
+func (i LogRecord) MatchesTimestampFilter(cfg config.Configuration, beforeFilter *time.Time, afterFilter *time.Time) bool {
+	timestampFieldValue := i.StandardFields["timestamp"]
+	if timestampFieldValue != nil {
+		timestampValue := timestampFieldValue.timeValue
+
+		beforeMatches := true
+		if beforeFilter != nil {
+			beforeMatches = timestampValue.Before(*beforeFilter) || timestampValue.Equal(*beforeFilter)
+		}
+
+		afterMatches := true
+		if afterFilter != nil {
+			afterMatches = timestampValue.After(*afterFilter) || timestampValue.Equal(*afterFilter)
+		}
+
+		return beforeMatches && afterMatches
+	}
+	return false
+}
+
 // MatchesFilters ...
 func (i LogRecord) MatchesFilters(cfg config.Configuration, options Options) bool {
 	levelFilters := options.GetLevelFilters()
@@ -196,6 +218,13 @@ func (i LogRecord) MatchesFilters(cfg config.Configuration, options Options) boo
 			return false
 		}
 	}
+
+	if options.HasTimestampFilter() {
+		if !i.MatchesTimestampFilter(cfg, options.BeforeFilter, options.AfterFilter) {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -205,7 +234,7 @@ func isStartupLine(cfg config.Configuration, raw string) bool {
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(cfg config.Configuration, options Options, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		UnknownFields:  make(map[string]util.AnyValue),
@@ -249,7 +278,7 @@ func ParseAsRecord(cfg config.Configuration, lineNo int, rawLine string) LogReco
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
 			fName = fConfig.Name // normalize field name
-			r.StandardFields[fName] = NewFieldValue(fConfig, v)
+			r.StandardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
 		} else {
 			r.UnknownFields[fName] = v
 		}

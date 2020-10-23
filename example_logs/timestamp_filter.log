@@ -1,0 +1,7 @@
+{"timestamp":"2020-07-02T03:16:35.001Z","logger":"jog.App","level":"debug","message":"msg 1"}
+{"timestamp":"2020-07-02T03:16:35.002Z","logger":"jog.App","level":"info","message":"msg 2"}
+{"timestamp":"2020-07-02T03:16:35.003Z","logger":"jog.App","level":"info","message":"msg 3"}
+{"timestamp":"2020-07-02T03:16:35.004Z","logger":"jog.App","level":"info","message":"msg 4"}
+{"timestamp":"2020-07-02T03:16:35.005Z","logger":"jog.App","level":"debug","message":"msg 5"}
+{"timestamp":"2020-07-02T03:16:35.006Z","logger":"jog.App","level":"debug","message":"msg 6"}
+{"timestamp":"2020-07-02T03:16:35.007Z","logger":"jog.App","level":"debug","message":"msg 7"}

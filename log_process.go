@@ -19,7 +19,7 @@ var followCheckInterval = time.Millisecond * 200
 
 // ProcessRawLine ...
 func ProcessRawLine(cfg config.Configuration, options Options, lineNo int, rawLine string) {
-	record := ParseAsRecord(cfg, lineNo, rawLine)
+	record := ParseAsRecord(cfg, options, lineNo, rawLine)
 	if !record.MatchesFilters(cfg, options) {
 		return
 	}

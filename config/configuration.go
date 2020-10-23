@@ -27,6 +27,7 @@ type ConfigurationT struct {
 	Prefix                  Prefix
 	Fields                  FieldMap
 	LevelField              Field
+	TimestampField          Field
 }
 
 // Configuration ...
@@ -61,6 +62,16 @@ func (i Configuration) Init(cfg Configuration) {
 		}
 	}
 	i.LevelField = levelField
+
+	timestampField := i.Fields.Standards["timestamp"]
+	if timestampField != nil {
+		if timestampField.Type == FieldTypeAuto {
+			timestampField.Type = FieldTypeTime
+		} else if timestampField.Type != FieldTypeTime {
+			panic(fmt.Errorf("invalid configuration: type of field 'timestamp' must be 'time' or 'auto'"))
+		}
+	}
+	i.TimestampField = timestampField
 }
 
 // Reset ...

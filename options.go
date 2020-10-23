@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"time"
 
 	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
@@ -10,15 +12,22 @@ import (
 
 // OptionsT ...
 type OptionsT struct {
-	LogFilePath      string
-	ConfigFilePath   string
-	Debug            bool
-	ConfigItemPath   string
-	ConfigItemValue  string
-	FollowMode       bool
-	NumberOfLines    int
+	LogFilePath     string
+	ConfigFilePath  string
+	Debug           bool
+	ConfigItemPath  string
+	ConfigItemValue string
+	FollowMode      bool
+	NumberOfLines   int
+
 	levelFilterTexts []string
 	levelFilters     []config.Enum
+
+	beforeFilterText string
+	BeforeFilter     *time.Time
+
+	afterFilterText string
+	AfterFilter     *time.Time
 }
 
 // Options ...
@@ -40,6 +49,29 @@ func (i Options) InitLevelFilters(levelFieldEnums config.EnumMap) {
 		levelFilter := levelFieldEnums.GetEnum(levelFilterText)
 		i.levelFilters = append(i.levelFilters, levelFilter)
 	}
+}
+
+// InitTimestampFilters ...
+func (i Options) InitTimestampFilters(timestampField config.Field) {
+	if len(i.beforeFilterText) > 0 {
+		f := ParseTimestamp(timestampField, i.beforeFilterText)
+		i.BeforeFilter = &f
+	}
+	if len(i.afterFilterText) > 0 {
+		f := ParseTimestamp(timestampField, i.afterFilterText)
+		i.AfterFilter = &f
+
+		if i.BeforeFilter != nil {
+			if i.BeforeFilter.Before(*i.AfterFilter) {
+				panic(fmt.Errorf("before filter (%s) shouldn't be before after filter (%s)", i.beforeFilterText, i.afterFilterText))
+			}
+		}
+	}
+}
+
+// HasTimestampFilter ...
+func (i Options) HasTimestampFilter() bool {
+	return i.BeforeFilter != nil || i.AfterFilter != nil
 }
 
 // OptionsWithCommandLine ...
@@ -125,6 +157,24 @@ func OptionsWithCommandLine() (bool, Options) {
 				}
 
 				r.levelFilterTexts = append(r.levelFilterTexts, os.Args[i+1])
+				i++
+			} else if arg == "-a" || arg == "--after" {
+				if i+1 >= len(os.Args) {
+					color.Red.Println("Missing after argument\n")
+					PrintHelp()
+					return false, nil
+				}
+
+				r.afterFilterText = os.Args[i+1]
+				i++
+			} else if arg == "-b" || arg == "--before" {
+				if i+1 >= len(os.Args) {
+					color.Red.Println("Missing before argument\n")
+					PrintHelp()
+					return false, nil
+				}
+
+				r.beforeFilterText = os.Args[i+1]
 				i++
 			} else {
 				color.Red.Printf("Unknown option: '%s'\n\n", arg)

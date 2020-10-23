@@ -90,6 +90,9 @@ func main() {
 	if cfg.LevelField != nil {
 		options.InitLevelFilters(cfg.LevelField.Enums)
 	}
+	if cfg.TimestampField != nil {
+		options.InitTimestampFilters(cfg.TimestampField)
+	}
 
 	if len(options.LogFilePath) == 0 {
 		log.Println("read JSON log lines from stdin")

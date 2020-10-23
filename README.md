@@ -67,27 +67,30 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         <stdin stream>  |  jog  [option...]
 
       Examples:
-        1) follow with last 10 lines:         jog -f app-20200701-1.log")
-        2) follow with specified lines:       jog -n 100 -f app-20200701-1.log")
-        3) with specified config file:        jog -c another.jog.yml app-20200701-1.log")
-        4) view docker-compose log:           docker-compose logs | jog")
-        5) print the default template:        jog -t")
-        6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
-        7) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
-        8) view the WARN level config item:   jog -cg fields.level.enums.WARN")
-        9) disable colorization:              jog -cs colorization=false app-20200701-1.log")
+         1) follow with last 10 lines:         jog -f app-20200701-1.log
+	      2) follow with specified lines:       jog -n 100 -f app-20200701-1.log
+	      3) with specified config file:        jog -c another.jog.yml app-20200701-1.log
+	      4) view docker-compose log:           docker-compose logs | jog
+	      5) print the default template:        jog -t
+	      6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log
+	      7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log
+	      8) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
+	      9) view the WARN level config item:   jog -cg fields.level.enums.WARN
+	     10) disable colorization:              jog -cs colorization=false app-20200701-1.log
 
       Options:
-        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
-        -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
-        -cg, --config-get <config item path>                        Get value to specified config item \n")
-        -d,  --debug                                                Print more error detail\n")
-        -f,  --follow                                               Follow mode - follow log output\n")
-        -h,  --help                                                 Display this information\n")
-        -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
-        -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
-        -t,  --template                                             Print a configuration YAML file template\n")
-        -V,  --version                                              Display app version information\n")
+        -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format
+	     -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format
+        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml
+        -cs, --config-set <config item path>=<config item value>    Set value to specified config item
+        -cg, --config-get <config item path>                        Get value to specified config item
+        -d,  --debug                                                Print more error detail
+        -f,  --follow                                               Follow mode - follow log output
+        -h,  --help                                                 Display this information
+        -l,  --level <level value>                                  Filter by log level. For ex. --level warn
+        -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode
+        -t,  --template                                             Print a configuration YAML file template
+        -V,  --version                                              Display app version information
      ```
 
 ## Build

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/util"
@@ -29,6 +30,8 @@ type FieldT struct {
 	Enums          EnumMap
 	Type           FieldType
 	TimeFormat     string `yaml:"time-format"`
+	Timezone       string `yaml:"timezone"`
+	TimeLocation   *time.Location
 }
 
 // Field ...
@@ -53,6 +56,8 @@ func (i Field) Reset() {
 
 	i.Type = FieldTypeAuto
 	i.TimeFormat = ""
+	i.Timezone = ""
+	i.TimeLocation = nil
 }
 
 // UnmarshalYAML ...
@@ -68,7 +73,6 @@ func (i Field) MarshalYAML() (interface{}, error) {
 
 // Init ...
 func (i Field) Init(cfg Configuration) {
-
 }
 
 // IsEnum ...
@@ -95,6 +99,10 @@ func (i Field) ToMap() map[string]interface{} {
 
 	if len(i.TimeFormat) > 0 {
 		r["time-format"] = i.TimeFormat
+	}
+
+	if len(i.Timezone) > 0 {
+		r["timezone"] = i.Timezone
 	}
 
 	return r
@@ -145,6 +153,17 @@ func (i Field) FromMap(m map[string]interface{}) error {
 	timeFormatV := util.ExtractFromMap(m, "time-format")
 	if timeFormatV != nil {
 		i.TimeFormat = strutil.MustString(timeFormatV)
+	}
+
+	timezoneV := util.ExtractFromMap(m, "timezone")
+	if timezoneV != nil {
+		i.Timezone = strutil.MustString(timezoneV)
+
+		loc, err := time.LoadLocation(i.Timezone)
+		if err != nil {
+			return fmt.Errorf("invalid timezone: %s", i.Timezone)
+		}
+		i.TimeLocation = loc
 	}
 
 	return nil
