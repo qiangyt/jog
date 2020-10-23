@@ -1,7 +1,7 @@
-# v0.9.18 (2020-10-24)
+# v0.9.18 (2020-10-23)
 1. New feature: filtering by time range (option `--before` and `--after`)
 
-# v0.9.17 (2020-10-23)
+# v0.9.17 (2020-10-22)
 1. New feature: filtering by logger level (option `-l`)
 
 Comments:
