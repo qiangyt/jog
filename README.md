@@ -48,7 +48,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.17/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.18/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      sudo chmod +x /usr/local/bin/jog
   ```
 

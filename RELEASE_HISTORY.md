@@ -1,5 +1,8 @@
+# v0.9.18 (2020-10-24)
+1. New feature: filtering by time range (option `--before` and `--after`)
+
 # v0.9.17 (2020-10-23)
-1. New feature: filtering by logger level
+1. New feature: filtering by logger level (option `-l`)
 
 Comments:
   The filtering feature initially works. So far it only supports filtering by logger level. Time range filtering should be ready soon (v0.9.18?). Then feature freezed before v1.0.0 ready.
