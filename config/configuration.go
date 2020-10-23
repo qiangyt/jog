@@ -206,7 +206,7 @@ func WithDefaultYamlFile() Configuration {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
-		log.Println("config file not found, take default config")
+		log.Println("config file not found, take default one")
 		return WithYaml(static.DefaultConfiguration_yml)
 	}
 

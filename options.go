@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
 	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/config"
+	"github.com/tj/go-naturaldate"
 )
 
 // OptionsT ...
@@ -53,12 +55,24 @@ func (i Options) InitLevelFilters(levelFieldEnums config.EnumMap) {
 
 // InitTimestampFilters ...
 func (i Options) InitTimestampFilters(timestampField config.Field) {
+	now := time.Now()
+
 	if len(i.beforeFilterText) > 0 {
-		f := ParseTimestamp(timestampField, i.beforeFilterText)
+		f, err := naturaldate.Parse(i.beforeFilterText, now, naturaldate.WithDirection(naturaldate.Past))
+		if err != nil {
+			log.Printf("failed to parse before filter %s as natural timestamp, so try absolute parse\n", i.beforeFilterText)
+			f = ParseTimestamp(timestampField, i.beforeFilterText)
+		}
+		log.Printf("before filter: %v", f)
 		i.BeforeFilter = &f
 	}
 	if len(i.afterFilterText) > 0 {
-		f := ParseTimestamp(timestampField, i.afterFilterText)
+		f, err := naturaldate.Parse(i.afterFilterText, now, naturaldate.WithDirection(naturaldate.Past))
+		if err != nil {
+			log.Printf("failed to parse after filter %s as natural timestamp, so try absolute parse\n", i.afterFilterText)
+			f = ParseTimestamp(timestampField, i.afterFilterText)
+		}
+		log.Printf("after filter: %v", f)
 		i.AfterFilter = &f
 
 		if i.BeforeFilter != nil {
