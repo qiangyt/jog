@@ -20,4 +20,4 @@
 /target
 idea.txt
 
-/static/static_files.go
+/static/*.go
