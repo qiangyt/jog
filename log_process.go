@@ -18,9 +18,9 @@ var readTimeout time.Duration = time.Millisecond * 200
 var followCheckInterval = time.Millisecond * 200
 
 // ProcessRawLine ...
-func ProcessRawLine(cfg config.Configuration, cmdLine CommandLine, lineNo int, rawLine string) {
+func ProcessRawLine(cfg config.Configuration, options Options, lineNo int, rawLine string) {
 	record := ParseAsRecord(cfg, lineNo, rawLine)
-	if !record.MatchesFilters(cfg, cmdLine) {
+	if !record.MatchesFilters(cfg, options) {
 		return
 	}
 
@@ -31,23 +31,23 @@ func ProcessRawLine(cfg config.Configuration, cmdLine CommandLine, lineNo int, r
 }
 
 // ProcessLocalFile ...
-func ProcessLocalFile(cfg config.Configuration, cmdLine CommandLine, follow bool, localFilePath string) {
+func ProcessLocalFile(cfg config.Configuration, options Options, follow bool, localFilePath string) {
 	var offset int64 = 0
 	var lineNo int = 1
 
 	if !follow {
-		ReadLocalFile(cfg, cmdLine, localFilePath, offset, lineNo)
+		ReadLocalFile(cfg, options, localFilePath, offset, lineNo)
 		return
 	}
 
 	ticker := time.NewTicker(followCheckInterval)
 	for range ticker.C {
-		offset, lineNo = ReadLocalFile(cfg, cmdLine, localFilePath, offset, lineNo)
+		offset, lineNo = ReadLocalFile(cfg, options, localFilePath, offset, lineNo)
 	}
 }
 
 // ReadLocalFile ...
-func ReadLocalFile(cfg config.Configuration, cmdLine CommandLine, localFilePath string, offset int64, lineNo int) (int64, int) {
+func ReadLocalFile(cfg config.Configuration, options Options, localFilePath string, offset int64, lineNo int) (int64, int) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
@@ -71,7 +71,7 @@ func ReadLocalFile(cfg config.Configuration, cmdLine CommandLine, localFilePath 
 		}
 	}
 
-	lineNo = ProcessReader(cfg, cmdLine, f, lineNo)
+	lineNo = ProcessReader(cfg, options, f, lineNo)
 
 	fi, err = f.Stat()
 	if err != nil {
@@ -117,14 +117,14 @@ func readRawLine(buf *bufio.Reader) (string, error) {
 }
 
 // ProcessReader ...
-func ProcessReader(cfg config.Configuration, cmdLine CommandLine, reader io.Reader, lineNo int) int {
+func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, lineNo int) int {
 	buf := bufio.NewReader(reader)
 	isEOF := false
 
-	if lineNo == 1 && cmdLine.NumberOfLines > 0 {
+	if lineNo == 1 && options.NumberOfLines > 0 {
 
-		// skip 'cmdLine.NumberOfLines' of lines
-		tailQueue := util.NewTailQueue(cmdLine.NumberOfLines)
+		// skip 'options.NumberOfLines' of lines
+		tailQueue := util.NewTailQueue(options.NumberOfLines)
 		timer := time.NewTimer(readTimeout)
 
 		for ; true; lineNo++ {
@@ -154,7 +154,7 @@ func ProcessReader(cfg config.Configuration, cmdLine CommandLine, reader io.Read
 
 		for ; !tailQueue.IsEmpty(); lineNo++ {
 			rawLine := tailQueue.Kick().(string)
-			ProcessRawLine(cfg, cmdLine, lineNo, rawLine)
+			ProcessRawLine(cfg, options, lineNo, rawLine)
 		}
 	}
 
@@ -171,11 +171,11 @@ func ProcessReader(cfg config.Configuration, cmdLine CommandLine, reader io.Read
 			}
 
 			log.Printf("got EOF, line %d\n", lineNo)
-			ProcessRawLine(cfg, cmdLine, lineNo, rawLine)
+			ProcessRawLine(cfg, options, lineNo, rawLine)
 			return lineNo + 1
 		}
 
-		ProcessRawLine(cfg, cmdLine, lineNo, rawLine)
+		ProcessRawLine(cfg, options, lineNo, rawLine)
 	}
 
 	return lineNo

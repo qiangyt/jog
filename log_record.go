@@ -188,10 +188,10 @@ func (i LogRecord) MatchesLevelFilter(cfg config.Configuration, levelFilters []c
 }
 
 // MatchesFilters ...
-func (i LogRecord) MatchesFilters(cfg config.Configuration, cmdLine CommandLine) bool {
-	levelFilters := cmdLine.GetLevelFilters()
+func (i LogRecord) MatchesFilters(cfg config.Configuration, options Options) bool {
+	levelFilters := options.GetLevelFilters()
 
-	if len(cmdLine.levelFilters) > 0 {
+	if len(options.levelFilters) > 0 {
 		if !i.MatchesLevelFilter(cfg, levelFilters) {
 			return false
 		}
