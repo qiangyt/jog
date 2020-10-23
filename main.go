@@ -14,6 +14,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+//go:generate go run script/include_static.go
+
 // ParseConfigExpression ...
 func ParseConfigExpression(expr string) (string, string, error) {
 	arr := strings.Split(expr, "=")

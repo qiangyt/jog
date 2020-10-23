@@ -1,7 +1,3 @@
-package config
-
-// DefaultYAML ...
-const DefaultYAML = `
 colorization: true
 pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${stacktrace}"
 startup-line:
@@ -145,4 +141,3 @@ fields:
     alias: "ver, @ver, @version"
     case-sensitive: false
     color: FgDefault
-`

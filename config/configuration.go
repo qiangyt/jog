@@ -8,6 +8,7 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/static"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
@@ -195,7 +196,7 @@ func WithDefaultYamlFile() Configuration {
 
 	if len(path) == 0 {
 		log.Println("config file not found, take default config")
-		return WithYaml(DefaultYAML)
+		return WithYaml(static.DefaultConfiguration_yml)
 	}
 
 	log.Printf("config file: %s\n", path)

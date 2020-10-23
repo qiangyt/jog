@@ -13,11 +13,12 @@ go_build() {
     local _PREFIX=$2
     local _OS_TARGET_DIR=${TARGET_DIR}/${_OS}
 
-    go test github.com/qiangyt/jog/util
-
     mkdir -p ${_OS_TARGET_DIR}
-    GOOS=${_OS} GOARCH=amd64 go build -o ${_OS_TARGET_DIR}/jog${_PREFIX}
+    GOOS=${_OS} GOARCH=amd64 go build -trimpath -o ${_OS_TARGET_DIR}/jog${_PREFIX}
 }
+
+go generate
+go test github.com/qiangyt/jog/util
 
 go_build linux .linux
 go_build darwin .darwin

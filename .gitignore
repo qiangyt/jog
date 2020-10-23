@@ -19,3 +19,5 @@
 /.vscode
 /target
 idea.txt
+
+/static/static_files.go
