@@ -33,7 +33,8 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    - [x] Print line number as line prefix
 
-   - [x] Customizable although usually you no need it. Run `jog -t` to export default configuration.
+   - [x] Customizable although usually you no need it.
+         Run `jog -t` to export default configuration, or see [./static_files/DefaultConfiguration.yml](./static_files/DefaultConfiguration.yml)
       - [x] Output pattern
       - [x] Hightlight startup line
       - [x] Colorization
