@@ -1,3 +1,8 @@
+# targeting v1.0.0
+Test test test:
+1. unit test coverage: >= 80%
+2. design manual test case
+
 # v0.9.18 (2020-10-23)
 1. New feature: filtering by absolute time range (option `--before` and `--after`)
 
