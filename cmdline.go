@@ -9,7 +9,7 @@ import (
 
 const (
 	// AppVersion ...
-	AppVersion = "v0.9.18"
+	AppVersion = "v0.9.19"
 )
 
 // PrintVersion ...
@@ -42,14 +42,15 @@ func PrintHelp() {
 	fmt.Println("   5) print the default template:        jog -t")
 	fmt.Println("   6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
 	fmt.Println("   7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log")
-	fmt.Println("   8) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
-	fmt.Println("   9) view the WARN level config item:   jog -cg fields.level.enums.WARN")
-	fmt.Println("  10) disable colorization:              jog -cs colorization=false app-20200701-1.log")
+	fmt.Println("   8) natural timestamp range:           jog --after \"1 week\" --before \"2 days\" app-20200701-1.log")
+	fmt.Println("   9) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
+	fmt.Println("  10) view the WARN level config item:   jog -cg fields.level.enums.WARN")
+	fmt.Println("  11) disable colorization:              jog -cs colorization=false app-20200701-1.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
-	fmt.Printf("  -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format \n")
-	fmt.Printf("  -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format \n")
+	fmt.Printf("  -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime \n")
+	fmt.Printf("  -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format; can be natural datetime \n")
 	fmt.Printf("  -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")

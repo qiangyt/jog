@@ -22,7 +22,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
    - [ ] Straightforward filtering:
       - [x] by logger level
       - [x] by absolute time range
-      - [ ] by relative time range
+      - [x] by relative time range
 
    - [x] Support JSON log mixed with non-JSON text, includes:
       - [x] Mixed with regular flat log lines, for ex., springboot banner, and PM2 banner
@@ -49,7 +49,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.18/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.19/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      sudo chmod +x /usr/local/bin/jog
   ```
 
@@ -75,13 +75,14 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 	      5) print the default template:        jog -t
 	      6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log
 	      7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log
-	      8) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
-	      9) view the WARN level config item:   jog -cg fields.level.enums.WARN
-	     10) disable colorization:              jog -cs colorization=false app-20200701-1.log
+	      8) natural timestamp range:           jog --after "1 week" --before "2 days" app-20200701-1.log
+	      9) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
+	     10) view the WARN level config item:   jog -cg fields.level.enums.WARN
+	     11) disable colorization:              jog -cs colorization=false app-20200701-1.log
 
       Options:
-        -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format
-	     -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format
+        -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime
+        -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format; can be natural datetime
         -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml
         -cs, --config-set <config item path>=<config item value>    Set value to specified config item
         -cg, --config-get <config item path>                        Get value to specified config item
