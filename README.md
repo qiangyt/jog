@@ -1,5 +1,5 @@
 # jog [![Build Status](https://travis-ci.org/qiangyt/jog.svg?branch=master)](https://travis-ci.org/qiangyt/jog)
-Command line tool to on-the-faly convert and view structured(JSON) log as regular flat line format. Jog supports follow mode like 'tail -f', as well as filtering by log level and time range.
+Command line tool to on-the-fly convert and view structured(JSON) log as regular flat line format. Jog supports follow mode like 'tail -f', as well as filtering by log level and time range.
 
 ## Background
 
