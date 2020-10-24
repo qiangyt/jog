@@ -9,9 +9,10 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
 
    Feature request is welcomed, for ex. new JSON log format. Submit issue for that please.
 
-   - [x] Support various of formats without customization. For ex.:
+   - [x] Support various of formats out-of-box and without customization.
+         Verified includes (submit issue for new one):
       - [x] Logstash
-      - [x] GOLANG Uber zap
+      - [x] GOLANG Uber zap (https://github.com/uber-go/zap)
       - [x] Node.js Bunyan (https://github.com/trentm/node-bunyan)
       - [ ] Node.js Winston (https://github.com/winstonjs/winston)
       - [ ] Logrus
