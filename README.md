@@ -14,6 +14,9 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [x] Logstash
       - [x] GOLANG Uber zap
       - [x] Node.js Bunyan (https://github.com/trentm/node-bunyan)
+      - [ ] Node.js Winston (https://github.com/winstonjs/winston)
+      - [ ] Logrus
+      - [ ] AWS CloudWatch Logs
 
    - [x] Follow mode like `tail -f`, with optional beginning from latest specified lines like `tail -n`.
 
@@ -23,6 +26,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [x] by logger level
       - [x] by absolute time range
       - [x] by relative time range
+      - [ ] show surrounding logs
 
    - [x] Support JSON log mixed with non-JSON text, includes:
       - [x] Mixed with regular flat log lines, for ex., springboot banner, and PM2 banner
