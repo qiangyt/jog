@@ -4,3 +4,8 @@ go:
   - '1.13'
   - '1.14'
 
+branches:
+  only:
+  - master
+
+script: ./build.sh
