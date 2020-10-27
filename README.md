@@ -115,6 +115,14 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
    Not yet ready for first release, still keep refactoring and fixing and adding new features. I create pre-release even for single bug fix or small feature. I won't test much before version 1.0 is ready.
    Just feel free to use it since it wouldn't affect something.
 
+## TODO
+
+   * version 1.0 TODO
+     - unit test coverage: >= 80%
+     - manual test suite
+     - read from native Docker containers log
+     - SSH remote host to read log directly
+
 ## License
 
 [MIT](/LICENSE)
