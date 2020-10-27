@@ -9,7 +9,7 @@ import (
 
 const (
 	// AppVersion ...
-	AppVersion = "v0.9.19"
+	AppVersion = "v0.9.20"
 )
 
 // PrintVersion ...
@@ -56,6 +56,7 @@ func PrintHelp() {
 	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
+	fmt.Printf("  -j,  --json                                                 Output the raw JSON but then able to apply filters\n")
 	fmt.Printf("  -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")

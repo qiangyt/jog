@@ -3,7 +3,9 @@ Command line tool to on-the-faly convert and view structured(JSON) log as regula
 
 ## Background
 
-Structured log, AKA. JSON line log, is great for log collectors but hard to read by developers themselves, usually during local development. Jog helps to on-the-fly convert those structured JSON log to traditional space-separated flat line log, friendly for developers. It then removes the need to maintenain different output format for different environments - for ex. we don't need any more to configure JSON log for test / production but flat line log for local development.
+Structured log, AKA. JSON line log, is great for log collectors but hard to read by developers themselves during local development. Jog helps to on-the-fly convert those structured JSON log to traditional flat line log. It then decreases the need to have environment-specific output formats - for ex. we don't need any more to configure JSON log for test / production but flat line log for local development.
+
+Extra feature includes filtering by log level, by time ranage, helpful for daily local development as well.
 
 ## Features
 
@@ -19,14 +21,17 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
       - [ ] AWS CloudWatch Logs
 
    - [x] Follow mode like `tail -f`, with optional beginning from latest specified lines like `tail -n`.
+         (see example #1 and #2)
 
    - [x] Read from stdin (stream) or local file
 
    - [ ] Straightforward filtering:
-      - [x] by logger level
-      - [x] by absolute time range
-      - [x] by relative time range
+      - [x] by log level (see example #6)
+      - [x] by absolute time range (see example #7)
+      - [x] by relative time range (see example #8)
       - [ ] show surrounding logs
+
+   - [x] output the raw JSON but then able to apply filters (see example #9)
 
    - [x] Support JSON log mixed with non-JSON text, includes:
       - [x] Mixed with regular flat log lines, for ex., springboot banner, and PM2 banner
@@ -53,7 +58,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.19/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v0.9.20/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      sudo chmod +x /usr/local/bin/jog
   ```
 
@@ -72,17 +77,16 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         <stdin stream>  |  jog  [option...]
 
       Examples:
-         1) follow with last 10 lines:         jog -f app-20200701-1.log
-	      2) follow with specified lines:       jog -n 100 -f app-20200701-1.log
-	      3) with specified config file:        jog -c another.jog.yml app-20200701-1.log
-	      4) view docker-compose log:           docker-compose logs | jog
-	      5) print the default template:        jog -t
-	      6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log
-	      7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log
-	      8) natural timestamp range:           jog --after "1 week" --before "2 days" app-20200701-1.log
-	      9) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log
-	     10) view the WARN level config item:   jog -cg fields.level.enums.WARN
-	     11) disable colorization:              jog -cs colorization=false app-20200701-1.log
+	     1) follow with last 10 lines:         jog -f app-20200701-1.log
+	     2) follow with specified lines:       jog -n 100 -f app-20200701-1.log
+	     3) with specified config file:        jog -c another.jog.yml app-20200701-1.log
+	     4) view docker-compose log:           docker-compose logs | jog
+	     5) print the default template:        jog -t
+	     6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log
+	     7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log
+	     8) natural timestamp range:           jog --after "1 week" --before "2 days" app-20200701-1.log
+	     9) output raw JSON and apply time range filter:      jog --after "1 week" --before "2 days" app-20200701-1.log --json
+	     10) disable colorization:             jog -cs colorization=false app-20200701-1.log
 
       Options:
         -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime
@@ -92,6 +96,7 @@ Structured log, AKA. JSON line log, is great for log collectors but hard to read
         -cg, --config-get <config item path>                        Get value to specified config item
         -d,  --debug                                                Print more error detail
         -f,  --follow                                               Follow mode - follow log output
+        -j,  --json                                                 Output the raw JSON but then able to apply filters
         -h,  --help                                                 Display this information
         -l,  --level <level value>                                  Filter by log level. For ex. --level warn
         -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode

@@ -3,6 +3,9 @@ Test test test:
 1. unit test coverage: >= 80%
 2. design manual test case
 
+# v0.9.20 (2020-10-27)
+1. New feature: output the raw JSON but then able to apply filters (see example #9)
+
 # v0.9.19 (2020-10-24)
 1. New feature: specify the time range filter by natural date time, for ex. `1 day`, `2 hour`
 
