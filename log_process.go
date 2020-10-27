@@ -24,7 +24,13 @@ func ProcessRawLine(cfg config.Configuration, options Options, lineNo int, rawLi
 		return
 	}
 
-	var line = record.AsFlatLine(cfg)
+	var line string
+	if options.OutputRawJSON {
+		line = record.Raw
+	} else {
+		line = record.AsFlatLine(cfg)
+	}
+
 	if len(line) > 0 {
 		fmt.Println(line)
 	}

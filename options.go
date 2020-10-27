@@ -30,6 +30,8 @@ type OptionsT struct {
 
 	afterFilterText string
 	AfterFilter     *time.Time
+
+	OutputRawJSON bool
 }
 
 // Options ...
@@ -163,6 +165,8 @@ func OptionsWithCommandLine() (bool, Options) {
 				return false, nil
 			} else if arg == "-d" || arg == "--debug" {
 				r.Debug = true
+			} else if arg == "-j" || arg == "--json" {
+				r.OutputRawJSON = true
 			} else if arg == "-l" || arg == "--level" {
 				if i+1 >= len(os.Args) {
 					color.Red.Println("Missing level argument\n")

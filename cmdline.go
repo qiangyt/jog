@@ -43,9 +43,8 @@ func PrintHelp() {
 	fmt.Println("   6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
 	fmt.Println("   7) shows with timestamp range:        jog --after 2020-7-1 --before 2020-7-3 app-20200701-1.log")
 	fmt.Println("   8) natural timestamp range:           jog --after \"1 week\" --before \"2 days\" app-20200701-1.log")
-	fmt.Println("   9) with WARN level foreground color set to RED: jog -cs fields.level.enums.WARN.color=FgRed app-20200701-1.log")
-	fmt.Println("  10) view the WARN level config item:   jog -cg fields.level.enums.WARN")
-	fmt.Println("  11) disable colorization:              jog -cs colorization=false app-20200701-1.log")
+	fmt.Println("   9) output raw JSON and apply time range filter:      jog --after \"1 week\" --before \"2 days\" app-20200701-1.log --json")
+	fmt.Println("   10) disable colorization:             jog -cs colorization=false app-20200701-1.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
