@@ -18,6 +18,9 @@ go_build() {
 }
 
 go generate
+rm static/grok_patterns/LICENSE.go
+rm static/grok_patterns/README.md.go
+
 go test github.com/qiangyt/jog/util
 
 go_build linux .linux
