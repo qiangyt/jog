@@ -59,6 +59,8 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 	if len(fExt) > 0 {
 		varName = varName + "_" + fExt
 	}
+	varName = strings.ToUpper(varName[:1]) + varName[1:]
+	out.WriteString("  // " + varName + " ...\n")
 	out.WriteString("  " + varName + " = `")
 
 	f, _ := os.Open(fPath)

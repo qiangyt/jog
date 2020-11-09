@@ -1,6 +1,7 @@
 package static 
 
 const (
+  // DefaultConfiguration_yml ...
   DefaultConfiguration_yml = `colorization: true
 pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${stacktrace}"
 startup-line:
