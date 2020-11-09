@@ -55,7 +55,7 @@ func PrintHelp() {
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")
-	fmt.Printf("  -g,  --grok <comma-separated grok pattern names>            For non-json log line. See 'jog -cg grok.patterns' for available patterns in config file\n")
+	fmt.Printf("  -g,  --grok <grok pattern name>                             For non-json log line. See 'jog -cg grok.patterns' for available patterns in config file\n")
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -j,  --json                                                 Output the raw JSON but then able to apply filters\n")
 	fmt.Printf("  -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")

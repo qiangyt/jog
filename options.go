@@ -10,6 +10,7 @@ import (
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/config"
 	"github.com/tj/go-naturaldate"
+	"github.com/vjeantet/grok"
 )
 
 // OptionsT ...
@@ -32,10 +33,20 @@ type OptionsT struct {
 	AfterFilter     *time.Time
 
 	OutputRawJSON bool
+
+	grokConfig       *grok.Grok
+	grokPatternsUsed []string
 }
 
 // Options ...
 type Options = *OptionsT
+
+// InitGroks ...
+func (i Options) InitGroks() {
+	i.grokConfig, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
+	//i.grokPatternsUsed []string
+	i.grokConfig.AddPattern("", "")
+}
 
 // GetLevelFilters ...
 func (i Options) GetLevelFilters() []config.Enum {
@@ -98,6 +109,7 @@ func OptionsWithCommandLine() (bool, Options) {
 		FollowMode:       false,
 		NumberOfLines:    -1,
 		levelFilterTexts: make([]string, 0),
+		GrokNames:        make([]string, 0),
 	}
 	var err error
 	var hasNumberOfLines = false
@@ -175,6 +187,15 @@ func OptionsWithCommandLine() (bool, Options) {
 				}
 
 				r.levelFilterTexts = append(r.levelFilterTexts, os.Args[i+1])
+				i++
+			} else if arg == "-g" || arg == "--grok" {
+				if i+1 >= len(os.Args) {
+					color.Red.Println("Missing grok argument\n")
+					PrintHelp()
+					return false, nil
+				}
+
+				r.GrokNames = append(r.GrokNames, os.Args[i+1])
 				i++
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(os.Args) {

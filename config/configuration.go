@@ -28,6 +28,7 @@ type ConfigurationT struct {
 	Fields                  FieldMap
 	LevelField              Field
 	TimestampField          Field
+	Grok                    Grok
 }
 
 // Configuration ...
@@ -72,6 +73,8 @@ func (i Configuration) Init(cfg Configuration) {
 		}
 	}
 	i.TimestampField = timestampField
+
+	i.Grok.Init(i)
 }
 
 // Reset ...
@@ -87,6 +90,7 @@ func (i Configuration) Reset() {
 	i.Prefix.Reset()
 	i.Fields.Reset()
 	i.LevelField = nil
+	i.Grok.Reset()
 }
 
 // HasFieldInPattern ...
@@ -156,6 +160,13 @@ func (i Configuration) FromMap(m map[string]interface{}) error {
 		}
 	}
 
+	v = util.ExtractFromMap(m, "grok")
+	if v != nil {
+		if err := util.UnmashalYAMLAgain(v, &i.Grok); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -169,6 +180,7 @@ func (i Configuration) ToMap() map[string]interface{} {
 	r["unknown-line"] = i.UnknownLine.ToMap()
 	r["prefix"] = i.Prefix.ToMap()
 	r["fields"] = i.Fields.ToMap()
+	r["grok"] = i.Grok.ToMap()
 	return r
 }
 
@@ -238,6 +250,7 @@ func WithYaml(yamlText string) Configuration {
 		UnknownLine: &ElementT{},
 		Prefix:      &PrefixT{},
 		Fields:      &FieldMapT{},
+		Grok:        &GrokT{},
 	}
 
 	if err := yaml.Unmarshal([]byte(yamlText), &r); err != nil {
