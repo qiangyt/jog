@@ -2,10 +2,12 @@ package config
 
 import (
 	"github.com/qiangyt/jog/util"
+	"github.com/vjeantet/grok"
 )
 
 // GrokT ...
 type GrokT struct {
+	grok     *grok.Grok
 	Uses     []string          `yaml:"uses"`
 	Patterns map[string]string `yaml:"patterns"`
 }
@@ -15,7 +17,9 @@ type Grok = *GrokT
 
 // Init ...
 func (i Grok) Init(cfg Configuration) {
-
+	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
+	//i.grokPatternsUsed []string
+	//i.grokConfig.AddPattern("", "")
 }
 
 // UnmarshalYAML ...
