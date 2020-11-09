@@ -60,6 +60,7 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 		varName = varName + "_" + fExt
 	}
 	varName = strings.ToUpper(varName[:1]) + varName[1:]
+	varName = strings.ReplaceAll(varName, "-", "_")
 	out.WriteString("  // " + varName + " ...\n")
 	out.WriteString("  " + varName + " = `")
 
