@@ -2,7 +2,8 @@ package grok_patterns
 
 const (
   // Haproxy ...
-  Haproxy = `## These patterns were tested w/ haproxy-1.4.15
+  Haproxy = `
+## These patterns were tested w/ haproxy-1.4.15
 
 ## Documentation of the haproxy log formats can be found at the following links:
 ## http://code.google.com/p/haproxy-docs/wiki/HTTPLogFormat

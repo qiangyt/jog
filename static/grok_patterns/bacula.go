@@ -2,7 +2,8 @@ package grok_patterns
 
 const (
   // Bacula ...
-  Bacula = `BACULA_TIMESTAMP %{MONTHDAY}-%{MONTH} %{HOUR}:%{MINUTE}
+  Bacula = `
+BACULA_TIMESTAMP %{MONTHDAY}-%{MONTH} %{HOUR}:%{MINUTE}
 BACULA_HOST [a-zA-Z0-9-]+
 BACULA_VOLUME %{USER}
 BACULA_DEVICE %{USER}

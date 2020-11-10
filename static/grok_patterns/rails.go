@@ -2,7 +2,8 @@ package grok_patterns
 
 const (
   // Rails ...
-  Rails = `RUUID \h{32}
+  Rails = `
+RUUID \h{32}
 # rails controller with action
 RCONTROLLER (?<controller>[^#]+)#(?<action>\w+)
 

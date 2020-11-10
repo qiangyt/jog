@@ -2,7 +2,8 @@ package grok_patterns
 
 const (
   // Linux_syslog ...
-  Linux_syslog = `SYSLOG5424PRINTASCII [!-~]+
+  Linux_syslog = `
+SYSLOG5424PRINTASCII [!-~]+
 
 SYSLOGBASE2 (?:%{SYSLOGTIMESTAMP:timestamp}|%{TIMESTAMP_ISO8601:timestamp8601}) (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource}+(?: %{SYSLOGPROG}:|)
 SYSLOGPAMSESSION %{SYSLOGBASE} (?=%{GREEDYDATA:message})%{WORD:pam_module}\(%{DATA:pam_caller}\): session %{WORD:pam_session_state} for user %{USERNAME:username}(?: by %{GREEDYDATA:pam_by})?
