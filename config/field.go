@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gookit/goutil/strutil"
@@ -32,6 +33,8 @@ type FieldT struct {
 	TimeFormat     string `yaml:"time-format"`
 	Timezone       string `yaml:"timezone"`
 	TimeLocation   *time.Location
+	Width          int
+	Fixed          bool
 }
 
 // Field ...
@@ -58,6 +61,9 @@ func (i Field) Reset() {
 	i.TimeFormat = ""
 	i.Timezone = ""
 	i.TimeLocation = nil
+
+	i.Width = 0
+	i.Fixed = false
 }
 
 // UnmarshalYAML ...
@@ -104,6 +110,11 @@ func (i Field) ToMap() map[string]interface{} {
 	if len(i.Timezone) > 0 {
 		r["timezone"] = i.Timezone
 	}
+
+	if i.Width != 0 {
+		r["width"] = i.Width
+	}
+	r["fixed"] = i.Fixed
 
 	return r
 }
@@ -166,6 +177,23 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		i.TimeLocation = loc
 	}
 
+	widthV := util.ExtractFromMap(m, "width")
+	if widthV != nil {
+		width := strutil.MustInt(strutil.MustString(widthV))
+		if width > 0 && width <= 4 {
+			i.Width = 4
+		} else if width < 0 && width >= -4 {
+			i.Width = -4
+		} else {
+			i.Width = width
+		}
+	}
+
+	fixedV := util.ExtractFromMap(m, "fixed")
+	if fixedV != nil {
+		i.Fixed = util.ToBool(fixedV)
+	}
+
 	return nil
 }
 
@@ -175,4 +203,44 @@ func (i Field) GetColor(value string) util.Color {
 		return i.Enums.GetEnum(value).Color
 	}
 	return i.Color
+}
+
+// PrintBody ...
+func (i Field) PrintBody(color util.Color, builder *strings.Builder, body string) {
+	if i.Fixed {
+		body = ShortenValue(body, abs(i.Width))
+	}
+
+	format := GetFormatString(i.Width)
+
+	if color == nil {
+		builder.WriteString(fmt.Sprintf(format, body))
+	} else {
+		builder.WriteString(color.Sprintf(format, body))
+	}
+}
+
+// ShortenValue shortens the value to maxWidth -3 chars if necessary, shortend values will be postfixed by three dots
+func ShortenValue(inValue string, maxWidth int) string {
+	if maxWidth == 0 || len([]rune(inValue)) <= maxWidth {
+		return inValue
+	}
+	return fmt.Sprint(inValue[:(maxWidth-3)], "...")
+}
+
+// abs function that works for int, Math.Abs only accepts float64
+func abs(value int) int {
+	if value < 0 {
+		value = value * -1
+	}
+	return value
+}
+
+// GetFormatString ...
+func GetFormatString(width int) string {
+	format := "%s"
+	if width != 0 {
+		format = fmt.Sprint("%", width, "s")
+	}
+	return format
 }

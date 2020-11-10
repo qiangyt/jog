@@ -149,3 +149,8 @@ func (i Color) MarshalYAML() (interface{}, error) {
 func (i Color) Sprint(a interface{}) string {
 	return i.style.Sprint(a)
 }
+
+// Sprintf is alias of the 'Render'
+func (i Color) Sprintf(format string, a ...interface{}) string {
+	return i.style.Sprintf(format, a...)
+}
