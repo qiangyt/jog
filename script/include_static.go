@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -64,9 +63,10 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 	out.WriteString("  // " + varName + " ...\n")
 	out.WriteString("  " + varName + " = `\n")
 
-	f, _ := os.Open(fPath)
-	defer f.Close()
-	io.Copy(out, f)
+	contentBytes, _ := ioutil.ReadFile(fPath)
+	content := string(contentBytes)
+	//content = strings.ReplaceAll(content, "\\", "\\\\")
+	out.WriteString(content)
 
 	out.WriteString("`\n")
 	out.WriteString(")\n")

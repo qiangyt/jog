@@ -246,31 +246,27 @@ func parseGrokPatterns(patternsText string) []grokPatternItem {
 }
 
 func loadAllGrokPatterns() []grokPatternItem {
-	allPatterns := map[string]grokPatternItem{}
-
-	mergeGrokPatterns(allPatterns, grok_patterns.Aws)
-	mergeGrokPatterns(allPatterns, grok_patterns.Bacula)
-	mergeGrokPatterns(allPatterns, grok_patterns.Bro)
-	mergeGrokPatterns(allPatterns, grok_patterns.Exim)
-	mergeGrokPatterns(allPatterns, grok_patterns.Firewalls)
-	mergeGrokPatterns(allPatterns, grok_patterns.Grok_patterns)
-	mergeGrokPatterns(allPatterns, grok_patterns.Haproxy)
-	mergeGrokPatterns(allPatterns, grok_patterns.Java)
-	mergeGrokPatterns(allPatterns, grok_patterns.Junos)
-	mergeGrokPatterns(allPatterns, grok_patterns.Linux_syslog)
-	mergeGrokPatterns(allPatterns, grok_patterns.Mcollective_patterns)
-	mergeGrokPatterns(allPatterns, grok_patterns.Mcollective)
-	mergeGrokPatterns(allPatterns, grok_patterns.Mongodb)
-	mergeGrokPatterns(allPatterns, grok_patterns.Nagios)
-	mergeGrokPatterns(allPatterns, grok_patterns.Postgresql)
-	mergeGrokPatterns(allPatterns, grok_patterns.Rails)
-	mergeGrokPatterns(allPatterns, grok_patterns.Redis)
-	mergeGrokPatterns(allPatterns, grok_patterns.Ruby)
-
 	r := []grokPatternItem{}
-	for _, pattern := range allPatterns {
-		r = append(r, pattern)
-	}
+
+	r = append(r, parseGrokPatterns(grok_patterns.Aws)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Bacula)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Bro)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Exim)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Firewalls)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Grok_patterns)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Haproxy)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Java)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Junos)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Linux_syslog)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Mcollective_patterns)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Mcollective)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Mongodb)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Nagios)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Postgresql)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Rails)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Redis)...)
+	r = append(r, parseGrokPatterns(grok_patterns.Ruby)...)
+
 	return r
 }
 
