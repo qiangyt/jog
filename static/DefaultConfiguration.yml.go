@@ -147,5 +147,14 @@ fields:
     alias: "ver, @ver, @version"
     case-sensitive: false
     color: FgDefault
+
+grok:
+  uses:
+    - TOMCATLOG
+    - MONGO3_LOG
+    - RAILS3
+    - REDISLOG
+  patterns: {{ range .grokPatterns }}
+    - {{ .Name }}: "{{ .Expr }}"{{ end }}
 `
 )

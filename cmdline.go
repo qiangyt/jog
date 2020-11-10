@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gookit/color"
-	"github.com/qiangyt/jog/static"
+	"github.com/qiangyt/jog/config"
 )
 
 const (
@@ -19,7 +19,7 @@ func PrintVersion() {
 
 // PrintConfigTemplate ...
 func PrintConfigTemplate() {
-	fmt.Println(static.DefaultConfiguration_yml)
+	fmt.Println(config.BuildDefaultConfigurationYAML())
 }
 
 // PrintHelp ...
