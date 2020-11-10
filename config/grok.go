@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/qiangyt/jog/util"
 	"github.com/vjeantet/grok"
 )
@@ -18,8 +20,7 @@ type Grok = *GrokT
 // Init ...
 func (i Grok) Init(cfg Configuration) {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
-	//i.grokPatternsUsed []string
-	//i.grokConfig.AddPattern("", "")
+	i.grok.AddPatternsFromMap(i.Patterns)
 }
 
 // UnmarshalYAML ...
@@ -40,8 +41,15 @@ func (i Grok) Reset() {
 
 // FromMap ...
 func (i Grok) FromMap(m map[string]interface{}) error {
-	i.Uses = util.ExtractFromMap(m, "uses").([]string)
 	i.Patterns = util.ExtractFromMap(m, "patterns").(map[string]string)
+
+	i.Uses = util.ExtractFromMap(m, "uses").([]string)
+	for _, usedPatternName := range i.Uses {
+		if _, found := i.Patterns[usedPatternName]; !found {
+			return fmt.Errorf("using pattern '%s' but not defined in available patterns", usedPatternName)
+		}
+	}
+
 	return nil
 }
 
