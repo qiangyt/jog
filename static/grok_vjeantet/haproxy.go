@@ -2,8 +2,7 @@ package grok_vjeantet
 
 const (
   // Haproxy ...
-  Haproxy string = `
-## These patterns were tested w/ haproxy-1.4.15
+  Haproxy string = `## These patterns were tested w/ haproxy-1.4.15
 
 ## Documentation of the haproxy log formats can be found at the following links:
 ## http://code.google.com/p/haproxy-docs/wiki/HTTPLogFormat

@@ -61,7 +61,7 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 	varName = strings.ToUpper(varName[:1]) + varName[1:]
 	varName = strings.ReplaceAll(varName, "-", "_")
 	out.WriteString("  // " + varName + " ...\n")
-	out.WriteString("  " + varName + " string = `\n")
+	out.WriteString("  " + varName + " string = `")
 
 	contentBytes, _ := ioutil.ReadFile(fPath)
 	content := string(contentBytes)

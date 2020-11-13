@@ -2,8 +2,7 @@ package grok_vjeantet
 
 const (
   // Exim ...
-  Exim string = `
-EXIM_MSGID [0-9A-Za-z]{6}-[0-9A-Za-z]{6}-[0-9A-Za-z]{2}
+  Exim string = `EXIM_MSGID [0-9A-Za-z]{6}-[0-9A-Za-z]{6}-[0-9A-Za-z]{2}
 EXIM_FLAGS (<=|[-=>*]>|[*]{2}|==)
 EXIM_DATE %{YEAR:exim_year}-%{MONTHNUM:exim_month}-%{MONTHDAY:exim_day} %{TIME:exim_time}
 EXIM_PID \[%{POSINT}\]
