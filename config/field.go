@@ -2,9 +2,6 @@ package config
 
 import (
 	"fmt"
-	"regexp"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gookit/goutil/strutil"
@@ -35,7 +32,6 @@ type FieldT struct {
 	TimeFormat     string `yaml:"time-format"`
 	Timezone       string `yaml:"timezone"`
 	TimeLocation   *time.Location
-	PrintFormat    string `yaml:"print-format"`
 }
 
 // Field ...
@@ -62,8 +58,6 @@ func (i Field) Reset() {
 	i.TimeFormat = ""
 	i.Timezone = ""
 	i.TimeLocation = nil
-
-	i.PrintFormat = "%s"
 }
 
 // UnmarshalYAML ...
@@ -110,8 +104,6 @@ func (i Field) ToMap() map[string]interface{} {
 	if len(i.Timezone) > 0 {
 		r["timezone"] = i.Timezone
 	}
-
-	r["print-format"] = i.PrintFormat
 
 	return r
 }
@@ -174,27 +166,7 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		i.TimeLocation = loc
 	}
 
-	printFormatV := util.ExtractFromMap(m, "print-format")
-	if printFormatV != nil {
-		printFormatT := strutil.MustString(printFormatV)
-		if validPrintFormat(printFormatT) {
-			i.PrintFormat = printFormatT
-		} else {
-			return fmt.Errorf("invalid print-format: %s", printFormatT)
-		}
-	}
-
 	return nil
-}
-
-/* validPrintFormat check print-format if it's valid and meaningful
- * only verbs `s` and `v` are valid at the moment
- * `%5.s` is valid, but not meaningful, because the output will be empty, will not be accepted
- * `%.5s` is valid, but not very meaningful, but will be accepted
- */
-func validPrintFormat(printFormat string) bool {
-	var re = regexp.MustCompile(`%(-{0,1}\d{1,}){0,1}(\.\d{1,}){0,1}([sv])`)
-	return re.MatchString(printFormat)
 }
 
 // GetColor ...
@@ -203,34 +175,4 @@ func (i Field) GetColor(value string) util.Color {
 		return i.Enums.GetEnum(value).Color
 	}
 	return i.Color
-}
-
-// PrintBody ...
-func (i Field) PrintBody(color util.Color, builder *strings.Builder, body string) {
-	body = ShortenValue(body, i.PrintFormat)
-	if color == nil {
-		builder.WriteString(fmt.Sprintf(i.PrintFormat, body))
-	} else {
-		builder.WriteString(color.Sprintf(i.PrintFormat, body))
-	}
-}
-
-// ShortenValue shortens the value to maxWidth -3 chars if necessary, shortend values will be postfixed by three dots
-func ShortenValue(inValue string, printFormat string) string {
-	idx := strings.Index(printFormat, ".")
-	if idx >= 0 {
-		width, err := strconv.Atoi(printFormat[1:idx])
-		if err == nil && len([]rune(inValue)) > abs(width) && abs(width) > 3 {
-			return fmt.Sprint(inValue[:abs(width)-3], "...")
-		}
-	}
-	return inValue
-}
-
-// abs function that works for int, Math.Abs only accepts float64
-func abs(value int) int {
-	if value < 0 {
-		value = value * -1
-	}
-	return value
 }
