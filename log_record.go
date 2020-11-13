@@ -233,6 +233,105 @@ func isStartupLine(cfg config.Configuration, raw string) bool {
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
+func tryToParseUsingGrok(cfg config.Configuration, options Options, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+	prefix = ""
+	standardFields = map[string]FieldValue{}
+	unknownFields = map[string]util.AnyValue{}
+
+	if options.isGrokEnabled() == false {
+		matchesGrok = false
+		return
+	}
+
+	standardsFieldConfig := cfg.Fields.StandardsWithAllAliases
+	grok := cfg.Grok
+
+	for _, pattern := range options.GrokPatterns {
+		fields, err := grok.Parse(pattern, line)
+		if err != nil {
+			//TODO: debug log
+		} else {
+			for fName, fValue := range fields {
+				v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
+
+				fConfig, contains := standardsFieldConfig[fName]
+				if contains {
+					fName = fConfig.Name // normalize field name
+					standardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
+				} else {
+					unknownFields[fName] = v
+				}
+			}
+
+			if len(standardFields) == 0 {
+				continue
+			}
+
+			matchesGrok = true
+
+			for _, matchesFieldName := range grok.MatchesFields {
+				if _, contains := standardFields[matchesFieldName]; contains == false {
+					matchesGrok = false
+					break
+				}
+			}
+
+			if matchesGrok {
+				return
+			}
+		}
+	}
+
+	return
+}
+
+func tryToParseAsJSON(cfg config.Configuration, options Options, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+	prefix = ""
+	standardFields = map[string]FieldValue{}
+	unknownFields = map[string]util.AnyValue{}
+
+	posOfLeftBracket := strings.IndexByte(line, '{')
+	if posOfLeftBracket < 0 {
+		log.Printf("line %d is not JSON line: <%s>\n", lineNo, line)
+		isJSON = false
+		return
+	}
+
+	if posOfLeftBracket > 0 {
+		prefix = line[:posOfLeftBracket]
+		line = line[posOfLeftBracket:]
+	}
+
+	allFields := make(map[string]interface{})
+
+	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
+		log.Printf("parse round 1 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
+		line = strings.ReplaceAll(line, "\\\"", "\"")
+		line = strings.ReplaceAll(line, "\t", "    ")
+		if err := json.Unmarshal([]byte(line), &allFields); err != nil {
+			log.Printf("parse round 2 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
+			isJSON = false
+			return
+		}
+	}
+
+	standardsFieldConfig := cfg.Fields.StandardsWithAllAliases
+	for fName, fValue := range allFields {
+		v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
+
+		fConfig, contains := standardsFieldConfig[fName]
+		if contains {
+			fName = fConfig.Name // normalize field name
+			standardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
+		} else {
+			unknownFields[fName] = v
+		}
+	}
+
+	isJSON = true
+	return
+}
+
 // ParseAsRecord ...
 func ParseAsRecord(cfg config.Configuration, options Options, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
@@ -250,38 +349,18 @@ func ParseAsRecord(cfg config.Configuration, options Options, lineNo int, rawLin
 		return r
 	}
 
-	posOfLeftBracket := strings.IndexByte(line, '{')
-	if posOfLeftBracket < 0 {
-		log.Printf("line %d is not JSON line: <%s>\n", lineNo, rawLine)
-		return r
-	}
-	if posOfLeftBracket > 0 {
-		r.Prefix = line[:posOfLeftBracket]
-		line = line[posOfLeftBracket:]
-	}
+	var isJSON bool
+	var matchesGrok bool
 
-	allFields := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
-		log.Printf("parse round 1 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
-		line = strings.ReplaceAll(line, "\\\"", "\"")
-		line = strings.ReplaceAll(line, "\t", "    ")
-		if err := json.Unmarshal([]byte(line), &allFields); err != nil {
-			log.Printf("parse round 2 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
-			return r
-		}
-	}
-	r.Unknown = false
-
-	standardsFieldConfig := cfg.Fields.StandardsWithAllAliases
-	for fName, fValue := range allFields {
-		v := util.AnyValueFromRaw(lineNo, fValue, cfg.Replace)
-
-		fConfig, contains := standardsFieldConfig[fName]
-		if contains {
-			fName = fConfig.Name // normalize field name
-			r.StandardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
+	isJSON, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseAsJSON(cfg, options, lineNo, line)
+	if isJSON {
+		r.Unknown = false
+	} else {
+		matchesGrok, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseUsingGrok(cfg, options, lineNo, line)
+		if matchesGrok {
+			r.Unknown = false
 		} else {
-			r.UnknownFields[fName] = v
+			r.Unknown = true
 		}
 	}
 

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/mitchellh/go-homedir"
@@ -130,6 +131,9 @@ func (i Grok) FromMap(m map[string]interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to parse grok.matches-fields")
 	}
+	if len(i.MatchesFields) < 2 {
+		return fmt.Errorf("grok.matches-fields must contains at least 2 standard fields")
+	}
 
 	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?
 	// for _, usedPatternName := range i.Uses {
@@ -150,4 +154,9 @@ func (i Grok) ToMap() map[string]interface{} {
 	r["matches-fields"] = i.MatchesFields
 
 	return r
+}
+
+// Parse ...
+func (i Grok) Parse(pattern string, line string) (map[string]string, error) {
+	return i.grok.Parse(pattern, line)
 }

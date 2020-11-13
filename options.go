@@ -34,6 +34,7 @@ type OptionsT struct {
 	OutputRawJSON bool
 
 	GrokPatternsUsed []string
+	GrokPatterns     []string
 }
 
 // Options ...
@@ -42,9 +43,18 @@ type Options = *OptionsT
 // InitGroks ...
 func (i Options) InitGroks(cfg config.Configuration) {
 	if len(i.GrokPatternsUsed) == 0 {
-		// uses default patterns
+		// try to uses default patterns
 		i.GrokPatternsUsed = cfg.Grok.Uses
 	}
+
+	i.GrokPatterns = make([]string, len(i.GrokPatternsUsed))
+	for index, patternName := range i.GrokPatternsUsed {
+		i.GrokPatterns[index] = "%{" + patternName + "}"
+	}
+}
+
+func (i Options) isGrokEnabled() bool {
+	return len(i.GrokPatterns) > 0
 }
 
 // GetLevelFilters ...

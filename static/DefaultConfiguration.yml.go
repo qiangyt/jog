@@ -21,9 +21,9 @@ prefix:
   print: true
   color: FgBlue
 
-grok:
+grok: # logstach GROK configuration, used to parse non-JSON log lines. DISABLED if ` + "`" + `uses` + "`" + ` is empty
   uses: # array of GROK pattern names to be used. Check files in ` + "`" + `library-dirs` + "`" + ` for available patterns
-  matches-fields: # array of field name by which a log line is considered to matches used GROK patterns
+  matches-fields: # array of STANDARD field name by which a log line is considered to matches used GROK patterns
     - timestamp
     - message
   library-dirs: # array of library directory that has GROK pattern files

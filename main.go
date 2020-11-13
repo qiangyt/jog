@@ -96,6 +96,8 @@ func main() {
 		options.InitTimestampFilters(cfg.TimestampField)
 	}
 
+	options.InitGroks(cfg)
+
 	if len(options.LogFilePath) == 0 {
 		log.Println("read JSON log lines from stdin")
 		ProcessReader(cfg, options, os.Stdin, 1)
