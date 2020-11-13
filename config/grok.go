@@ -113,22 +113,16 @@ func (i Grok) Reset() {
 
 // FromMap ...
 func (i Grok) FromMap(m map[string]interface{}) error {
-	patternsDirsV := util.ExtractFromMap(m, "library-dirs")
-	if patternsDirsV != nil {
-		patternsDirs, err := util.MustStringSlice(patternsDirsV)
-		if err != nil {
-			return errors.Wrapf(err, "failed to parse grok.library: %v", patternsDirsV)
-		}
-		i.LibraryDirs = patternsDirs
+	var err error
+
+	i.LibraryDirs, err = util.ExtractStringSliceFromMap(m, "library-dirs")
+	if err != nil {
+		return errors.Wrap(err, "failed to parse grok.library-dirs")
 	}
 
-	usesV := util.ExtractFromMap(m, "uses")
-	if usesV != nil {
-		patternsDirs, err := util.MustStringSlice(usesV)
-		if err != nil {
-			return errors.Wrapf(err, "failed to parse grok.uses: %v", usesV)
-		}
-		i.Uses = patternsDirs
+	i.Uses, err = util.ExtractStringSliceFromMap(m, "uses")
+	if err != nil {
+		return errors.Wrap(err, "failed to parse grok.uses")
 	}
 
 	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?

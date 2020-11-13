@@ -134,6 +134,20 @@ func ExtractFromMap(m map[string]interface{}, key string) interface{} {
 	return r
 }
 
+// ExtractStringSliceFromMap ...
+func ExtractStringSliceFromMap(m map[string]interface{}, key string) ([]string, error) {
+	v := ExtractFromMap(m, key)
+	if v == nil {
+		return []string{}, nil
+	}
+
+	r, err := MustStringSlice(v)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to parse %s: %v", key, v)
+	}
+	return r, nil
+}
+
 // MkdirAll ...
 func MkdirAll(path string) {
 	if err := os.MkdirAll(path, os.ModePerm); err != nil {
