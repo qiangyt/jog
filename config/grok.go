@@ -6,6 +6,7 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/static/grok_extended"
 	"github.com/qiangyt/jog/static/grok_vjeantet"
 	"github.com/qiangyt/jog/util"
 	"github.com/vjeantet/grok"
@@ -19,31 +20,36 @@ type GrokT struct {
 	LibraryDirs   []string `yaml:"library-dirs"`
 }
 
-// DefaultGrokLibraryDir ...
-func DefaultGrokLibraryDir() string {
-	return JogHomeDir("grok_vjeantet")
-}
-
 // Grok ...
 type Grok = *GrokT
 
-// SaveDefaultGrokPatternFile ...
-func SaveDefaultGrokPatternFile(patternFileName string, patternFileContent string) {
-	dir := DefaultGrokLibraryDir()
+// SaveGrokPatternFile ...
+func SaveGrokPatternFile(dir string, patternFileName string, patternFileContent string) {
 	util.ReplaceFile(filepath.Join(dir, patternFileName), []byte(patternFileContent))
+}
+
+// DefaultGrokLibraryDirs ...
+func DefaultGrokLibraryDirs(expand bool) []string {
+	return []string{
+		JogHomeDir(expand, "grok_vjeantet"),
+		JogHomeDir(expand, "grok_extended"),
+	}
 }
 
 // ResetDefaultGrokLibraryDir ...
 func ResetDefaultGrokLibraryDir() {
-	dir := DefaultGrokLibraryDir()
-	util.RemoveDir(dir)
+	dirVjeantet := JogHomeDir(true, "grok_vjeantet")
+	util.RemoveDir(dirVjeantet)
+
+	dirExtended := JogHomeDir(true, "grok_extended")
+	util.RemoveDir(dirExtended)
 
 	InitDefaultGrokLibraryDir()
 }
 
 // InitDefaultGrokLibraryDir ...
 func InitDefaultGrokLibraryDir() {
-	jogHomeDir := JogHomeDir()
+	jogHomeDir := JogHomeDir(true)
 
 	licensePath := filepath.Join(jogHomeDir, "grok_vjeantet.LICENSE")
 	util.WriteFileIfNotFound(licensePath, []byte(grok_vjeantet.LICENSE))
@@ -51,32 +57,38 @@ func InitDefaultGrokLibraryDir() {
 	readmePath := filepath.Join(jogHomeDir, "grok_vjeantet.README.md")
 	util.WriteFileIfNotFound(readmePath, []byte(grok_vjeantet.README_md))
 
-	dir := DefaultGrokLibraryDir()
-	if util.DirExists(dir) == false {
-		util.MkdirAll(dir)
+	dirVjeantet := JogHomeDir(true, "grok_vjeantet")
+	if util.DirExists(dirVjeantet) == false {
+		util.MkdirAll(dirVjeantet)
 
-		SaveDefaultGrokPatternFile("aws", grok_vjeantet.Aws)
-		SaveDefaultGrokPatternFile("bro", grok_vjeantet.Bro)
-		SaveDefaultGrokPatternFile("firewalls", grok_vjeantet.Firewalls)
-		SaveDefaultGrokPatternFile("haproxy", grok_vjeantet.Haproxy)
-		SaveDefaultGrokPatternFile("junos", grok_vjeantet.Junos)
-		SaveDefaultGrokPatternFile("linux-syslog", grok_vjeantet.Linux_syslog)
-		SaveDefaultGrokPatternFile("mcollective-patterns", grok_vjeantet.Mcollective_patterns)
-		SaveDefaultGrokPatternFile("nagios", grok_vjeantet.Nagios)
-		SaveDefaultGrokPatternFile("rails", grok_vjeantet.Rails)
-		SaveDefaultGrokPatternFile("redis", grok_vjeantet.Redis)
-		SaveDefaultGrokPatternFile("bacula", grok_vjeantet.Bacula)
-		SaveDefaultGrokPatternFile("exim", grok_vjeantet.Exim)
-		SaveDefaultGrokPatternFile("grok-patterns", grok_vjeantet.Grok_patterns)
-		SaveDefaultGrokPatternFile("java", grok_vjeantet.Java)
-		SaveDefaultGrokPatternFile("mcollective", grok_vjeantet.Mcollective)
-		SaveDefaultGrokPatternFile("mongodb", grok_vjeantet.Mongodb)
-		SaveDefaultGrokPatternFile("postgresql", grok_vjeantet.Postgresql)
-		SaveDefaultGrokPatternFile("ruby", grok_vjeantet.Ruby)
+		SaveGrokPatternFile(dirVjeantet, "aws", grok_vjeantet.Aws)
+		SaveGrokPatternFile(dirVjeantet, "bro", grok_vjeantet.Bro)
+		SaveGrokPatternFile(dirVjeantet, "firewalls", grok_vjeantet.Firewalls)
+		SaveGrokPatternFile(dirVjeantet, "haproxy", grok_vjeantet.Haproxy)
+		SaveGrokPatternFile(dirVjeantet, "junos", grok_vjeantet.Junos)
+		SaveGrokPatternFile(dirVjeantet, "linux-syslog", grok_vjeantet.Linux_syslog)
+		SaveGrokPatternFile(dirVjeantet, "mcollective-patterns", grok_vjeantet.Mcollective_patterns)
+		SaveGrokPatternFile(dirVjeantet, "nagios", grok_vjeantet.Nagios)
+		SaveGrokPatternFile(dirVjeantet, "rails", grok_vjeantet.Rails)
+		SaveGrokPatternFile(dirVjeantet, "redis", grok_vjeantet.Redis)
+		SaveGrokPatternFile(dirVjeantet, "bacula", grok_vjeantet.Bacula)
+		SaveGrokPatternFile(dirVjeantet, "exim", grok_vjeantet.Exim)
+		SaveGrokPatternFile(dirVjeantet, "grok-patterns", grok_vjeantet.Grok_patterns)
+		SaveGrokPatternFile(dirVjeantet, "java", grok_vjeantet.Java)
+		SaveGrokPatternFile(dirVjeantet, "mcollective", grok_vjeantet.Mcollective)
+		SaveGrokPatternFile(dirVjeantet, "mongodb", grok_vjeantet.Mongodb)
+		SaveGrokPatternFile(dirVjeantet, "postgresql", grok_vjeantet.Postgresql)
+		SaveGrokPatternFile(dirVjeantet, "ruby", grok_vjeantet.Ruby)
 	}
 
-	util.MkdirAll(JogHomeDir("grok_extended"))
-	util.MkdirAll(JogHomeDir("grok_mine"))
+	dirExtended := JogHomeDir(true, "grok_extended")
+	if util.DirExists(dirExtended) == false {
+		util.MkdirAll(dirExtended)
+
+		SaveGrokPatternFile(dirExtended, "pm2", grok_extended.Pm2)
+	}
+
+	util.MkdirAll(JogHomeDir(true, "grok_mine"))
 
 }
 
