@@ -7,12 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
-)
-
-const (
-	LogDir = "~/.jog/log"
 )
 
 // LogFileT implements io.Writer
@@ -73,16 +68,9 @@ func (i LogFile) Close() {
 }
 
 // InitLogger ...
-func InitLogger() LogFile {
-	dir, err := homedir.Expand(LogDir)
-	if err != nil {
-		panic(errors.Wrapf(err, "failed to get log dir: %s", LogDir))
-	}
-
-	MkdirAll(dir)
-
+func InitLogger(jogHomeDir string) LogFile {
 	r := &LogFileT{
-		path: filepath.Join(dir, "jog.log"),
+		path: filepath.Join(jogHomeDir, "jog.log"),
 	}
 	r.Open()
 	return r

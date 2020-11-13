@@ -72,7 +72,7 @@ func main() {
 		}()
 	}
 
-	logFile := util.InitLogger()
+	logFile := util.InitLogger(config.JogHomeDir())
 	defer logFile.Close()
 
 	cfg := ReadConfig(options.ConfigFilePath)

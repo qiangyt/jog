@@ -17,6 +17,22 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	jogHomeDir = "~/.jog"
+)
+
+// JogHomeDir ...
+func JogHomeDir(children ...string) string {
+	r, err := homedir.Expand(jogHomeDir)
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to get jog home directory", jogHomeDir))
+	}
+
+	util.MkdirAll(r)
+
+	return filepath.Join(r, filepath.Join(children...))
+}
+
 // ConfigurationT ...
 type ConfigurationT struct {
 	// TODO: configurable
