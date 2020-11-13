@@ -29,8 +29,6 @@ func (i StartupLine) MarshalYAML() (interface{}, error) {
 func (i StartupLine) Reset() {
 	i.ElementT.Reset()
 
-	i.Before = "\n"
-	i.After = "\n"
 	i.Contains = "Started Application in"
 }
 
@@ -38,16 +36,6 @@ func (i StartupLine) Reset() {
 func (i StartupLine) FromMap(m map[string]interface{}) error {
 	if err := i.ElementT.FromMap(m); err != nil {
 		return err
-	}
-
-	beforeV := util.ExtractFromMap(m, "before")
-	if beforeV != nil {
-		i.Before = strutil.MustString(beforeV)
-	}
-
-	afterV := util.ExtractFromMap(m, "after")
-	if beforeV != nil {
-		i.After = strutil.MustString(afterV)
 	}
 
 	containsV := util.ExtractFromMap(m, "contains")

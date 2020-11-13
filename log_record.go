@@ -44,9 +44,7 @@ func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable
 		color = nil
 	}
 
-	element.PrintBefore(color, builder)
 	element.PrintBody(color, builder, a)
-	element.PrintAfter(color, builder)
 }
 
 // PopulateOtherFields ...
@@ -118,18 +116,6 @@ func (i LogRecord) PopulateExplicitStandardFields(cfg config.Configuration, expl
 func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 	builder := &strings.Builder{}
 
-	printStartLine := i.StartupLine && cfg.StartupLine.IsEnabled()
-
-	var startupLineColor util.Color
-	if cfg.Colorization {
-		startupLineColor = cfg.StartupLine.GetColor("")
-	} else {
-		startupLineColor = nil
-	}
-	if printStartLine {
-		cfg.StartupLine.PrintBefore(startupLineColor, builder)
-	}
-
 	i.PrintElement(cfg, cfg.LineNo, builder, fmt.Sprintf("%-6v ", i.LineNo))
 
 	if i.Unknown {
@@ -149,10 +135,6 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 		builder.WriteString(os.Expand(cfg.Pattern, func(fieldName string) string {
 			return result[fieldName]
 		}))
-	}
-
-	if printStartLine {
-		cfg.StartupLine.PrintAfter(startupLineColor, builder)
 	}
 
 	return builder.String()
