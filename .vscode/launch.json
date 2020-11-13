@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}",
-            "args": ["example_logs/grok_tomcat.log", "-g", "TOMCATLOG"]
+            "args": ["example_logs/logstash.log"]
         }
     ]
 }

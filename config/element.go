@@ -101,13 +101,13 @@ func (i Element) IsEnabled() bool {
 	return i.Print
 }
 
-// PrintBody ...
-func (i Element) PrintBody(color util.Color, builder *strings.Builder, body string) {
-	body = ShortenValue(body, i.PrintFormat)
+// Print ...
+func (i Element) Print(color util.Color, builder *strings.Builder, a string) {
+	a = ShortenValue(a, i.PrintFormat)
 	if color == nil {
-		builder.WriteString(fmt.Sprintf(i.PrintFormat, body))
+		builder.WriteString(fmt.Sprintf(i.PrintFormat, a))
 	} else {
-		builder.WriteString(color.Sprintf(i.PrintFormat, body))
+		builder.WriteString(color.Sprintf(i.PrintFormat, a))
 	}
 }
 
