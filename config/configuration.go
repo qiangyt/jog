@@ -22,10 +22,16 @@ const (
 )
 
 // JogHomeDir ...
-func JogHomeDir(children ...string) string {
-	r, err := homedir.Expand(jogHomeDir)
-	if err != nil {
-		panic(errors.Wrapf(err, "failed to get jog home directory", jogHomeDir))
+func JogHomeDir(expand bool, children ...string) string {
+	var r string
+
+	if !expand {
+		r = jogHomeDir
+	} else {
+		var err error
+		if r, err = homedir.Expand(jogHomeDir); err != nil {
+			panic(errors.Wrapf(err, "failed to get jog home directory", jogHomeDir))
+		}
 	}
 
 	util.MkdirAll(r)

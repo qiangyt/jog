@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gookit/color"
 	"github.com/qiangyt/jog/config"
@@ -24,6 +25,8 @@ func PrintConfigTemplate() {
 
 // PrintHelp ...
 func PrintHelp() {
+	defaultGrokLibraryDirs := strings.Join(config.DefaultGrokLibraryDirs(false), ", ")
+
 	color.New(color.Blue, color.OpBold).Println("\nConvert and view structured (JSON) log")
 	PrintVersion()
 	fmt.Println()
@@ -56,12 +59,12 @@ func PrintHelp() {
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -d,  --debug                                                Print more error detail\n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")
-	fmt.Printf("  -g,  --grok <grok pattern name>                             For non-json log line. The default patterns are saved in " + config.DefaultGrokLibraryDir() + "\n")
+	fmt.Printf("  -g,  --grok <grok pattern name>                             For non-json log line. The default patterns are saved in [%s]\n", defaultGrokLibraryDirs)
 	fmt.Printf("  -h,  --help                                                 Display this information\n")
 	fmt.Printf("  -j,  --json                                                 Output the raw JSON but then able to apply filters\n")
 	fmt.Printf("  -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
-	fmt.Printf("       --reset-grok-library-dir                               Save default GROK patterns to " + config.DefaultGrokLibraryDir() + "\n")
+	fmt.Printf("       --reset-grok-library-dir                               Save default GROK patterns to [%s]\n", defaultGrokLibraryDirs)
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
 	fmt.Println()
