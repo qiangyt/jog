@@ -12,7 +12,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/static"
-	"github.com/qiangyt/jog/static/grok_patterns"
+	"github.com/qiangyt/jog/static/grok_vjeantet"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
@@ -264,24 +264,24 @@ func parseGrokPatterns(patternsText string) []grokPatternItem {
 func loadAllGrokPatterns() []grokPatternItem {
 	r := []grokPatternItem{}
 
-	r = append(r, parseGrokPatterns(grok_patterns.Aws)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Bacula)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Bro)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Exim)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Firewalls)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Grok_patterns)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Haproxy)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Java)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Junos)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Linux_syslog)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Mcollective_patterns)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Mcollective)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Mongodb)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Nagios)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Postgresql)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Rails)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Redis)...)
-	r = append(r, parseGrokPatterns(grok_patterns.Ruby)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Aws)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Bacula)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Bro)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Exim)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Firewalls)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Grok_patterns)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Haproxy)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Java)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Junos)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Linux_syslog)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Mcollective_patterns)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Mcollective)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Mongodb)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Nagios)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Postgresql)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Rails)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Redis)...)
+	r = append(r, parseGrokPatterns(grok_vjeantet.Ruby)...)
 
 	return r
 }
