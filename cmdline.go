@@ -45,6 +45,7 @@ func PrintHelp() {
 	fmt.Println("   8) natural timestamp range:           jog --after \"1 week\" --before \"2 days\" app-20200701-1.log")
 	fmt.Println("   9) output raw JSON and apply time range filter:      jog --after \"1 week\" --before \"2 days\" app-20200701-1.log --json")
 	fmt.Println("   10) disable colorization:             jog -cs colorization=false app-20200701-1.log")
+	fmt.Println("   11) view apache log, non-JSON log     jog -g COMMONAPACHELOG example_logs/grok_apache.log")
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Options:")
@@ -60,7 +61,7 @@ func PrintHelp() {
 	fmt.Printf("  -j,  --json                                                 Output the raw JSON but then able to apply filters\n")
 	fmt.Printf("  -l,  --level <level value>                                  Filter by log level. For ex. --level warn \n")
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
-	fmt.Printf("  ,    --reset-grok-library-dir                               Save default GROK patterns to " + config.DefaultGrokLibraryDir() + "\n")
+	fmt.Printf("       --reset-grok-library-dir                               Save default GROK patterns to " + config.DefaultGrokLibraryDir() + "\n")
 	fmt.Printf("  -t,  --template                                             Print a config YAML file template\n")
 	fmt.Printf("  -V,  --version                                              Display app version information\n")
 	fmt.Println()
