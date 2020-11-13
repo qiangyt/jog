@@ -264,6 +264,7 @@ func ParseAsRecord(cfg config.Configuration, options Options, lineNo int, rawLin
 	if err := json.Unmarshal([]byte(line), &allFields); err != nil {
 		log.Printf("parse round 1 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
 		line = strings.ReplaceAll(line, "\\\"", "\"")
+		line = strings.ReplaceAll(line, "\t", "    ")
 		if err := json.Unmarshal([]byte(line), &allFields); err != nil {
 			log.Printf("parse round 2 failed: line %d: <%s>\n\treason %v\n", lineNo, line, errors.Wrap(err, ""))
 			return r

@@ -19,3 +19,5 @@
 /target
 idea.txt
 
+/static/grok_patterns/LICENSE.go
+/static/grok_patterns/README.md.go
