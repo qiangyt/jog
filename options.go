@@ -196,6 +196,9 @@ func OptionsWithCommandLine() (bool, Options) {
 
 				r.GrokPatternsUsed = append(r.GrokPatternsUsed, os.Args[i+1])
 				i++
+			} else if arg == "--reset-default-grok-patterns-dir" {
+				config.ResetDefaultGrokPatternsDir()
+				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(os.Args) {
 					color.Red.Println("Missing after argument\n")
