@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -32,13 +33,30 @@ func FileStat(path string, ensureExists bool) os.FileInfo {
 		}
 		return nil
 	}
+
 	return r
 }
 
 // FileExists ...
 func FileExists(path string) bool {
-	if FileStat(path, false) == nil {
+	fi := FileStat(path, false)
+	if fi == nil {
 		return false
+	}
+	if fi.IsDir() {
+		panic(fmt.Errorf("expect %s be file, but it is directory", path))
+	}
+	return true
+}
+
+// DirExists ...
+func DirExists(path string) bool {
+	fi := FileStat(path, false)
+	if fi == nil {
+		return false
+	}
+	if !fi.IsDir() {
+		panic(fmt.Errorf("expect %s be directory, but it is file", path))
 	}
 	return true
 }
