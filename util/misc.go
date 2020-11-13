@@ -72,9 +72,16 @@ func RemoveFile(path string) {
 func ReadFile(path string) []byte {
 	r, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(errors.Wrap(err, ""))
+		panic(errors.Wrapf(err, "failed to read file: %s", path))
 	}
 	return r
+}
+
+// WriteFile ...
+func WriteFile(path string, content []byte) {
+	if err := ioutil.WriteFile(path, content, 0640); err != nil {
+		panic(errors.Wrapf(err, "failed to write file: %s", path))
+	}
 }
 
 // UnmashalYAMLAgain ...

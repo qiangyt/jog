@@ -11,6 +11,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	LogDir = "~/.jog/log"
+)
+
 // LogFileT implements io.Writer
 type LogFileT struct {
 	path string
@@ -70,9 +74,9 @@ func (i LogFile) Close() {
 
 // InitLogger ...
 func InitLogger() LogFile {
-	dir, err := homedir.Expand("~/.jog/log")
+	dir, err := homedir.Expand(LogDir)
 	if err != nil {
-		panic(fmt.Errorf("failed to get home dir: %v", err))
+		panic(errors.Wrapf(err, "failed to get log dir: %s", LogDir))
 	}
 
 	MkdirAll(dir)
