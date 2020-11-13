@@ -6,16 +6,12 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/qiangyt/jog/config"
-)
-
-const (
-	// AppVersion ...
-	AppVersion = "v0.9.21"
+	"github.com/qiangyt/jog/static"
 )
 
 // PrintVersion ...
 func PrintVersion() {
-	fmt.Println(AppVersion)
+	fmt.Println(static.AppVersion)
 }
 
 // PrintConfigTemplate ...
