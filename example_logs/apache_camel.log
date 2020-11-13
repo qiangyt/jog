@@ -1,14 +1,14 @@
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"Auto-configuration summary:"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.threadpool.maxPoolSize=500"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.workerPoolMaxSize=1000"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.reconnectBackoffMaxMs=1000"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.consumersCount=1"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.fetchMaxBytes=52428800"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.workerPoolCoreSize=20"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.saslMechanism=PLAIN"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.securityProtocol=PLAINTEXT"}
-{"timestamp":"2020.11.11T15:58:47.587+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Apache Camel 3.6.0 (camel-1) is starting"}
-{"timestamp":"2020.11.11T15:58:47.588+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"StreamCaching is not in use. If using streams then its recommended to enable stream caching. See more details at http://camel.apache.org/stream-caching.html"}
-{"timestamp":"2020.11.11T15:58:47.588+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Total 0 routes, of which 0 are started"}
-{"timestamp":"2020.11.11T15:58:47.588+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Apache Camel 3.6.0 (camel-1) started in 0.001 seconds"}
+{"timestamp":"2020.11.11T15:58:47.501+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"Auto-configuration summary:"}
+{"timestamp":"2020.11.11T15:58:47.502+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.threadpool.maxPoolSize=500"}
+{"timestamp":"2020.11.11T15:58:47.503+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.workerPoolMaxSize=1000"}
+{"timestamp":"2020.11.11T15:58:47.504+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.reconnectBackoffMaxMs=1000"}
+{"timestamp":"2020.11.11T15:58:47.505+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.consumersCount=1"}
+{"timestamp":"2020.11.11T15:58:47.506+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.fetchMaxBytes=52428800"}
+{"timestamp":"2020.11.11T15:58:47.507+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.workerPoolCoreSize=20"}
+{"timestamp":"2020.11.11T15:58:47.508+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.saslMechanism=PLAIN"}
+{"timestamp":"2020.11.11T15:58:47.509+0000", "level": "INFO", "source": "somehost:org.apache.camel.main.BaseMainSupport:main", "message":"	camel.component.kafka.securityProtocol=PLAINTEXT"}
+{"timestamp":"2020.11.11T15:58:47.510+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Apache Camel 3.6.0 (camel-1) is starting"}
+{"timestamp":"2020.11.11T15:58:47.511+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"StreamCaching is not in use. If using streams then its recommended to enable stream caching. See more details at http://camel.apache.org/stream-caching.html"}
+{"timestamp":"2020.11.11T15:58:47.512+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Total 0 routes, of which 0 are started"}
+{"timestamp":"2020.11.11T15:58:47.513+0000", "level": "INFO", "source": "somehost:org.apache.camel.impl.engine.AbstractCamelContext:main", "message":"Apache Camel 3.6.0 (camel-1) started in 0.001 seconds"}
 
