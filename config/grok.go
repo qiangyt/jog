@@ -131,8 +131,8 @@ func (i Grok) FromMap(m map[string]interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to parse grok.matches-fields")
 	}
-	if len(i.MatchesFields) < 2 {
-		return fmt.Errorf("grok.matches-fields must contains at least 2 standard fields")
+	if len(i.MatchesFields) < 1 {
+		return fmt.Errorf("grok.matches-fields must contains at least 1 standard fields")
 	}
 
 	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?

@@ -1,0 +1,2 @@
+# TOMCATLOG %{TOMCAT_DATESTAMP:timestamp} \| %{LOGLEVEL:level} \| %{JAVACLASS:class} - %{JAVALOGMESSAGE:logmessage}
+2020-11-13 19:01:01 | Debug | org.apache.catalina.A - hello 1
