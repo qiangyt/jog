@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -33,8 +35,7 @@ type FieldT struct {
 	TimeFormat     string `yaml:"time-format"`
 	Timezone       string `yaml:"timezone"`
 	TimeLocation   *time.Location
-	Width          int
-	Fixed          bool
+	PrintFormat    string `yaml:"print-format"`
 }
 
 // Field ...
@@ -62,8 +63,7 @@ func (i Field) Reset() {
 	i.Timezone = ""
 	i.TimeLocation = nil
 
-	i.Width = 0
-	i.Fixed = false
+	i.PrintFormat = "%s"
 }
 
 // UnmarshalYAML ...
@@ -111,10 +111,7 @@ func (i Field) ToMap() map[string]interface{} {
 		r["timezone"] = i.Timezone
 	}
 
-	if i.Width != 0 {
-		r["width"] = i.Width
-	}
-	r["fixed"] = i.Fixed
+	r["print-format"] = i.PrintFormat
 
 	return r
 }
@@ -177,24 +174,27 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		i.TimeLocation = loc
 	}
 
-	widthV := util.ExtractFromMap(m, "width")
-	if widthV != nil {
-		width := strutil.MustInt(strutil.MustString(widthV))
-		if width > 0 && width <= 4 {
-			i.Width = 4
-		} else if width < 0 && width >= -4 {
-			i.Width = -4
+	printFormatV := util.ExtractFromMap(m, "print-format")
+	if printFormatV != nil {
+		printFormatT := strutil.MustString(printFormatV)
+		if validPrintFormat(printFormatT) {
+			i.PrintFormat = printFormatT
 		} else {
-			i.Width = width
+			return fmt.Errorf("invalid print-format: %s", printFormatT)
 		}
 	}
 
-	fixedV := util.ExtractFromMap(m, "fixed")
-	if fixedV != nil {
-		i.Fixed = util.ToBool(fixedV)
-	}
-
 	return nil
+}
+
+/* validPrintFormat check print-format if it's valid and meaningful
+ * only verbs `s` and `v` are valid at the moment
+ * `%5.s` is valid, but not meaningful, because the output will be empty, will not be accepted
+ * `%.5s` is valid, but not very meaningful, but will be accepted
+ */
+func validPrintFormat(printFormat string) bool {
+	var re = regexp.MustCompile(`%(-{0,1}\d{1,}){0,1}(\.\d{1,}){0,1}([sv])`)
+	return re.MatchString(printFormat)
 }
 
 // GetColor ...
@@ -207,25 +207,24 @@ func (i Field) GetColor(value string) util.Color {
 
 // PrintBody ...
 func (i Field) PrintBody(color util.Color, builder *strings.Builder, body string) {
-	if i.Fixed {
-		body = ShortenValue(body, abs(i.Width))
-	}
-
-	format := GetFormatString(i.Width)
-
+	body = ShortenValue(body, i.PrintFormat)
 	if color == nil {
-		builder.WriteString(fmt.Sprintf(format, body))
+		builder.WriteString(fmt.Sprintf(i.PrintFormat, body))
 	} else {
-		builder.WriteString(color.Sprintf(format, body))
+		builder.WriteString(color.Sprintf(i.PrintFormat, body))
 	}
 }
 
 // ShortenValue shortens the value to maxWidth -3 chars if necessary, shortend values will be postfixed by three dots
-func ShortenValue(inValue string, maxWidth int) string {
-	if maxWidth == 0 || len([]rune(inValue)) <= maxWidth {
-		return inValue
+func ShortenValue(inValue string, printFormat string) string {
+	idx := strings.Index(printFormat, ".")
+	if idx >= 0 {
+		width, err := strconv.Atoi(printFormat[1:idx])
+		if err == nil && len([]rune(inValue)) > abs(width) && abs(width) > 3 {
+			return fmt.Sprint(inValue[:abs(width)-3], "...")
+		}
 	}
-	return fmt.Sprint(inValue[:(maxWidth-3)], "...")
+	return inValue
 }
 
 // abs function that works for int, Math.Abs only accepts float64
@@ -234,13 +233,4 @@ func abs(value int) int {
 		value = value * -1
 	}
 	return value
-}
-
-// GetFormatString ...
-func GetFormatString(width int) string {
-	format := "%s"
-	if width != 0 {
-		format = fmt.Sprint("%", width, "s")
-	}
-	return format
 }
