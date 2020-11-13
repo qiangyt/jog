@@ -2,7 +2,7 @@ package grok_patterns
 
 const (
   // Linux_syslog ...
-  Linux_syslog = `
+  Linux_syslog string = `
 SYSLOG5424PRINTASCII [!-~]+
 
 SYSLOGBASE2 (?:%{SYSLOGTIMESTAMP:timestamp}|%{TIMESTAMP_ISO8601:timestamp8601}) (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource}+(?: %{SYSLOGPROG}:|)

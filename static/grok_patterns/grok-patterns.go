@@ -2,7 +2,7 @@ package grok_patterns
 
 const (
   // Grok_patterns ...
-  Grok_patterns = `
+  Grok_patterns string = `
 USERNAME [a-zA-Z0-9._-]+
 USER %{USERNAME}
 INT (?:[+-]?(?:[0-9]+))

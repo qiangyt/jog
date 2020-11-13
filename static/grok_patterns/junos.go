@@ -2,7 +2,7 @@ package grok_patterns
 
 const (
   // Junos ...
-  Junos = `
+  Junos string = `
 # JUNOS 11.4 RT_FLOW patterns
 RT_FLOW_EVENT (RT_FLOW_SESSION_CREATE|RT_FLOW_SESSION_CLOSE|RT_FLOW_SESSION_DENY)
 

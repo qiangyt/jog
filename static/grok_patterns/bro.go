@@ -2,7 +2,7 @@ package grok_patterns
 
 const (
   // Bro ...
-  Bro = `
+  Bro string = `
 # https://www.bro.org/sphinx/script-reference/log-files.html
 
 # http.log
