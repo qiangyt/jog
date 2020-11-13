@@ -42,6 +42,7 @@ fields:
       color: FgDefault
   level: # 'level' field is a hard-coded field used for level filter as well, so don't rename it
          # And, it must be an enum.
+    print-format: "%-5.5s" # follows https://golang.org/pkg/fmt/
     alias: "level, @level, severity, @severity"
     case-sensitive: false
     enums:
