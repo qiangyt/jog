@@ -207,7 +207,7 @@ func OptionsWithCommandLine() (bool, Options) {
 				r.GrokPatternsUsed = append(r.GrokPatternsUsed, os.Args[i+1])
 				i++
 			} else if arg == "--reset-grok-library-dir" {
-				config.DefaultGrokLibraryDir()
+				config.ResetDefaultGrokLibraryDir()
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(os.Args) {
