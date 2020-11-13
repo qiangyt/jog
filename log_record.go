@@ -137,6 +137,12 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 		}))
 	}
 
+	if i.StartupLine {
+		startupLine := &strings.Builder{}
+		cfg.StartupLine.PrintTo(cfg.StartupLine.Color, startupLine, builder.String())
+		builder = startupLine
+	}
+
 	return builder.String()
 }
 

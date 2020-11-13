@@ -3,6 +3,7 @@ pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${
 startup-line:
   color: FgGreen, OpBold
   contains: "Started Application in"
+  print-format: "\n%s\n"
 
 line-no:
   print: true
