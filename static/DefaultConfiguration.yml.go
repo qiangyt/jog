@@ -27,6 +27,8 @@ grok: # logstach GROK configuration, used to parse non-JSON log lines. DISABLED 
     - timestamp
   library-dirs: # array of library directory that has GROK pattern files
     - ~/.jog/grok_vjeantet  # Will touch it and put default patterns there if not exists. To reset it, run ` + "`" + `jog --reset-grok-library-dir` + "`" + `
+    - ~/.jog/grok_extended
+    - ~/.jog/grok_mine
     - ./.jog/grok_library # Ignore if not exists
 
 fields:

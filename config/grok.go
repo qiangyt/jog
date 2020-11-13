@@ -52,29 +52,32 @@ func InitDefaultGrokLibraryDir() {
 	util.WriteFileIfNotFound(readmePath, []byte(grok_vjeantet.README_md))
 
 	dir := DefaultGrokLibraryDir()
-	if util.DirExists(dir) {
-		return
-	}
-	util.MkdirAll(dir)
+	if util.DirExists(dir) == false {
+		util.MkdirAll(dir)
 
-	SaveDefaultGrokPatternFile("aws", grok_vjeantet.Aws)
-	SaveDefaultGrokPatternFile("bro", grok_vjeantet.Bro)
-	SaveDefaultGrokPatternFile("firewalls", grok_vjeantet.Firewalls)
-	SaveDefaultGrokPatternFile("haproxy", grok_vjeantet.Haproxy)
-	SaveDefaultGrokPatternFile("junos", grok_vjeantet.Junos)
-	SaveDefaultGrokPatternFile("linux-syslog", grok_vjeantet.Linux_syslog)
-	SaveDefaultGrokPatternFile("mcollective-patterns", grok_vjeantet.Mcollective_patterns)
-	SaveDefaultGrokPatternFile("nagios", grok_vjeantet.Nagios)
-	SaveDefaultGrokPatternFile("rails", grok_vjeantet.Rails)
-	SaveDefaultGrokPatternFile("redis", grok_vjeantet.Redis)
-	SaveDefaultGrokPatternFile("bacula", grok_vjeantet.Bacula)
-	SaveDefaultGrokPatternFile("exim", grok_vjeantet.Exim)
-	SaveDefaultGrokPatternFile("grok-patterns", grok_vjeantet.Grok_patterns)
-	SaveDefaultGrokPatternFile("java", grok_vjeantet.Java)
-	SaveDefaultGrokPatternFile("mcollective", grok_vjeantet.Mcollective)
-	SaveDefaultGrokPatternFile("mongodb", grok_vjeantet.Mongodb)
-	SaveDefaultGrokPatternFile("postgresql", grok_vjeantet.Postgresql)
-	SaveDefaultGrokPatternFile("ruby", grok_vjeantet.Ruby)
+		SaveDefaultGrokPatternFile("aws", grok_vjeantet.Aws)
+		SaveDefaultGrokPatternFile("bro", grok_vjeantet.Bro)
+		SaveDefaultGrokPatternFile("firewalls", grok_vjeantet.Firewalls)
+		SaveDefaultGrokPatternFile("haproxy", grok_vjeantet.Haproxy)
+		SaveDefaultGrokPatternFile("junos", grok_vjeantet.Junos)
+		SaveDefaultGrokPatternFile("linux-syslog", grok_vjeantet.Linux_syslog)
+		SaveDefaultGrokPatternFile("mcollective-patterns", grok_vjeantet.Mcollective_patterns)
+		SaveDefaultGrokPatternFile("nagios", grok_vjeantet.Nagios)
+		SaveDefaultGrokPatternFile("rails", grok_vjeantet.Rails)
+		SaveDefaultGrokPatternFile("redis", grok_vjeantet.Redis)
+		SaveDefaultGrokPatternFile("bacula", grok_vjeantet.Bacula)
+		SaveDefaultGrokPatternFile("exim", grok_vjeantet.Exim)
+		SaveDefaultGrokPatternFile("grok-patterns", grok_vjeantet.Grok_patterns)
+		SaveDefaultGrokPatternFile("java", grok_vjeantet.Java)
+		SaveDefaultGrokPatternFile("mcollective", grok_vjeantet.Mcollective)
+		SaveDefaultGrokPatternFile("mongodb", grok_vjeantet.Mongodb)
+		SaveDefaultGrokPatternFile("postgresql", grok_vjeantet.Postgresql)
+		SaveDefaultGrokPatternFile("ruby", grok_vjeantet.Ruby)
+	}
+
+	util.MkdirAll(JogHomeDir("grok_extended"))
+	util.MkdirAll(JogHomeDir("grok_mine"))
+
 }
 
 // Init ...
