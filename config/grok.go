@@ -21,7 +21,7 @@ type GrokT struct {
 
 // DefaultGrokLibraryDir ...
 func DefaultGrokLibraryDir() string {
-	return JogHomeDir("grok-library")
+	return JogHomeDir("grok-library/vjeantet")
 }
 
 // Grok ...
