@@ -3,6 +3,11 @@ Test test test:
 1. unit test coverage: >= 80%
 2. design manual test case
 
+# v0.9.21 (TODO)
+1. New feature: support flag (non-JSON) log, using logstash GROK to parse
+2. Fix: replace tab in log lines by four lines, by @frudolph77
+3. A bit refactoring
+
 # v0.9.20 (2020-10-27)
 1. New feature: output the raw JSON but then able to apply filters (see example #9)
 
