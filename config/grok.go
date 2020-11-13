@@ -113,9 +113,23 @@ func (i Grok) Reset() {
 
 // FromMap ...
 func (i Grok) FromMap(m map[string]interface{}) error {
-	i.PatternsDirs = util.ExtractFromMap(m, "patterns-dirs").([]string)
+	patternsDirsV := util.ExtractFromMap(m, "patterns-dirs")
+	if patternsDirsV != nil {
+		patternsDirs, err := util.MustStringSlice(patternsDirsV)
+		if err != nil {
+			return errors.Wrapf(err, "failed to parse grok.patterns-dirs: %v", patternsDirsV)
+		}
+		i.PatternsDirs = patternsDirs
+	}
 
-	i.Uses = util.ExtractFromMap(m, "uses").([]string)
+	usesV := util.ExtractFromMap(m, "uses")
+	if usesV != nil {
+		patternsDirs, err := util.MustStringSlice(usesV)
+		if err != nil {
+			return errors.Wrapf(err, "failed to parse grok.uses: %v", usesV)
+		}
+		i.Uses = patternsDirs
+	}
 
 	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?
 	// for _, usedPatternName := range i.Uses {

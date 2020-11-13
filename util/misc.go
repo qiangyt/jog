@@ -140,3 +140,21 @@ func MkdirAll(path string) {
 		panic(errors.Wrapf(err, "failed to create directory: %s", path))
 	}
 }
+
+// MustStringSlice ...
+func MustStringSlice(raw interface{}) ([]string, error) {
+	switch raw.(type) {
+	case []string:
+		return raw.([]string), nil
+	case []interface{}:
+		{
+			r := []string{}
+			for _, v := range raw.([]interface{}) {
+				r = append(r, v.(string))
+			}
+			return r, nil
+		}
+	default:
+		return nil, fmt.Errorf("not a string array: %v", raw)
+	}
+}
