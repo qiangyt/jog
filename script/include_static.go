@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
 func includeDir(staticGoParentDir string, staticFileParentDir string, dirName string) {
-	staticGoDir := path.Join(staticGoParentDir, dirName)
+	staticGoDir := filepath.Join(staticGoParentDir, dirName)
 	os.MkdirAll(staticGoDir, os.ModePerm)
 
-	staticFilesDir := path.Join(staticFileParentDir, dirName)
+	staticFilesDir := filepath.Join(staticFileParentDir, dirName)
 	fs, _ := ioutil.ReadDir(staticFilesDir)
 
 	for _, f := range fs {
@@ -29,7 +29,7 @@ func includeDir(staticGoParentDir string, staticFileParentDir string, dirName st
 func includeFile(staticGoParentDir string, staticFileParentDir string, fName string) {
 	packageName := staticGoParentDir[strings.LastIndex(staticGoParentDir, "/")+1:]
 
-	fPath := path.Join(staticFileParentDir, fName)
+	fPath := filepath.Join(staticFileParentDir, fName)
 	fmt.Println("Including static file: " + fPath)
 
 	var fTitle, fExt string
@@ -50,7 +50,7 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 
 	// TODO: this code does not work for text files that contain: %  `
 
-	out, _ := os.Create(path.Join(staticGoParentDir, fName+".go"))
+	out, _ := os.Create(filepath.Join(staticGoParentDir, fName+".go"))
 	defer out.Close()
 	out.WriteString("package " + packageName + " \n\nconst (\n")
 
@@ -61,7 +61,7 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 	varName = strings.ToUpper(varName[:1]) + varName[1:]
 	varName = strings.ReplaceAll(varName, "-", "_")
 	out.WriteString("  // " + varName + " ...\n")
-	out.WriteString("  " + varName + " = `\n")
+	out.WriteString("  " + varName + " string = `\n")
 
 	contentBytes, _ := ioutil.ReadFile(fPath)
 	content := string(contentBytes)
