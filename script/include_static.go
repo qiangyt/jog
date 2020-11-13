@@ -65,7 +65,7 @@ func includeFile(staticGoParentDir string, staticFileParentDir string, fName str
 
 	contentBytes, _ := ioutil.ReadFile(fPath)
 	content := string(contentBytes)
-	content = strings.ReplaceAll(content, "`", "\\`")
+	content = strings.ReplaceAll(content, "`", "` + \"`\" + `")
 	out.WriteString(content)
 
 	out.WriteString("`\n")
