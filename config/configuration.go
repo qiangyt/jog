@@ -28,13 +28,9 @@ func JogHomeDir(expand bool, children ...string) string {
 	if !expand {
 		r = jogHomeDir
 	} else {
-		var err error
-		if r, err = homedir.Expand(jogHomeDir); err != nil {
-			panic(errors.Wrapf(err, "failed to get jog home directory", jogHomeDir))
-		}
+		r = util.ExpandPath(jogHomeDir)
+		util.MkdirAll(r)
 	}
-
-	util.MkdirAll(r)
 
 	return filepath.Join(r, filepath.Join(children...))
 }

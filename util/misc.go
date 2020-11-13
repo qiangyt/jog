@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/gookit/goutil/strutil"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -102,6 +103,17 @@ func ReplaceFile(path string, content []byte) {
 	if err := ioutil.WriteFile(path, content, 0640); err != nil {
 		panic(errors.Wrapf(err, "failed to write file: %s", path))
 	}
+}
+
+// ExpandPath ...
+func ExpandPath(path string) string {
+	var r string
+	var err error
+
+	if r, err = homedir.Expand(path); err != nil {
+		panic(errors.Wrapf(err, "failed to expand path: %s", path))
+	}
+	return r
 }
 
 // UnmashalYAMLAgain ...

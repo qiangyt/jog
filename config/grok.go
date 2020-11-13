@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/static/grok_extended"
 	"github.com/qiangyt/jog/static/grok_vjeantet"
@@ -100,11 +99,7 @@ func (i Grok) Init(cfg Configuration) {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {
-		dir, err := homedir.Expand(patternsDir)
-		if err != nil {
-			panic(errors.Wrapf(err, "failed to get home dir: %s", patternsDir))
-		}
-
+		dir := util.ExpandPath(patternsDir)
 		if util.DirExists(dir) == false {
 			continue
 		}
