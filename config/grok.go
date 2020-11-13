@@ -12,9 +12,10 @@ import (
 
 // GrokT ...
 type GrokT struct {
-	grok        *grok.Grok
-	Uses        []string `yaml:"uses"`
-	LibraryDirs []string `yaml:"library-dirs"`
+	grok          *grok.Grok
+	Uses          []string `yaml:"uses"`
+	MatchesFields []string `yaml:"matches-fields"`
+	LibraryDirs   []string `yaml:"library-dirs"`
 }
 
 // DefaultGrokLibraryDir ...
@@ -125,6 +126,11 @@ func (i Grok) FromMap(m map[string]interface{}) error {
 		return errors.Wrap(err, "failed to parse grok.uses")
 	}
 
+	i.MatchesFields, err = util.ExtractStringSliceFromMap(m, "matches-fields")
+	if err != nil {
+		return errors.Wrap(err, "failed to parse grok.matches-fields")
+	}
+
 	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?
 	// for _, usedPatternName := range i.Uses {
 	// pattern := fmt.Sprintf("%%{%s}", usedPatternName)
@@ -141,6 +147,7 @@ func (i Grok) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["uses"] = i.Uses
 	r["library-dirs"] = i.LibraryDirs
+	r["matches-fields"] = i.MatchesFields
 
 	return r
 }

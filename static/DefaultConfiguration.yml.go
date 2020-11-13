@@ -21,6 +21,15 @@ prefix:
   print: true
   color: FgBlue
 
+grok:
+  uses: # array of GROK pattern names to be used. Check files in ` + "`" + `library-dirs` + "`" + ` for available patterns
+  matches-fields: # array of field name by which a log line is considered to matches used GROK patterns
+    - timestamp
+    - message
+  library-dirs: # array of library directory that has GROK pattern files
+    - ~/.jog/grok-library  # Will touch it and put default patterns there if not exists. To reset it, run ` + "`" + `jog --reset-grok-library-dir` + "`" + `
+    - ./.jog/grok-library # Ignore if not exists
+
 fields:
   others:
     name:
@@ -148,15 +157,6 @@ fields:
     case-sensitive: false
     color: FgDefault
 
-grok:
-  uses:
-    - TOMCATLOG
-    - MONGO3_LOG
-    - RAILS3
-    - REDISLOG
-  library-dirs:
-    - ~/.jog/grok-library  # Will touch it and put default patterns there if not exists. To reset it, run ` + "`" + `jog --reset-grok-library-dir` + "`" + `
-    - ./.jog/grok-library # Ignore if not exists
 
 `
 )
