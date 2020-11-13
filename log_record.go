@@ -44,7 +44,7 @@ func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable
 		color = nil
 	}
 
-	element.Print(color, builder, a)
+	element.PrintTo(color, builder, a)
 }
 
 // PopulateOtherFields ...

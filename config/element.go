@@ -101,8 +101,8 @@ func (i Element) IsEnabled() bool {
 	return i.Print
 }
 
-// Print ...
-func (i Element) Print(color util.Color, builder *strings.Builder, a string) {
+// PrintTo ...
+func (i Element) PrintTo(color util.Color, builder *strings.Builder, a string) {
 	a = ShortenValue(a, i.PrintFormat)
 	if color == nil {
 		builder.WriteString(fmt.Sprintf(i.PrintFormat, a))
