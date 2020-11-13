@@ -133,7 +133,7 @@ fields:
     alias: "err, error, stack, stack_trace, stack-trace, @stack, @stack_trace, @stack-trace, @stacktrace, error.stack_trace, @error.stack_trace"
     case-sensitive: false
     color: FgRed
-    before: "\nStack trace: \n"
+    print-format: "\nStack trace: \n%s"
   thread:
     alias: "thread_name, thread-name, threadname, @thread, @thread_name, @thread-name, @threadname"
     case-sensitive: false
