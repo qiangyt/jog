@@ -63,8 +63,20 @@ func DirExists(path string) bool {
 
 // RemoveFile ...
 func RemoveFile(path string) {
-	if err := os.Remove(path); err != nil {
-		panic(errors.Wrapf(err, "failed to delete file: %s", path))
+	if FileExists(path) {
+		if err := os.Remove(path); err != nil {
+			panic(errors.Wrapf(err, "failed to delete file: %s", path))
+		}
+	}
+}
+
+// RemoveDir ...
+func RemoveDir(path string) {
+	if path == "/" || path == "\\" {
+		panic(fmt.Errorf("should NOT remove root directory"))
+	}
+	if err := os.RemoveAll(path); err != nil {
+		panic(errors.Wrapf(err, "failed to delete directory: %s", path))
 	}
 }
 
@@ -77,8 +89,16 @@ func ReadFile(path string) []byte {
 	return r
 }
 
-// WriteFile ...
-func WriteFile(path string, content []byte) {
+// WriteFileIfNotFound ...
+func WriteFileIfNotFound(path string, content []byte) {
+	if FileExists(path) {
+		return
+	}
+	ReplaceFile(path, content)
+}
+
+// ReplaceFile ...
+func ReplaceFile(path string, content []byte) {
 	if err := ioutil.WriteFile(path, content, 0640); err != nil {
 		panic(errors.Wrapf(err, "failed to write file: %s", path))
 	}
