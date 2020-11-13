@@ -12,14 +12,14 @@ import (
 
 // GrokT ...
 type GrokT struct {
-	grok         *grok.Grok
-	Uses         []string `yaml:"uses"`
-	PatternsDirs []string `yaml:"patterns-dirs"`
+	grok        *grok.Grok
+	Uses        []string `yaml:"uses"`
+	LibraryDirs []string `yaml:"library-dirs"`
 }
 
-// DefaultGrokPatternsDir ...
-func DefaultGrokPatternsDir() string {
-	return JogHomeDir("grok-patterns")
+// DefaultGrokLibraryDir ...
+func DefaultGrokLibraryDir() string {
+	return JogHomeDir("grok-library")
 }
 
 // Grok ...
@@ -27,20 +27,20 @@ type Grok = *GrokT
 
 // SaveDefaultGrokPatternFile ...
 func SaveDefaultGrokPatternFile(patternFileName string, patternFileContent string) {
-	dir := DefaultGrokPatternsDir()
+	dir := DefaultGrokLibraryDir()
 	util.ReplaceFile(filepath.Join(dir, patternFileName), []byte(patternFileContent))
 }
 
-// ResetDefaultGrokPatternsDir ...
-func ResetDefaultGrokPatternsDir() {
-	dir := DefaultGrokPatternsDir()
+// ResetDefaultGrokLibraryDir ...
+func ResetDefaultGrokLibraryDir() {
+	dir := DefaultGrokLibraryDir()
 	util.RemoveDir(dir)
 
-	InitDefaultGrokPatternsDir()
+	InitDefaultGrokLibraryDir()
 }
 
-// InitDefaultGrokPatternsDir ...
-func InitDefaultGrokPatternsDir() {
+// InitDefaultGrokLibraryDir ...
+func InitDefaultGrokLibraryDir() {
 	jogHomeDir := JogHomeDir()
 
 	licensePath := filepath.Join(jogHomeDir, "vjeantet-grok.LICENSE")
@@ -49,7 +49,7 @@ func InitDefaultGrokPatternsDir() {
 	readmePath := filepath.Join(jogHomeDir, "vjeantet-grok.README.md")
 	util.WriteFileIfNotFound(readmePath, []byte(grok_patterns.README_md))
 
-	dir := DefaultGrokPatternsDir()
+	dir := DefaultGrokLibraryDir()
 	if util.DirExists(dir) {
 		return
 	}
@@ -78,11 +78,11 @@ func InitDefaultGrokPatternsDir() {
 // Init ...
 func (i Grok) Init(cfg Configuration) {
 
-	InitDefaultGrokPatternsDir()
+	InitDefaultGrokLibraryDir()
 
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
-	for _, patternsDir := range i.PatternsDirs {
+	for _, patternsDir := range i.LibraryDirs {
 		dir, err := homedir.Expand(patternsDir)
 		if err != nil {
 			panic(errors.Wrapf(err, "failed to get home dir: %s", patternsDir))
@@ -108,18 +108,18 @@ func (i Grok) MarshalYAML() (interface{}, error) {
 // Reset ...
 func (i Grok) Reset() {
 	i.Uses = make([]string, 0)
-	i.PatternsDirs = []string{}
+	i.LibraryDirs = []string{}
 }
 
 // FromMap ...
 func (i Grok) FromMap(m map[string]interface{}) error {
-	patternsDirsV := util.ExtractFromMap(m, "patterns-dirs")
+	patternsDirsV := util.ExtractFromMap(m, "library-dirs")
 	if patternsDirsV != nil {
 		patternsDirs, err := util.MustStringSlice(patternsDirsV)
 		if err != nil {
-			return errors.Wrapf(err, "failed to parse grok.patterns-dirs: %v", patternsDirsV)
+			return errors.Wrapf(err, "failed to parse grok.library: %v", patternsDirsV)
 		}
-		i.PatternsDirs = patternsDirs
+		i.LibraryDirs = patternsDirs
 	}
 
 	usesV := util.ExtractFromMap(m, "uses")
@@ -146,7 +146,7 @@ func (i Grok) FromMap(m map[string]interface{}) error {
 func (i Grok) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["uses"] = i.Uses
-	r["patterns-dirs"] = i.PatternsDirs
+	r["library-dirs"] = i.LibraryDirs
 
 	return r
 }

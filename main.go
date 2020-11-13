@@ -57,7 +57,7 @@ func SetConfigItem(cfg config.Configuration, m map[string]interface{}, configIte
 }
 
 func main() {
-	config.InitDefaultGrokPatternsDir()
+	config.InitDefaultGrokLibraryDir()
 
 	ok, options := OptionsWithCommandLine()
 	if !ok {
