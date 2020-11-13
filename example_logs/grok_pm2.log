@@ -37,20 +37,23 @@ __/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
 
 pm2 launched in no-daemon mode (you can add DEBUG="*" env variable to get more messages)
 2020-06-16T11:54:50: PM2 log: Launching in no daemon mode
-2020-06-16T11:54:50: PM2 log: [PM2][WARN] Applications amplieer_admin.uat not running, starting...
-2020-06-16T11:54:50: PM2 log: [Watch] Start watching amplieer_admin.uat
-2020-06-16T11:54:50: PM2 log: App [amplieer_admin.uat:0] starting in -cluster mode-
+2020-06-16T11:54:51: PM2 log: [PM2][WARN] Applications amplieer_admin.uat not running, starting...
+2020-06-16T11:54:52: PM2 log: [Watch] Start watching amplieer_admin.uat
+2020-06-16T11:54:53: PM2 log: App [amplieer_admin.uat:0] starting in -cluster mode-
 Debugger listening on ws://0.0.0.0:9230/fb9adaef-34eb-4696-8045-712f199c2adc
 For help see https://nodejs.org/en/docs/inspector
-2020-06-16T11:54:50: PM2 log: App [amplieer_admin.uat:0] online
-2020-06-16T11:54:50: PM2 error: (node:6) [DEP0007] DeprecationWarning: worker.suicide is deprecated. Please use worker.exitedAfterDisconnect.
-2020-06-16T11:54:50: PM2 log: [PM2] App [amplieer_admin.uat] launched (1 instances)
-2020-06-16T11:54:50: PM2 log: ┌─────┬───────────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+2020-06-16T11:54:54: PM2 log: App [amplieer_admin.uat:0] online
+2020-06-16T11:54:55: PM2 error: (node:6) [DEP0007] DeprecationWarning: worker.suicide is deprecated. Please use worker.exitedAfterDisconnect.
+2020-06-16T11:54:56: PM2 log: [PM2] App [amplieer_admin.uat] launched (1 instances)
+2020-06-16T11:54:57: PM2 log: ┌─────┬───────────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id  │ name                      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├─────┼───────────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
 │ 0   │ amplieer_admin.uat    │ default     │ 0.0.1   │ cluster │ 16       │ 0s     │ 0    │ online    │ 0%       │ 29.6mb   │ root     │ enabled  │
 └─────┴───────────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-2020-06-16T11:54:50: PM2 log: [--no-daemon] Continue to stream logs
-2020-06-16T11:54:50: PM2 log: [--no-daemon] Exit on target PM2 exit pid=6
+2020-06-16T11:54:58: PM2 log: [--no-daemon] Continue to stream logs
+2020-06-16T11:54:59: PM2 log: [--no-daemon] Exit on target PM2 exit pid=6
 11:54:50 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: base logger config file: /usr/src/app/config/logger.json
-11:54:50 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: env logger config file: /usr/src/app/config/logger.uat.json
+11:54:51 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: env logger config file: /usr/src/app/config/logger.uat.json
+11:54:52 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: {"name":"amplieer_admin","hostname":"db9c2f8e0b7c","pid":16,"id":"Config","level":30,"path":"/usr/src/app/config/config.json","msg":"no json configuration file","time":"2020-06-16T18:54:52.242Z","v":0}
+11:54:53 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: {"name":"amplieer_admin","hostname":"db9c2f8e0b7c","pid":16,"id":"Config","level":30,"path":"/usr/src/app/config/config.js","msg":"base config file","time":"2020-06-16T18:54:52.243Z","v":0}
+11:54:54 0|amplieer_admin.uat  | 2020-06-16 11:54 -07:00: work folder: /data/tca_amplicon/uat/admin/work

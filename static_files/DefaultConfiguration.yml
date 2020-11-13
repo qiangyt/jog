@@ -46,7 +46,7 @@ fields:
         alias: debug,20
         color: FgBlue,OpBold
       INFO:
-        alias: info,30
+        alias: info,30,log
         color: FgBlue,OpBold
       ERROR:
         alias: error,err,critical,50
