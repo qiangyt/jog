@@ -12,6 +12,10 @@ import (
 
 // GrokT ...
 type GrokT struct {
+	grok         *grok.Grok
+	Uses         []string `yaml:"uses"`
+	PatternsDirs []string `yaml:"patterns-dirs"`
+}
 
 // DefaultGrokPatternsDir ...
 func DefaultGrokPatternsDir() string {
@@ -78,6 +82,18 @@ func (i Grok) Init(cfg Configuration) {
 
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
+	for _, patternsDir := range i.PatternsDirs {
+		dir, err := homedir.Expand(patternsDir)
+		if err != nil {
+			panic(errors.Wrapf(err, "failed to get home dir: %s", patternsDir))
+		}
+
+		if util.DirExists(dir) == false {
+			continue
+		}
+		i.grok.AddPatternsFromPath(dir)
+	}
+}
 
 // UnmarshalYAML ...
 func (i Grok) UnmarshalYAML(unmarshal func(interface{}) error) error {
@@ -92,19 +108,22 @@ func (i Grok) MarshalYAML() (interface{}, error) {
 // Reset ...
 func (i Grok) Reset() {
 	i.Uses = make([]string, 0)
-	i.Patterns = make(map[string]string)
+	i.PatternsDirs = []string{}
 }
 
 // FromMap ...
 func (i Grok) FromMap(m map[string]interface{}) error {
-	i.Patterns = util.ExtractFromMap(m, "patterns").(map[string]string)
+	i.PatternsDirs = util.ExtractFromMap(m, "patterns-dirs").([]string)
 
 	i.Uses = util.ExtractFromMap(m, "uses").([]string)
-	for _, usedPatternName := range i.Uses {
-		if _, found := i.Patterns[usedPatternName]; !found {
-			return fmt.Errorf("using pattern '%s' but not defined in available patterns", usedPatternName)
-		}
-	}
+
+	// TODO: how to ensure i.Uses doesn't refer to a pattern that not exists ?
+	// for _, usedPatternName := range i.Uses {
+	// pattern := fmt.Sprintf("%%{%s}", usedPatternName)
+	// if _, err := i.grok.Parse(pattern, ""); err != nil {
+	// 	return fmt.Errorf("using pattern '%s' but not defined in available patterns", usedPatternName)
+	//}
+	// }
 
 	return nil
 }
@@ -113,12 +132,7 @@ func (i Grok) FromMap(m map[string]interface{}) error {
 func (i Grok) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["uses"] = i.Uses
-
-	patterns := make(map[string]string)
-	for patternName, patternExpr := range i.Patterns {
-		patterns[patternName] = patternExpr
-	}
-	r["patterns"] = patterns
+	r["patterns-dirs"] = i.PatternsDirs
 
 	return r
 }

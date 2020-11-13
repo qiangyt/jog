@@ -149,5 +149,7 @@ grok:
     - MONGO3_LOG
     - RAILS3
     - REDISLOG
-  patterns: {{ range .grokPatterns }}
-    - {{ .Name }}: "{{ .Expr }}"{{ end }}
+  patterns-dirs:
+    - ~/.jog/grok-patterns  # Will touch it and put default patterns there if not exists. To reset it, run `jog --reset-default-grok-patterns-dir`
+    - ./.jog/grok-patterns # Ignore if not exists
+
