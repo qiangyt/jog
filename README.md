@@ -87,7 +87,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
 	     8) natural timestamp range:           jog --after "1 week" --before "2 days" app-20200701-1.log
 	     9) output raw JSON and apply time range filter:      jog --after "1 week" --before "2 days" app-20200701-1.log --json
 	     10) disable colorization:             jog -cs colorization=false app-20200701-1.log
-        11) view apache log, non-JSON log     jog -g COMMONAPACHELOG example_logs/grok_apache.log")
+	     11) view apache log, non-JSON log     jog -g COMMONAPACHELOG example_logs/grok_apache.log")
 
       Options:
         -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime
