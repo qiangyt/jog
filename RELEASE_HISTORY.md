@@ -1,12 +1,24 @@
-# targeting v1.0.0
-Test test test:
-1. unit test coverage: >= 80%
-2. design manual test case
+# targeting v1.0.0 (TODO)
+1. User manual - English
+2. User manual - Chineses
+3. Unit test coverage: 100%
 
-# v0.9.21 (TODO)
-1. New feature: support flat (non-JSON) log, using logstash GROK to parse
+# v1.0.0-rc-2 (TODO)
+1. Unit test coverage: >= 80%
+2. Fix:
+
+# v1.0.0-rc-1 (TODO)
+1. Unit test coverage: >= 50%
+2. Fix:
+
+# v1.0.0-belta (TODO)
+1. Enhancement: improve grok support
+2. Enhancement: merge multiple configuration
+
+# v1.0.0-alpha (TODO)
+1. New feature: initial support flat (non-JSON) log, using logstash GROK to parse
 2. New feature: new configuration parameter `print-format`, for ex., able to tabularize log output - by @frudolph77
-3. Fix: replace tab in log lines by four lines - by @frudolph77
+3. Fix: replace tab in log lines by four spaces - by @frudolph77
 4. Remove `before` and `after` configuration parameters. Uses `print-format` instead
 5. A bit refactoring
 
