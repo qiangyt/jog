@@ -58,7 +58,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v0.9.20/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     curl -L https://github.com/qiangyt/jog/releases/download/v1.0.0-alpha/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      chmod +x /usr/local/bin/jog
   ```
 
@@ -87,6 +87,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
 	     8) natural timestamp range:           jog --after "1 week" --before "2 days" app-20200701-1.log
 	     9) output raw JSON and apply time range filter:      jog --after "1 week" --before "2 days" app-20200701-1.log --json
 	     10) disable colorization:             jog -cs colorization=false app-20200701-1.log
+        11) view apache log, non-JSON log     jog -g COMMONAPACHELOG example_logs/grok_apache.log")
 
       Options:
         -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime
@@ -96,10 +97,12 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
         -cg, --config-get <config item path>                        Get value to specified config item
         -d,  --debug                                                Print more error detail
         -f,  --follow                                               Follow mode - follow log output
+        -g,  --grok <grok pattern name>                             For non-json log line. The default patterns are saved in ...
         -j,  --json                                                 Output the raw JSON but then able to apply filters
         -h,  --help                                                 Display this information
         -l,  --level <level value>                                  Filter by log level. For ex. --level warn
         -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode
+             --reset-grok-library-dir                               Save default GROK patterns to [%s]
         -t,  --template                                             Print a configuration YAML file template
         -V,  --version                                              Display app version information
      ```
