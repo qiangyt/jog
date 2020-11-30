@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/util"
 )
 
@@ -36,8 +37,7 @@ func (i Enum) Reset() {
 	i.Alias = &util.MultiStringT{}
 	i.Alias.Reset()
 
-	i.Color = &util.ColorT{}
-	i.Color.Reset()
+	i.Color = util.DefaultColor()
 }
 
 // FromMap ...
@@ -51,9 +51,7 @@ func (i Enum) FromMap(m map[string]interface{}) error {
 
 	colorV := util.ExtractFromMap(m, "color")
 	if colorV != nil {
-		if err := util.UnmashalYAMLAgain(colorV, &i.Color); err != nil {
-			return err
-		}
+		i.Color.Set(strutil.MustString(colorV))
 	}
 
 	return nil
