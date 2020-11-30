@@ -1,0 +1,17 @@
+- use channel to read lines
+  - https://github.com/mitchellh/go-linereader
+  - https://github.com/mitchellh/prefixedio
+- release by https://github.com/laher/goxc  or  https://github.com/mitchellh/gox
+- https://github.com/mitchellh/pointerstructure or https://github.com/mitchellh/mapstructure or https://github.com/jinzhu/copier
+-  github.com/fsnotify/fsnotify
+-  https://github.com/spf13/cast
+-  !https://github.com/thedevsaddam/gojsonq  or  https://github.com/Knetic/govaluate
+-  !https://github.com/google/wire
+-  !https://github.com/imdario/mergo
+-  https://github.com/google/go-cmp
+- https://github.com/go-playground/validator
+- !github.com/rs/zerolog
+- !faster: https://github.com/tidwall/gjson
+- https://github.com/tidwall/static
+- !https://github.com/jinzhu/now
+- !https://github.com/oklog/oklog
