@@ -18,6 +18,7 @@
 2. Enhancement: improve grok support
 3. Enhancement: merge multiple configuration
 4. Replace dynamic object design with https://github.com/imdario/mergo & https://github.com/mitchellh/mapstructure
+5. Enhancement: refine hint message for usage error
 
 # v1.0.0-alpha
 1. New feature: initial support flat (non-JSON) log, using logstash GROK to parse

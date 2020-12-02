@@ -110,6 +110,11 @@ func (i Options) HasTimestampFilter() bool {
 	return i.BeforeFilter != nil || i.AfterFilter != nil
 }
 
+func printErrorHint(format string, a ...interface{}) {
+	PrintHelp()
+	color.Red.Printf(format+". Please check above example\n", a...)
+}
+
 // OptionsWithCommandLine ...
 func OptionsWithCommandLine() (bool, Options) {
 
@@ -133,8 +138,7 @@ func OptionsWithCommandLine() (bool, Options) {
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing config file path\n")
-					PrintHelp()
+					printErrorHint("Missing config file path")
 					return false, nil
 				}
 
@@ -142,22 +146,19 @@ func OptionsWithCommandLine() (bool, Options) {
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing config item expression\n")
-					PrintHelp()
+					printErrorHint("Missing config item expression")
 					return false, nil
 				}
 
 				r.ConfigItemPath, r.ConfigItemValue, err = ParseConfigExpression(os.Args[i+1])
 				if err != nil {
-					color.Red.Println("%v\n", err)
-					PrintHelp()
+					printErrorHint("%v", err)
 					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing config item path\n")
-					PrintHelp()
+					printErrorHint("Missing config item path")
 					return false, nil
 				}
 
@@ -167,8 +168,7 @@ func OptionsWithCommandLine() (bool, Options) {
 				r.FollowMode = true
 			} else if arg == "-n" || arg == "--lines" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing lines argument\n")
-					PrintHelp()
+					printErrorHint("Missing lines argument")
 					return false, nil
 				}
 
@@ -190,8 +190,7 @@ func OptionsWithCommandLine() (bool, Options) {
 				r.OutputRawJSON = true
 			} else if arg == "-l" || arg == "--level" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing level argument\n")
-					PrintHelp()
+					printErrorHint("Missing level argument")
 					return false, nil
 				}
 
@@ -199,8 +198,7 @@ func OptionsWithCommandLine() (bool, Options) {
 				i++
 			} else if arg == "-g" || arg == "--grok" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing grok argument\n")
-					PrintHelp()
+					printErrorHint("Missing grok argument")
 					return false, nil
 				}
 
@@ -211,8 +209,7 @@ func OptionsWithCommandLine() (bool, Options) {
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing after argument\n")
-					PrintHelp()
+					printErrorHint("Missing after argument")
 					return false, nil
 				}
 
@@ -220,16 +217,14 @@ func OptionsWithCommandLine() (bool, Options) {
 				i++
 			} else if arg == "-b" || arg == "--before" {
 				if i+1 >= len(os.Args) {
-					color.Red.Println("Missing before argument\n")
-					PrintHelp()
+					printErrorHint("Missing before argument")
 					return false, nil
 				}
 
 				r.beforeFilterText = os.Args[i+1]
 				i++
 			} else {
-				color.Red.Printf("Unknown option: '%s'\n\n", arg)
-				PrintHelp()
+				printErrorHint("Unknown option: '%s'", arg)
 				return false, nil
 			}
 		} else {
