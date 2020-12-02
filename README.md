@@ -123,8 +123,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
    * version 1.0 TODO
      - unit test coverage: >= 80%
      - manual test suite
-     - read from native Docker containers log
-     - SSH remote host to read log directly
+     - enhance grok mode, by supporting multi-mergeable-profile
 
 ## License
 
