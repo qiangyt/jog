@@ -6,7 +6,6 @@ import (
 	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 )
 
 // Colors ...
@@ -77,8 +76,7 @@ var Colors = map[string]color.Color{
 	"LightMagenta":    color.LightMagenta,
 }
 
-// ColorsFromLabel ...
-func ColorsFromLabel(label string) (color.Style, error) {
+func parseStyle(label string) (color.Style, error) {
 	colorNais := strutil.Split(label, ",")
 	r := make([]color.Color, 0, len(colorNais))
 
@@ -95,9 +93,6 @@ func ColorsFromLabel(label string) (color.Style, error) {
 
 // ColorT ...
 type ColorT struct {
-	yaml.Unmarshaler
-	yaml.Marshaler
-
 	label string
 	style color.Style
 }
@@ -105,15 +100,17 @@ type ColorT struct {
 // Color ...
 type Color = *ColorT
 
-// Reset ...
-func (i Color) Reset() {
-	i.label = "FgDefault"
-	i.style, _ = ColorsFromLabel(i.label)
+// DefaultColor ...
+func DefaultColor() Color {
+	label := "FgDefault"
+	style, _ := parseStyle(label)
+
+	return &ColorT{label: label, style: style}
 }
 
 // Set ...
 func (i Color) Set(label string) {
-	style, err := ColorsFromLabel(label)
+	style, err := parseStyle(label)
 	if err != nil {
 		panic(errors.Wrap(err, ""))
 	}
@@ -124,25 +121,6 @@ func (i Color) Set(label string) {
 
 func (i Color) String() string {
 	return i.label
-}
-
-// UnmarshalYAML ...
-func (i Color) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var err error
-
-	i.Reset()
-
-	if err = unmarshal(&i.label); err != nil {
-		return err
-	}
-
-	i.style, err = ColorsFromLabel(i.label)
-	return err
-}
-
-// MarshalYAML ...
-func (i Color) MarshalYAML() (interface{}, error) {
-	return i.String(), nil
 }
 
 // Sprint is alias of the 'Render'

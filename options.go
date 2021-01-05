@@ -135,6 +135,11 @@ func OptionsWithCommandLine() (bool, Options) {
 
 		arg := os.Args[i]
 
+		if len(arg) == 0 {
+			color.Red.Println("Argument is blank")
+			return false, nil
+		}
+
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(os.Args) {

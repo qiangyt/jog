@@ -39,9 +39,7 @@ func (i Element) Init(cfg Configuration) {
 func (i Element) FromMap(m map[string]interface{}) error {
 	colorV := util.ExtractFromMap(m, "color")
 	if colorV != nil {
-		if err := util.UnmashalYAMLAgain(colorV, &i.Color); err != nil {
-			return err
-		}
+		i.Color.Set(strutil.MustString(colorV))
 	}
 
 	printV := util.ExtractFromMap(m, "print")
