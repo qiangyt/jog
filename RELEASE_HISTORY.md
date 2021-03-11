@@ -1,24 +1,5 @@
-# targeting v1.0.0 (TODO)
-1. User manual - English
-2. Unit test coverage: 100%
-3. New feature: field path
-
-# v1.0.0-rc-2 (TODO)
-1. Unit test coverage: >= 80%
-2. Fix: ...
-3. New feature: initial arbitrary field filter
-
-# v1.0.0-rc-1 (TODO)
-1. Unit test coverage: >= 50%
-2. Fix: ...
-3. Enhancement: Log json log
-
-# v1.0.0-belta (TODO)
-1. User manual - Chineses
-2. Enhancement: improve grok support
-3. Enhancement: merge multiple configuration
-4. Replace dynamic object design with https://github.com/imdario/mergo & https://github.com/mitchellh/mapstructure
-5. Enhancement: refine hint message for usage error
+# v1.0.1-alpha
+1. Fix issue #48
 
 # v1.0.0-alpha
 1. New feature: initial support flat (non-JSON) log, using logstash GROK to parse
