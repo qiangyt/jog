@@ -1,0 +1,10 @@
+{"asctime":"2021-03-04T07:59:25+0100","levelname":"INFO","name":"some_component","filename":"some_file","message":"some_message"}
+{"asctime":"2021-03-04T08:02:46+0100","levelname":"CRITICAL","name":"other_component2","filename":"other_file2","message":"other_message2"}
+{"asctime":"2021-03-04T09:31:20+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:24+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:25+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:26+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:27+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:28+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:29+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}
+{"asctime":"2021-03-04T09:31:30+0100","levelname":"WARNING","name":"other_component","filename":"other_file","message":"other_message","exc_info":"optional_traceback"}

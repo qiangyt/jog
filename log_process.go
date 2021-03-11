@@ -71,7 +71,7 @@ func ReadLocalFile(cfg config.Configuration, options Options, localFilePath stri
 			return fSize, lineNo
 		}
 
-		_, err := f.Seek(offset+1, 0)
+		_, err := f.Seek(offset, 0)
 		if err != nil {
 			panic(errors.Wrapf(err, "failed to seek: %s/%v", localFilePath, offset))
 		}
