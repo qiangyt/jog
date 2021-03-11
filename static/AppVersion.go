@@ -2,5 +2,5 @@ package static
 
 const (
   // AppVersion ...
-  AppVersion string = `v1.0.0-alpha`
+  AppVersion string = `v1.0.1-alpha`
 )
