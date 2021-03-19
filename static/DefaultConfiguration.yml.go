@@ -148,7 +148,14 @@ fields:
     case-sensitive: false
     color: FgDefault
     #type: auto
-    #time-format: auto # Auto-detect the timestamp format. If explicitly specified, must present 2006-1-2 3:04pm
+    #time-format: auto # 'auto' means jog will try best to automatically figure out the timestamp format which is done by github.com/araddon/dateparse.
+                       # If explicitly specified, must present 2006-1-2 3:04pm.
+                       #
+                       # Perhaps ambigous (see https://github.com/qiangyt/jog/issues/49), but this time-format as well as
+                       # timezone attribute are not for print/conversion, instead, they're only used to parse --after filter
+                       # value, --before filter value, and timestamp field value. And parsing only occurs if --after/--before
+                       # filter value is specified.
+                       # timestamp field is always outputted without any conversion, even these 2 attributes are specified
     #timezone: UTC # see golang time.LoadLocation(timezone)
   user:
     alias: "usr, username, user-name, user_name, @usr, @username, @user-name, @user_name, @user"
