@@ -1,0 +1,72 @@
+colorization: true
+pattern: "${timestamp} - ${level} - ${app} - ${file}:${message}${stacktrace}${others}"
+
+line-no:
+  print: true
+  color: FgRed
+  print-format: "\n%s"
+
+unknown-line:
+  print: true
+  color: FgGray
+
+fields:
+  others:
+    name:
+      color: FgYellow
+    separator:
+      label: =
+      color: FgDefault
+    value:
+      color: FgDefault
+    print-format: "\n%s"
+  level: # 'level' field is a hard-coded field used for level filter as well, so don't rename it
+         # And, it must be an enum.
+    print-format: "%s" # follows https://golang.org/pkg/fmt/
+    alias: "levelname"
+    case-sensitive: false
+    enums:
+      case-sensitive: false
+      NOTSET:
+        alias: notset,0
+        color: FgGray,OpBold
+      DEBUG:
+        alias: debug,10
+        color: FgGreen,OpBold
+      INFO:
+        alias: info,20,
+        color: FgBlue,OpBold,OpFuzzy
+      WARNING:
+        alias: warn,warning,30
+        color: FgYellow,OpBold
+      ERROR:
+        alias: error,err,40
+        color: FgMagenta,OpBold
+      CRITICAL:
+        alias: critical,50
+        color: FgRed,OpBold
+  app:
+    print: false
+    alias: "name"
+    case-sensitive: false
+    color: FgLightBlue
+  file:
+    alias: "filename"
+    case-sensitive: false
+    color: FgDefault
+  message:
+    alias: "message"
+    case-sensitive: false
+    color: FgCyan,OpItalic
+    print-format: "\n%s"
+  stacktrace:
+    alias: "exc_info"
+    case-sensitive: false
+    color: FgDefault
+    print-format: "\nStack trace: \n%s"
+  timestamp: # 'timestamp' field is a hard-coded field used for time range filter as well, so don't rename it
+    alias: "asctime"
+    case-sensitive: false
+    color: FgYellow
+    type: time
+    time-format: "2006-01-02T15:04:05-0700"

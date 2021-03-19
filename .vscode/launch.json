@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}",
-            "args": ["-c", "${workspaceFolder}/example_logs/issue48.yaml", "${workspaceFolder}/example_logs/issue48.log", "-f"]
+            "args": ["-c", "${workspaceFolder}/example_logs/issue49.yaml", "${workspaceFolder}/example_logs/issue49.log"]
         }
     ]
 }
