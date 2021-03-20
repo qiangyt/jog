@@ -71,6 +71,16 @@ func ReadLocalFile(cfg config.Configuration, options Options, localFilePath stri
 			return fSize, lineNo
 		}
 
+		if offset+1 < fSize {
+			tmp := make([]byte, 1)
+			if _, err := f.ReadAt(tmp, offset); err != nil {
+				panic(errors.Wrapf(err, "failed to read at: $s/%v", localFilePath, offset+1))
+			}
+			if tmp[0] == '\n' {
+				offset = offset + 1
+			}
+		}
+
 		_, err := f.Seek(offset, 0)
 		if err != nil {
 			panic(errors.Wrapf(err, "failed to seek: %s/%v", localFilePath, offset))
@@ -133,7 +143,7 @@ func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, 
 		tailQueue := util.NewTailQueue(options.NumberOfLines)
 		timer := time.NewTimer(readTimeout)
 
-		for ; true; lineNo++ {
+		for {
 			rawLine, err := readRawLineWithTimeout(timer, buf)
 			if err != nil {
 				timer.Stop()
@@ -145,15 +155,21 @@ func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, 
 				} else {
 					isEOF = true
 
-					tailQueue.Add(rawLine)
 					log.Printf("got EOF, line %d\n", lineNo)
-					lineNo++
+
+					if len(rawLine) > 0 {
+						if rawLine[0] != '\n' {
+							tailQueue.Add(rawLine)
+							lineNo++
+						}
+					}
 				}
 
 				break
 			}
 
 			tailQueue.Add(rawLine)
+			lineNo++
 		}
 
 		lineNo = lineNo - tailQueue.Count()
@@ -168,7 +184,7 @@ func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, 
 		return lineNo
 	}
 
-	for ; true; lineNo++ {
+	for {
 		rawLine, err := readRawLine(buf)
 
 		if err != nil {
@@ -177,12 +193,17 @@ func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, 
 			}
 
 			log.Printf("got EOF, line %d\n", lineNo)
-			ProcessRawLine(cfg, options, lineNo, rawLine)
-			return lineNo + 1
+
+			if len(rawLine) > 0 {
+				if rawLine[0] != '\n' {
+					ProcessRawLine(cfg, options, lineNo, rawLine)
+					lineNo++
+				}
+			}
+			return lineNo
 		}
 
 		ProcessRawLine(cfg, options, lineNo, rawLine)
+		lineNo++
 	}
-
-	return lineNo
 }
