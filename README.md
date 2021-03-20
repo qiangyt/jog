@@ -58,7 +58,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
   Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v1.0.1-alpha/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
+     curl -L https://github.com/qiangyt/jog/releases/download/v1.0.2-alpha/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
      chmod +x /usr/local/bin/jog
   ```
 

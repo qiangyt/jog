@@ -1,6 +1,6 @@
-package static 
+package static
 
 const (
-  // AppVersion ...
-  AppVersion string = `v1.0.1-alpha`
+	// AppVersion ...
+	AppVersion string = `v1.0.2-alpha`
 )

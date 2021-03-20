@@ -1,3 +1,6 @@
+# v1.0.2-alpha
+1. Fix issue #50
+
 # v1.0.1-alpha
 1. Fix issue #48
 
