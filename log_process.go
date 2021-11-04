@@ -74,7 +74,7 @@ func ReadLocalFile(cfg config.Configuration, options Options, localFilePath stri
 		if offset+1 < fSize {
 			tmp := make([]byte, 1)
 			if _, err := f.ReadAt(tmp, offset); err != nil {
-				panic(errors.Wrapf(err, "failed to read at: $s/%v", localFilePath, offset+1))
+				panic(errors.Wrapf(err, "failed to read at: %s/%v", localFilePath, offset+1))
 			}
 			if tmp[0] == '\n' {
 				offset = offset + 1
