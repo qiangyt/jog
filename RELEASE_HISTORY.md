@@ -1,3 +1,10 @@
+# v1.0.3
+1. release MacOS ARM64 binary
+2. fix comment typo in configuration file template
+3. fix an error message format bug
+
+Note: As this is a simple non-product-critical tool, beginning from this version, remove alpha/belta versioning
+
 # v1.0.2-alpha
 1. Fix issue #50
 
