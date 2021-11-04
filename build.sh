@@ -19,8 +19,13 @@ go_build() {
 }
 
 go generate
+go fmt ./...
+go test ./...
 
-go test github.com/qiangyt/jog/util
+#go install github.com/gojp/goreportcard/cmd/goreportcard-cli@latest
+#https://github.com/alecthomas/gometalinter/releases/tag/v3.0.0
+#goreportcard-cli -v
+goreportcard-cli
 
 go_build linux amd64 .linux
 go_build darwin amd64 .darwin_amd64
