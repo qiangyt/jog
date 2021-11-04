@@ -55,11 +55,30 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
    - [x] A GOLANG application, so single across-platform executable binary, support Mac OSX, Windows, Linux.
 
 ## Usage:
-  Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. For ex., for Mac OSX and Linux,
+  Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. 
+  
+  - Windows
+    Download https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.exe, copy it to your executable path
+
+  - Linux
 
   ```shell
-     curl -L https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.$(echo `uname -s` | tr A-Z a-z) -o /usr/local/bin/jog
-     chmod +x /usr/local/bin/jog
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.linux -o /usr/local/bin/jog
+     sudo chmod +x /usr/local/bin/jog
+  ```
+
+  - Mac OSX (x86_64)
+
+  ```shell
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.darwin_amd64 -o /usr/local/bin/jog
+     sudo chmod +x /usr/local/bin/jog
+  ```
+
+  - Mac OSX (arm64)
+
+  ```shell
+     sudo curl -L https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.darwin_arm64 -o /usr/local/bin/jog
+     sudo chmod +x /usr/local/bin/jog
   ```
 
    * View a local JSON log file: `jog sample.log`

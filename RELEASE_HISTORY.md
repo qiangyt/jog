@@ -1,3 +1,7 @@
+# v1.0.4 (Working on)
+1. Fix download instructions in README.md
+
+
 # v1.0.3
 1. release MacOS ARM64 binary
 2. fix comment typo in configuration file template
