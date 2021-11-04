@@ -1,8 +1,8 @@
-package grok_vjeantet 
+package grok_vjeantet
 
 const (
-  // Redis ...
-  Redis string = `REDISTIMESTAMP %{MONTHDAY} %{MONTH} %{TIME}
+	// Redis ...
+	Redis string = `REDISTIMESTAMP %{MONTHDAY} %{MONTH} %{TIME}
 REDISLOG \[%{POSINT:pid}\] %{REDISTIMESTAMP:timestamp} \* 
 
 `

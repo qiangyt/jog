@@ -1,8 +1,8 @@
-package grok_vjeantet 
+package grok_vjeantet
 
 const (
-  // Ruby ...
-  Ruby string = `RUBY_LOGLEVEL (?:DEBUG|FATAL|ERROR|WARN|INFO)
+	// Ruby ...
+	Ruby string = `RUBY_LOGLEVEL (?:DEBUG|FATAL|ERROR|WARN|INFO)
 RUBY_LOGGER [DFEWI], \[%{TIMESTAMP_ISO8601:timestamp} #%{POSINT:pid}\] *%{RUBY_LOGLEVEL:loglevel} -- +%{DATA:progname}: %{GREEDYDATA:message}
 `
 )
