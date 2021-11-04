@@ -111,7 +111,7 @@ func (i Element) PrintTo(color util.Color, builder *strings.Builder, a string) {
 	}
 }
 
-// ShortenValue shortens the value to maxWidth -3 chars if necessary, shortend values will be postfixed by three dots
+// ShortenValue shortens the value to maxWidth -3 chars if necessary, shortened values will be postfixed by three dots
 func ShortenValue(inValue string, printFormat string) string {
 	idx := strings.Index(printFormat, ".")
 	if idx >= 0 {
