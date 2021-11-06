@@ -1,4 +1,11 @@
-# jog [![Build Status](https://travis-ci.org/qiangyt/jog.svg?branch=master)](https://travis-ci.org/qiangyt/jog)
+# jog 
+
+[![Build Status](https://travis-ci.org/qiangyt/jog.svg?branch=master)](https://travis-ci.org/qiangyt/jog)
+[![GitHub release](https://img.shields.io/github/v/release/qiangyt/jog.svg)](https://github.com/qiangyt/jog/releases/latest)
+[![Go Report Card](https://goreportcard.com/badge/qiangyt/jog)](https://goreportcard.com/report/github.com/qiangyt/jog)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Releases Download](https://img.shields.io/github/downloads/qiangyt/jog/total.svg?logo=github)](https://somsubhra.github.io/github-release-stats/?username=qiangyt&repository=jog)
+
 Command line tool to on-the-fly convert and view structured(JSON) log as regular flat line format. Jog supports follow mode like 'tail -f', as well as filtering by log level and time range.
 
 ## Background
