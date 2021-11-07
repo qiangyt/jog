@@ -130,13 +130,15 @@ func (i Color) String() string {
 func (i Color) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var err error
 
-	i.Reset()
-
 	if err = unmarshal(&i.label); err != nil {
+		i.Reset()
 		return err
 	}
 
 	i.style, err = ColorsFromLabel(i.label)
+	if err != nil {
+		i.Reset()
+	}
 	return err
 }
 
