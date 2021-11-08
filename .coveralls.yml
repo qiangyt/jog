@@ -4,6 +4,6 @@
 # gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
 # gem install travis
 # travis login --pro --github-token xxxx
-# travis encrypt --pro COVERALLS_TOKEN="xxxx"
+# travis encrypt --pro COVERALLS_TOKEN="xxxx" --add
 
 service_name: travis-pro
