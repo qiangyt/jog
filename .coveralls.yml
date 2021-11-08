@@ -6,3 +6,4 @@
 # travis login --pro --github-token xxxx
 # travis encrypt --pro COVERALLS_TOKEN="xxxx"
 
+service_name: travis-pro
