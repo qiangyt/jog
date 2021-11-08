@@ -1,6 +1,6 @@
 # jog 
 
-[![Build Status](https://travis-ci.com/qiangyt/jog.svg?branch=master)](https://travis-ci.com/qiangyt/jog)
+[![Build Status](https://app.travis-ci.com/qiangyt/jog.svg?branch=master)](https://api.travis-ci.com/qiangyt/jog.svg?branch=master)
 [![GitHub release](https://img.shields.io/github/v/release/qiangyt/jog.svg)](https://github.com/qiangyt/jog/releases/latest)
 [![Coverage Status](https://coveralls.io/repos/github/qiangyt/jog/badge.svg?branch=master)](https://coveralls.io/github/qiangyt/jog?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/qiangyt/jog)](https://goreportcard.com/report/github.com/qiangyt/jog)
