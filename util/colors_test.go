@@ -63,15 +63,39 @@ func Test_Colors_UnmarshalYAML_happy(t *testing.T) {
 	require.Equal(color.Blue.Code(), r.style.Code())
 }
 
-func Test_Colors_UnmarshalYAML_failed(t *testing.T) {
+func Test_Colors_UnmarshalYAML_failed_due_to_invalid_color(t *testing.T) {
 	require := require.New(t)
 
 	r := &ColorT{}
 
-	err := yaml.Unmarshal([]byte("Nothing"), &r)
+	err := yaml.Unmarshal([]byte("RedWrong"), &r)
 	if err == nil {
 		require.FailNow("expect unmarchal failure but nothing happened")
 	}
 
 	require.Equal(color.FgDefault.Code(), r.style.Code())
+}
+
+func Test_Colors_UnmarshalYAML_failed_due_to_invalid_yaml(t *testing.T) {
+	require := require.New(t)
+
+	r := &ColorT{}
+
+	err := yaml.Unmarshal([]byte("wrong:"), &r)
+	if err == nil {
+		require.FailNow("expect unmarchal failure but nothing happened")
+	}
+
+	require.Equal(color.FgDefault.Code(), r.style.Code())
+}
+
+func Test_Colors_MarshalYAML_happy(t *testing.T) {
+	require := require.New(t)
+
+	r := &ColorT{}
+	r.Set("Red,Green,Blue")
+	yamlText, err := r.MarshalYAML()
+
+	require.NoError(err)
+	require.Equal("Red,Green,Blue", yamlText)
 }
