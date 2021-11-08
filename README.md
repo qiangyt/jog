@@ -1,7 +1,8 @@
 # jog 
 
-[![Build Status](https://travis-ci.org/qiangyt/jog.svg?branch=master)](https://travis-ci.org/qiangyt/jog)
+[![Build Status](https://travis-ci.com/qiangyt/jog.svg?branch=master)](https://travis-ci.com/qiangyt/jog)
 [![GitHub release](https://img.shields.io/github/v/release/qiangyt/jog.svg)](https://github.com/qiangyt/jog/releases/latest)
+[![Coverage Status](https://coveralls.io/repos/github/qiangyt/jog/badge.svg?branch=master)](https://coveralls.io/github/qiangyt/jog?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/qiangyt/jog)](https://goreportcard.com/report/github.com/qiangyt/jog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Releases Download](https://img.shields.io/github/downloads/qiangyt/jog/total.svg?logo=github)](https://somsubhra.github.io/github-release-stats/?username=qiangyt&repository=jog)
@@ -136,7 +137,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
 ## Build
 
    *  Install GOLANG version >= 1.13
-
+   *  Install [goreportcard-cli](https://github.com/gojp/goreportcard) and [gometalinter](https://github.com/alecthomas/gometalinter)
    *  In current directory, run `./build.sh`
 
 ## Status
@@ -149,8 +150,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
    * version 1.0 TODO
      - unit test coverage: >= 80%
      - manual test suite
-     - read from native Docker containers log
-     - SSH remote host to read log directly
+     - aggregate Kubernetes Pods logs
 
 ## License
 
