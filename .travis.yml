@@ -1,31 +1,25 @@
 language: go
-
 arch:
-  - amd64
-
+- amd64
 os:
-  - linux
-
+- linux
 go:
-  - 1.16.x
-  - 1.17.x
-
+- 1.16.x
+- 1.17.x
 env:
+  matrix:
   - GO111MODULE=on
-
+  global:
+    secure: lp7m6jKqA4WlaDPrMk0h1Fk+gYtRrt+6rMeoZkgIqKskflTYxGbnGzgzC5r6xl5U3zfMs1Zf9DF04scD66JJ4Sar4x5cr3L+h/f8cuk/ez24jMP7hv2i9/KCNgX7M/mVlo5l5xomewRsZ0VxL+zV6rT57P9kOJDB4G6Fd2HUCbuG2jMqmeF0U68Qua0NLUijEpRhoh2Lch4S14gVwAd34C5jyUpnbYPB3ZG9ScA7MeOrjmVIa+dPGa/xX6JrykZ76HOE8lrcGJU1BXHtsNnMmXM94VjoVDJKVs19WQ5ibJpBS6amc4Oi7qhUV7xhwviGbWavYRgpiBTGeKuMYUumLOvQy0QcZ0B4OueMUeUWVno9sYAiqwJ+ZPdPbn5/XqsXV4HRbBEI0/cAYjNQY6FHXQVJqoL3mvPkmrzPv8GtHrEA0569+IfYty9Pnc7m52AlTZPi0J5WRav7n40st4HEmQ8hrk3K0FqfiSpx1IAzGocxQ6N0EI3lcbrYTYE2ZUCwEOLsv3HYk4vtzT/Cm8btek5yCgXsI8Vph3+Ab4vROF12FRxYvnVfdIwHClLN2BzcZ8MDZklsBAHPjxv1K5MPAhDQ9SJClDP05rBZ3KruG32RAVrwx3gNhbp8ER9r3hnb/PFeVBYKYp/o/5nL+Ykd3OhO6n8GbSfEQs+lbgWiabY=
 branches:
   only:
-    - master
-
-secure: "UvX9f6ISs5ASDfeRQTpaL1vjU8HlxI9lE2ZVpJOHfYYtbd5P+/njyUHQsaM3Mfcbirpeu4bO/FglDsNFc7oPkYK5GbJG7jRvZq3NmDXbPw53XP/OZzsvAgQJNJCp/rHl7DXpTvLAtA7acKyrWbQjwcDd/GHI8rIzU+zl2wSyXUvUX+uavL/TboURiVl1w3wVB2s744gTTceUMMc81Gisb+XOy9OobS9tfJ082S57i0AXy+5dxDE8/Gct0J2FzJYtGw4Oj7nervvuDaHw5zuCmqhW16JG3cC65onhi+sq5+a1mdP6V1WzDK1xVYz2EA/IMPb32LQHzupOVT0QAeNJPdHEz69rNxw6FjZaU5jPvSoaMSmib1HoaKy9sVawxdqdrS0mfdRsGOxaJUckQ7PEN4jCRMGLYZiv7tV84Gu90+KQq5TPdRWfUE8gFiJA81M/q7yPKvpF3dgtTbK4pLZfhIyCjBfGoj/FYkEPLGZ/wWWBZ9YRU6RgbBKFrOqHJDLdqUM00TumCq/sh6lMt13mwwgAVSgfF//4u9pZ/L2zsuEcvvAgWO3lq4uCU7/XvH9z47Z4usFuJfm/uTOwiLE6zP0x0Ipd6s97jmlUNH8ozLtsmpGtJ/tPKbHa3CbEpP1oYApJb7Dt6fDCeeIKYx9B0ejX3bbpjE9XlH3HdFMJoCY="
-
-script: 
-  - go mod tidy && git diff --exit-code go.mod go.sum
-  - go generate
-  - go test -v ./...
-  - go get golang.org/x/tools/cmd/cover
-  - go get github.com/mattn/goveralls
-  - go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
-  - echo $COVERALLS_TOKEN
-  - goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
-
+  - master
+script:
+- go mod tidy && git diff --exit-code go.mod go.sum
+- go generate
+- go test -v ./...
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
+- go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
+- echo $COVERALLS_TOKEN
+- goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
