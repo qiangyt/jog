@@ -21,8 +21,8 @@ script:
   - go mod tidy && git diff --exit-code go.mod go.sum
   - go generate
   - go test -v ./...
-  #- go get golang.org/x/tools/cmd/cover
-  #- go get github.com/mattn/goveralls
-  #- go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
-  #- $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+  - go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
+  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
 

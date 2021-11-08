@@ -1,0 +1,8 @@
+# https://docs.coveralls.io/go
+# https://coveralls.io/github/qiangyt/jog
+
+# gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+# gem install travis
+# travis login --pro --github-token xxxx
+# travis encrypt --pro COVERALLS_TOKEN="xxxx"
+
