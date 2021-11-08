@@ -20,7 +20,8 @@ go_build() {
 
 go generate
 go fmt ./...
-go test ./...
+go test ./... -v -covermode=count -coverprofile=coverage.out
+#$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
 
 #go install github.com/gojp/goreportcard/cmd/goreportcard-cli@latest
 #https://github.com/alecthomas/gometalinter/releases/tag/v3.0.0
