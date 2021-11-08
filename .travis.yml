@@ -17,6 +17,8 @@ branches:
   only:
     - master
 
+secure: "UvX9f6ISs5ASDfeRQTpaL1vjU8HlxI9lE2ZVpJOHfYYtbd5P+/njyUHQsaM3Mfcbirpeu4bO/FglDsNFc7oPkYK5GbJG7jRvZq3NmDXbPw53XP/OZzsvAgQJNJCp/rHl7DXpTvLAtA7acKyrWbQjwcDd/GHI8rIzU+zl2wSyXUvUX+uavL/TboURiVl1w3wVB2s744gTTceUMMc81Gisb+XOy9OobS9tfJ082S57i0AXy+5dxDE8/Gct0J2FzJYtGw4Oj7nervvuDaHw5zuCmqhW16JG3cC65onhi+sq5+a1mdP6V1WzDK1xVYz2EA/IMPb32LQHzupOVT0QAeNJPdHEz69rNxw6FjZaU5jPvSoaMSmib1HoaKy9sVawxdqdrS0mfdRsGOxaJUckQ7PEN4jCRMGLYZiv7tV84Gu90+KQq5TPdRWfUE8gFiJA81M/q7yPKvpF3dgtTbK4pLZfhIyCjBfGoj/FYkEPLGZ/wWWBZ9YRU6RgbBKFrOqHJDLdqUM00TumCq/sh6lMt13mwwgAVSgfF//4u9pZ/L2zsuEcvvAgWO3lq4uCU7/XvH9z47Z4usFuJfm/uTOwiLE6zP0x0Ipd6s97jmlUNH8ozLtsmpGtJ/tPKbHa3CbEpP1oYApJb7Dt6fDCeeIKYx9B0ejX3bbpjE9XlH3HdFMJoCY="
+
 script: 
   - go mod tidy && git diff --exit-code go.mod go.sum
   - go generate
@@ -24,5 +26,5 @@ script:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
   - go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
-  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - $HOME/go/bin/goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
 
