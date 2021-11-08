@@ -17,7 +17,11 @@ func UnmarshalYAML(i DynamicObject, unmarshal func(interface{}) error) error {
 	}
 
 	i.Reset()
-	return i.FromMap(m)
+	err = i.FromMap(m)
+	if err != nil {
+		i.Reset()
+	}
+	return err
 }
 
 // MarshalYAML ...
