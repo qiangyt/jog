@@ -1,8 +1,8 @@
-package grok_vjeantet
+package grok_vjeantet 
 
 const (
-	// Grok_patterns ...
-	Grok_patterns string = `USERNAME [a-zA-Z0-9._-]+
+  // Grok_patterns ...
+  Grok_patterns string = `USERNAME [a-zA-Z0-9._-]+
 USER %{USERNAME}
 INT (?:[+-]?(?:[0-9]+))
 BASE10NUM ([+-]?(?:[0-9]+(?:\.[0-9]+)?)|\.[0-9]+)

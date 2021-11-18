@@ -1,8 +1,8 @@
-package grok_vjeantet
+package grok_vjeantet 
 
 const (
-	// Bacula ...
-	Bacula string = `BACULA_TIMESTAMP %{MONTHDAY}-%{MONTH} %{HOUR}:%{MINUTE}
+  // Bacula ...
+  Bacula string = `BACULA_TIMESTAMP %{MONTHDAY}-%{MONTH} %{HOUR}:%{MINUTE}
 BACULA_HOST [a-zA-Z0-9-]+
 BACULA_VOLUME %{USER}
 BACULA_DEVICE %{USER}
