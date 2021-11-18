@@ -1,8 +1,10 @@
 package util
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/gookit/color"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v2"
@@ -98,4 +100,35 @@ func Test_Colors_MarshalYAML_happy(t *testing.T) {
 
 	require.NoError(err)
 	require.Equal("Red,Green,Blue", yamlText)
+}
+
+func Test_Colors_Sprint(t *testing.T) {
+	assert := require.New(t)
+
+	r := &ColorT{}
+
+	patches := gomonkey.ApplyMethod(reflect.TypeOf(r.style), "Sprint", func(s color.Style, a ...interface{}) string {
+		assert.Equal("x", a[0])
+		return "called"
+	})
+	defer patches.Reset()
+
+	r.Set("Red")
+	assert.Equal("called", r.Sprint("x"))
+}
+
+func Test_Colors_Sprintf(t *testing.T) {
+	assert := require.New(t)
+
+	r := &ColorT{}
+
+	patches := gomonkey.ApplyMethod(reflect.TypeOf(r.style), "Sprintf", func(s color.Style, format string, a ...interface{}) string {
+		assert.Equal("%s", format)
+		assert.Equal("x", a[0])
+		return "called"
+	})
+	defer patches.Reset()
+
+	r.Set("Red")
+	assert.Equal("called", r.Sprintf("%s", "x"))
 }
