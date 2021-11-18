@@ -17,9 +17,9 @@ branches:
 script:
 - go mod tidy && git diff --exit-code go.mod go.sum
 - go generate
-- go test -v ./...
+- go test gcflags=all=-l -v ./...
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
-- go test ${gobuild_args} -v ./... -covermode=count -coverprofile=coverage.out
+- go test ${gobuild_args} -v gcflags=all=-l ./... -covermode=count -coverprofile=coverage.out
 - echo $COVERALLS_TOKEN
 - goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN

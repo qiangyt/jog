@@ -2,5 +2,5 @@
 
 set -e
 
-go test ./... -v -covermode=count -coverprofile=coverage.out
+go test ./... -v gcflags=all=-l -covermode=count -coverprofile=coverage.out
 go tool cover -html=./coverage.out -o ./coverage.html
