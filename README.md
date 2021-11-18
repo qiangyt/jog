@@ -1,4 +1,4 @@
-# jog 
+# jog
 
 [![Build Status](https://app.travis-ci.com/qiangyt/jog.svg?branch=master)](https://api.travis-ci.com/qiangyt/jog.svg?branch=master)
 [![GitHub release](https://img.shields.io/github/v/release/qiangyt/jog.svg)](https://github.com/qiangyt/jog/releases/latest)
@@ -63,8 +63,8 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
    - [x] A GOLANG application, so single across-platform executable binary, support Mac OSX, Windows, Linux.
 
 ## Usage:
-  Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH. 
-  
+  Download the executable binary (https://github.com/qiangyt/jog/releases/) to $PATH.
+
   - Windows
     Download https://github.com/qiangyt/jog/releases/download/v1.0.3/jog.exe, copy it to your executable path
 
@@ -136,8 +136,11 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
 
 ## Build
 
-   *  Install GOLANG version >= 1.13
-   *  Install [goreportcard-cli](https://github.com/gojp/goreportcard) and [gometalinter](https://github.com/alecthomas/gometalinter)
+   *  Install GOLANG version >= 1.16
+   *  Install
+      - [goreportcard-cli](https://github.com/gojp/goreportcard)
+      - [gometalinter](https://github.com/alecthomas/gometalinter)
+      - go install github.com/golang/mock/mockgen@v1.6.0
    *  In current directory, run `./build.sh`
 
 ## Status
