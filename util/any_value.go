@@ -10,8 +10,9 @@ import (
 
 // AnyValueT ...
 type AnyValueT struct {
-	Raw  interface{}
-	Text string
+	Raw    interface{}
+	Text   string
+	LineNo int
 }
 
 // AnyValue ...
@@ -29,13 +30,14 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 	alreadyNormalized := false
 
 	if raw == nil {
-		return &AnyValueT{Raw: raw}
+		return &AnyValueT{Raw: nil, Text: "", LineNo: lineNo}
 	}
 
 	kind := reflect.TypeOf(raw).Kind()
 	if kind == reflect.Map || kind == reflect.Slice || kind == reflect.Array {
 		json, err := json.MarshalIndent(raw, "", "  ")
 		if err != nil {
+			// TODO: should we panic with this err ?
 			log.Printf("line %v: failed to json format: %v\n", lineNo, raw)
 		} else {
 			text = string(json)
@@ -45,6 +47,7 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 		text = strutil.MustString(raw)
 	}
 
+	/* TODO: why?
 	if len(text) >= 1 {
 		if text[:1] == "\"" || text[:1] == "'" {
 			text = text[1:]
@@ -55,6 +58,7 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 			text = text[:len(text)-1]
 		}
 	}
+	*/
 	text = strutil.Replaces(text, replace)
 
 	if alreadyNormalized == false {
@@ -65,7 +69,8 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 				text = string(json)
 			}
 		}
+		// TODO: should we panic with above err ?
 	}
 
-	return &AnyValueT{Raw: raw, Text: text}
+	return &AnyValueT{Raw: raw, Text: text, LineNo: lineNo}
 }
