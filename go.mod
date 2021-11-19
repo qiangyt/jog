@@ -3,9 +3,8 @@ module github.com/qiangyt/jog
 go 1.16
 
 require (
-	github.com/agiledragon/gomonkey/v2 v2.3.1 // indirect
+	github.com/agiledragon/gomonkey/v2 v2.3.1
 	github.com/araddon/dateparse v0.0.0-20200409225146-d820a6159ab1
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/gookit/color v1.2.7
 	github.com/gookit/goutil v0.2.12
 	github.com/kr/pretty v0.1.0 // indirect

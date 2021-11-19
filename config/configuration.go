@@ -28,7 +28,7 @@ func JogHomeDir(expand bool, children ...string) string {
 	if !expand {
 		r = jogHomeDir
 	} else {
-		r = util.ExpandPath(jogHomeDir)
+		r = util.ExpandHomePath(jogHomeDir)
 		util.MkdirAll(r)
 	}
 

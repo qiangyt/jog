@@ -99,7 +99,7 @@ func (i Grok) Init(cfg Configuration) {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {
-		dir := util.ExpandPath(patternsDir)
+		dir := util.ExpandHomePath(patternsDir)
 		if util.DirExists(dir) == false {
 			continue
 		}

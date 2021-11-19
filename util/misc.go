@@ -105,8 +105,8 @@ func ReplaceFile(path string, content []byte) {
 	}
 }
 
-// ExpandPath ...
-func ExpandPath(path string) string {
+// ExpandHomePath ...
+func ExpandHomePath(path string) string {
 	var r string
 	var err error
 
