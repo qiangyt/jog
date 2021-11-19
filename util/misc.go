@@ -14,7 +14,11 @@ import (
 
 // ExeDirectory ...
 func ExeDirectory() string {
-	exePath := os.Args[0]
+	return exeDirectory(os.Args[0])
+}
+
+// ExeDirectory_ ...
+func exeDirectory(exePath string) string {
 	r, err := filepath.Abs(filepath.Dir(exePath))
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to get absolute directory path for "+exePath))
@@ -122,8 +126,7 @@ func UnmashalYAMLAgain(in interface{}, out interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = yaml.Unmarshal(yml, out)
-	return err
+	return yaml.Unmarshal(yml, out)
 }
 
 // ToBool ...
