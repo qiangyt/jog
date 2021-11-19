@@ -1,6 +1,7 @@
 package jsonpath
 
 // copied from https://raw.githubusercontent.com/mdaverde/jsonpath/jsonpath.go
+// TODO: don't copy it
 
 import (
 	"errors"

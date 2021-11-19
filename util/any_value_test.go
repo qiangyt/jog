@@ -1,8 +1,11 @@
 package util
 
 import (
+	"encoding/json"
+	"errors"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/stretchr/testify/require"
 )
 
@@ -36,6 +39,14 @@ func Test_Test_AnyValueFromRaw_Array(t *testing.T) {
 	assert.Equal(raw, target.Raw)
 	assert.Equal("[\n  \"k\",\n  \"v\"\n]", target.Text)
 	assert.Equal(-1, target.LineNo)
+
+	patches := gomonkey.ApplyFunc(json.MarshalIndent, func(_ interface{}, _ string, _ string) ([]byte, error) {
+		return nil, errors.New("")
+	})
+	defer patches.Reset()
+
+	target = AnyValueFromRaw(-1, raw, nil)
+	//TODO: what to assert?
 }
 
 func Test_AnyValueFromRaw_Slice(t *testing.T) {
