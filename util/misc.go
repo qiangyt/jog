@@ -148,8 +148,8 @@ func ExtractFromMap(m map[string]interface{}, key string) interface{} {
 
 // ExtractStringSliceFromMap ...
 func ExtractStringSliceFromMap(m map[string]interface{}, key string) ([]string, error) {
-	v := ExtractFromMap(m, key)
-	if v == nil {
+	v, has := m[key]
+	if !has {
 		return []string{}, nil
 	}
 
@@ -157,6 +157,8 @@ func ExtractStringSliceFromMap(m map[string]interface{}, key string) ([]string, 
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse %s: %v", key, v)
 	}
+
+	delete(m, key)
 	return r, nil
 }
 
