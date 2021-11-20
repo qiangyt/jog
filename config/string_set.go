@@ -22,45 +22,32 @@ type StringSetT struct {
 // StringSet ...
 type StringSet = *StringSetT
 
-func _extractKeys(m map[string]bool) []string {
-	r := make([]string, len(m))
-	n := 0
-	for k := range m {
-		r[n] = k
-		n++
-	}
-	return r
-}
-
 // Parse ...
 func (i StringSet) Parse(input interface{}) {
 	i.Reset()
 
+	var valuesArray []string
+
 	switch input.(type) {
 	case []string:
 		{
-			for _, v := range input.([]string) {
-				v = strings.Trim(v, "\t\r\n ")
-				i.ValueMap[v] = true
-				if i.CaseSensitive == false {
-					i.LowercasedValueMap[strings.ToLower(v)] = true
-					i.UppercasedValueMap[strings.ToUpper(v)] = true
-				}
-			}
+			valuesArray = input.([]string)
 		}
 	case string:
 		{
-			for _, v := range strutil.Split(input.(string), ",") {
-				v = strings.Trim(v, "\t\r\n ")
-				i.ValueMap[v] = true
-				if i.CaseSensitive == false {
-					i.LowercasedValueMap[strings.ToLower(v)] = true
-					i.UppercasedValueMap[strings.ToUpper(v)] = true
-				}
-			}
+			valuesArray = strutil.Split(input.(string), ",")
 		}
 	default:
 		panic(fmt.Errorf("not a string array: %v", input))
+	}
+
+	for _, v := range valuesArray {
+		v = strings.Trim(v, "\t\r\n ")
+		i.ValueMap[v] = true
+		if i.CaseSensitive == false {
+			i.LowercasedValueMap[strings.ToLower(v)] = true
+			i.UppercasedValueMap[strings.ToUpper(v)] = true
+		}
 	}
 }
 

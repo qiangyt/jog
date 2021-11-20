@@ -21,6 +21,9 @@ func UnmarshalYAML(i DynamicObject, unmarshal func(interface{}) error) error {
 	if err != nil {
 		i.Reset()
 	}
+
+	//TODO: check to ensure len(m) == 0, that is, no unknown keys left
+
 	return err
 }
 
