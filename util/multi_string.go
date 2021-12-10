@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// TODO: is it duplicated with StringSet?
 // MultiStringT ...
 type MultiStringT struct {
 	yaml.Unmarshaler
