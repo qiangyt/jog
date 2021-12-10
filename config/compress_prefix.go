@@ -120,6 +120,7 @@ func (i CompressPrefix) Reset() {
 	i.Action = CompressPrefixActionDefault
 }
 
+// TODO: this 2 caches are not thread-safe, should be moved to a context
 var _compressCache4RemoveNonFirstLetter = make(map[string]string)
 var _compressCache4Remove = make(map[string]string)
 

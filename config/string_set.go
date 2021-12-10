@@ -58,6 +58,10 @@ func (i StringSet) Reset() {
 	i.UppercasedValueMap = make(map[string]bool)
 }
 
+func (i StringSet) IsEmpty() bool {
+	return i.ValueMap == nil || len(i.ValueMap) == 0
+}
+
 // Contains ...
 func (i StringSet) Contains(v string) bool {
 	r := i.ValueMap[v]
