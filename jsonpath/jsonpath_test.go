@@ -8,22 +8,26 @@ import (
 	"testing"
 )
 
-var data = map[string]interface{}{
-	"user": map[string]interface{}{
-		"firstname": "seth",
-		"lastname":  "rogen",
-	},
-	"age": 35,
-	"filmography": map[string]interface{}{
-		"movies": []string{
-			"This Is The End",
-			"Superbad",
-			"Neighbors",
+func test_data() map[string]interface{} {
+	return map[string]interface{}{
+		"user": map[string]interface{}{
+			"firstname": "seth",
+			"lastname":  "rogen",
 		},
-	},
+		"age": 35,
+		"filmography": map[string]interface{}{
+			"movies": []string{
+				"This Is The End",
+				"Superbad",
+				"Neighbors",
+			},
+		},
+	}
 }
 
 func TestGet(t *testing.T) {
+	data := test_data()
+
 	result, err := Get(data, "user.firstname")
 	if err != nil {
 		t.Errorf("failed to get user.firstname")
@@ -55,6 +59,8 @@ func TestGet(t *testing.T) {
 }
 
 func TestSet(t *testing.T) {
+	data := test_data()
+
 	err := Set(&data, "user.firstname", "chris")
 	if err != nil {
 		t.Errorf("failed to set user.firstname: %v", err)
@@ -189,6 +195,8 @@ func TestJSON(t *testing.T) {
 }
 
 func TestErrors(t *testing.T) {
+	data := test_data()
+
 	_, err := Get(data, "where.is.this")
 	if _, ok := err.(DoesNotExist); !ok && err != nil {
 		t.Errorf("error retrieving value %v", err)
