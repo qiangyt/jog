@@ -14,7 +14,8 @@ func Test_StringSet_Parse_string(t *testing.T) {
 
 	target.CaseSensitive = false
 	target.Parse("a, B")
-	assert.True("a, B" == target.String() || "B, a" == target.String())
+	s := target.String()
+	assert.True("a, B" == s || "B, a" == s)
 
 	assert.Equal(2, len(target.ValueMap))
 	assert.True(target.ValueMap["a"])
@@ -30,7 +31,8 @@ func Test_StringSet_Parse_string(t *testing.T) {
 
 	target.CaseSensitive = true
 	target.Parse("c, D")
-	assert.True("c, D" == target.String() || "D, c" == target.String())
+	s = target.String()
+	assert.True("c, D" == s || "D, c" == s)
 
 	assert.Equal(2, len(target.ValueMap))
 	assert.True(target.ValueMap["c"])
@@ -46,7 +48,8 @@ func Test_StringSet_Parse_string_array(t *testing.T) {
 
 	target.CaseSensitive = false
 	target.Parse([]string{" A ", " b"})
-	assert.True("A, b" == target.String() || "b, A" == target.String())
+	s := target.String()
+	assert.True("A, b" == s || "b, A" == s)
 
 	assert.Equal(2, len(target.ValueMap))
 	assert.True(target.ValueMap["A"])
