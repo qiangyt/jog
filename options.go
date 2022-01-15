@@ -82,24 +82,24 @@ func (i Options) InitTimestampFilters(timestampField config.Field) {
 	if len(i.beforeFilterText) > 0 {
 		f, err := naturaldate.Parse(i.beforeFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
-			log.Printf("failed to parse before filter %s as natural timestamp, so try absolute parse\n", i.beforeFilterText)
+			log.Printf("failed to parse before-time filter %s as natural timestamp, so try absolute parse\n", i.beforeFilterText)
 			f = ParseTimestamp(timestampField, i.beforeFilterText)
 		}
-		log.Printf("before filter: %v", f)
+		log.Printf("before-time filter: %v", f)
 		i.BeforeFilter = &f
 	}
 	if len(i.afterFilterText) > 0 {
 		f, err := naturaldate.Parse(i.afterFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
-			log.Printf("failed to parse after filter %s as natural timestamp, so try absolute parse\n", i.afterFilterText)
+			log.Printf("failed to parse after-time filter %s as natural timestamp, so try absolute parse\n", i.afterFilterText)
 			f = ParseTimestamp(timestampField, i.afterFilterText)
 		}
-		log.Printf("after filter: %v", f)
+		log.Printf("after-time filter: %v", f)
 		i.AfterFilter = &f
 
 		if i.BeforeFilter != nil {
 			if i.BeforeFilter.Before(*i.AfterFilter) {
-				panic(fmt.Errorf("before filter (%s) shouldn't be before after filter (%s)", i.beforeFilterText, i.afterFilterText))
+				panic(fmt.Errorf("before-time filter (%s) shouldn't be before after-time filter (%s)", i.beforeFilterText, i.afterFilterText))
 			}
 		}
 	}
