@@ -24,3 +24,17 @@
 - !https://github.com/progrium/bashstyle
   Let's do Bash right!
 
+- refer to https://github.com/hpcloud/tail
+
+- https://github.com/rburns/ansi-to-html
+  Convert ansi escaped text streams to html.
+
+- https://github.com/drudru/ansi_up
+  A javascript library that converts text with ANSI terminal codes into colorful HTML Zero dependencies.
+
+- https://github.com/d2-projects/d2-admin
+  An elegant dashboard
+
+- https://github.com/shimohq/mogo
+  A light weight web log visual analytic platform for clickhouse.
+
