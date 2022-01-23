@@ -1,9 +1,9 @@
 package data
 
 import (
-	"jog/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/qiangyt/jog/internal/conf"
 )
 
 // ProviderSet is data providers.

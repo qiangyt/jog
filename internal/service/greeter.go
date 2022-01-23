@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	v1 "jog/api/helloworld/v1"
-	"jog/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
+	v1 "github.com/qiangyt/jog/api/helloworld/v1"
+	"github.com/qiangyt/jog/internal/biz"
 )
 
 // GreeterService is a greeter service.

@@ -1,18 +1,19 @@
+//go:build wireinject
 // +build wireinject
 
 // The build tag makes sure the stub is not built in the final build.
 
-package main
+package main2
 
 import (
-	"jog/internal/biz"
-	"jog/internal/conf"
-	"jog/internal/data"
-	"jog/internal/server"
-	"jog/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/qiangyt/jog/internal/biz"
+	"github.com/qiangyt/jog/internal/conf"
+	"github.com/qiangyt/jog/internal/data"
+	"github.com/qiangyt/jog/internal/server"
+	"github.com/qiangyt/jog/internal/service"
 )
 
 // initApp init kratos application.

@@ -2,8 +2,9 @@ package data
 
 import (
 	"context"
-	"jog/internal/biz"
+
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/qiangyt/jog/internal/biz"
 )
 
 type greeterRepo struct {

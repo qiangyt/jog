@@ -12,6 +12,9 @@ import (
 const _ = errors.SupportPackageIsVersion1
 
 func IsUserNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
 	e := errors.FromError(err)
 	return e.Reason == ErrorReason_USER_NOT_FOUND.String() && e.Code == 404
 }
@@ -21,6 +24,9 @@ func ErrorUserNotFound(format string, args ...interface{}) *errors.Error {
 }
 
 func IsContentMissing(err error) bool {
+	if err == nil {
+		return false
+	}
 	e := errors.FromError(err)
 	return e.Reason == ErrorReason_CONTENT_MISSING.String() && e.Code == 400
 }
