@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
-	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/client/config"
 	"github.com/qiangyt/jog/static"
 )
 

@@ -11,7 +11,7 @@ import (
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/client/config"
 	"github.com/qiangyt/jog/util"
 )
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/client/config"
 	"github.com/tj/go-naturaldate"
 )
 

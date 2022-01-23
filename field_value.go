@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/araddon/dateparse"
-	"github.com/qiangyt/jog/config"
+	"github.com/qiangyt/jog/client/config"
 	"github.com/qiangyt/jog/util"
 )
 
