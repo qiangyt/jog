@@ -1,3 +1,4 @@
+# Reference https://github.com/github/gitignore/blob/master/Go.gitignore
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -12,12 +13,26 @@
 /coverage.out
 /coverage.html
 
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# OS General
+Thumbs.db
+.DS_Store
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
 /jog
-/jog.log
+*.log
 /target
 idea.txt
 /__debug_bin
 /local.md
+
+# Develop tools
+.vscode/
+.idea/
+*.swp
