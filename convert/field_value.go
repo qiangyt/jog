@@ -1,4 +1,4 @@
-package main
+package convert
 
 import (
 	"fmt"
@@ -30,7 +30,7 @@ func (i FieldValue) GetColor() util.Color {
 }
 
 // NewFieldValue ...
-func NewFieldValue(cfg config.Configuration, options Options, fieldConfig config.Field, value util.AnyValue) FieldValue {
+func NewFieldValue(cfg config.Configuration, options ConvertOptions, fieldConfig config.Field, value util.AnyValue) FieldValue {
 	var enumValue config.Enum
 	var err error
 	var output string

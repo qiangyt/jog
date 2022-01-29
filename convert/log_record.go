@@ -1,4 +1,4 @@
-package main
+package convert
 
 import (
 	"encoding/json"
@@ -198,7 +198,7 @@ func (i LogRecord) MatchesTimestampFilter(cfg config.Configuration, beforeFilter
 }
 
 // MatchesFilters ...
-func (i LogRecord) MatchesFilters(cfg config.Configuration, options Options) bool {
+func (i LogRecord) MatchesFilters(cfg config.Configuration, options ConvertOptions) bool {
 	levelFilters := options.GetLevelFilters()
 
 	if len(options.levelFilters) > 0 {
@@ -221,7 +221,7 @@ func isStartupLine(cfg config.Configuration, raw string) bool {
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
-func tryToParseUsingGrok(cfg config.Configuration, options Options, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseUsingGrok(cfg config.Configuration, options ConvertOptions, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
@@ -273,7 +273,7 @@ func tryToParseUsingGrok(cfg config.Configuration, options Options, lineNo int, 
 	return
 }
 
-func tryToParseAsJSON(cfg config.Configuration, options Options, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseAsJSON(cfg config.Configuration, options ConvertOptions, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
@@ -321,7 +321,7 @@ func tryToParseAsJSON(cfg config.Configuration, options Options, lineNo int, lin
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(cfg config.Configuration, options Options, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(cfg config.Configuration, options ConvertOptions, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		UnknownFields:  make(map[string]util.AnyValue),

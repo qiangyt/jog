@@ -1,4 +1,4 @@
-package main
+package convert
 
 import (
 	"bufio"
@@ -18,7 +18,7 @@ var readTimeout time.Duration = time.Millisecond * 200
 var followCheckInterval = time.Millisecond * 200
 
 // ProcessRawLine ...
-func ProcessRawLine(cfg config.Configuration, options Options, lineNo int, rawLine string) {
+func ProcessRawLine(cfg config.Configuration, options ConvertOptions, lineNo int, rawLine string) {
 	record := ParseAsRecord(cfg, options, lineNo, rawLine)
 	if !record.MatchesFilters(cfg, options) {
 		return
@@ -37,7 +37,7 @@ func ProcessRawLine(cfg config.Configuration, options Options, lineNo int, rawLi
 }
 
 // ProcessLocalFile ...
-func ProcessLocalFile(cfg config.Configuration, options Options, follow bool, localFilePath string) {
+func ProcessLocalFile(cfg config.Configuration, options ConvertOptions, follow bool, localFilePath string) {
 	var offset int64 = 0
 	var lineNo int = 1
 
@@ -53,7 +53,7 @@ func ProcessLocalFile(cfg config.Configuration, options Options, follow bool, lo
 }
 
 // ReadLocalFile ...
-func ReadLocalFile(cfg config.Configuration, options Options, localFilePath string, offset int64, lineNo int) (int64, int) {
+func ReadLocalFile(cfg config.Configuration, options ConvertOptions, localFilePath string, offset int64, lineNo int) (int64, int) {
 	f, err := os.Open(localFilePath)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to open: %s", localFilePath))
@@ -133,7 +133,7 @@ func readRawLine(buf *bufio.Reader) (string, error) {
 }
 
 // ProcessReader ...
-func ProcessReader(cfg config.Configuration, options Options, reader io.Reader, lineNo int) int {
+func ProcessReader(cfg config.Configuration, options ConvertOptions, reader io.Reader, lineNo int) int {
 	buf := bufio.NewReader(reader)
 	isEOF := false
 

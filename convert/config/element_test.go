@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_Enum_FromMap_ToMap_happy(t *testing.T) {
+func Test_Enum2_FromMap_ToMap_happy(t *testing.T) {
 	assert := require.New(t)
 
 	target := &EnumT{}

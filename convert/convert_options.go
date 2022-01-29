@@ -1,4 +1,4 @@
-package main
+package convert
 
 import (
 	"fmt"
@@ -12,8 +12,8 @@ import (
 	"github.com/tj/go-naturaldate"
 )
 
-// OptionsT ...
-type OptionsT struct {
+// ConvertOptionsT ...
+type ConvertOptionsT struct {
 	LogFilePath     string
 	ConfigFilePath  string
 	Debug           bool
@@ -37,11 +37,16 @@ type OptionsT struct {
 	GrokPatterns     []string
 }
 
-// Options ...
-type Options = *OptionsT
+// ConvertOptions ...
+type ConvertOptions = *ConvertOptionsT
+
+// PrintConfigTemplate ...
+func PrintConfigTemplate() {
+	fmt.Println(config.BuildDefaultConfigurationYAML())
+}
 
 // InitGroks ...
-func (i Options) InitGroks(cfg config.Configuration) {
+func (i ConvertOptions) InitGroks(cfg config.Configuration) {
 	if len(i.GrokPatternsUsed) == 0 {
 		// try to uses default patterns
 		i.GrokPatternsUsed = cfg.Grok.Uses
@@ -53,17 +58,17 @@ func (i Options) InitGroks(cfg config.Configuration) {
 	}
 }
 
-func (i Options) isGrokEnabled() bool {
+func (i ConvertOptions) isGrokEnabled() bool {
 	return len(i.GrokPatterns) > 0
 }
 
 // GetLevelFilters ...
-func (i Options) GetLevelFilters() []config.Enum {
+func (i ConvertOptions) GetLevelFilters() []config.Enum {
 	return i.levelFilters
 }
 
 // InitLevelFilters ...
-func (i Options) InitLevelFilters(levelFieldEnums config.EnumMap) {
+func (i ConvertOptions) InitLevelFilters(levelFieldEnums config.EnumMap) {
 	if len(i.levelFilterTexts) == 0 {
 		i.levelFilters = make([]config.Enum, 0)
 		return
@@ -76,7 +81,7 @@ func (i Options) InitLevelFilters(levelFieldEnums config.EnumMap) {
 }
 
 // InitTimestampFilters ...
-func (i Options) InitTimestampFilters(timestampField config.Field) {
+func (i ConvertOptions) InitTimestampFilters(timestampField config.Field) {
 	now := time.Now()
 
 	if len(i.beforeFilterText) > 0 {
@@ -106,7 +111,7 @@ func (i Options) InitTimestampFilters(timestampField config.Field) {
 }
 
 // HasTimestampFilter ...
-func (i Options) HasTimestampFilter() bool {
+func (i ConvertOptions) HasTimestampFilter() bool {
 	return i.BeforeFilter != nil || i.AfterFilter != nil
 }
 
@@ -116,9 +121,9 @@ func printErrorHint(format string, a ...interface{}) {
 }
 
 // OptionsWithCommandLine ...
-func OptionsWithCommandLine() (bool, Options) {
+func OptionsWithCommandLine() (bool, ConvertOptions) {
 
-	r := &OptionsT{
+	r := &ConvertOptionsT{
 		Debug:            false,
 		FollowMode:       false,
 		NumberOfLines:    -1,
