@@ -8,7 +8,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/client/config"
+	"github.com/qiangyt/jog/convert/config"
 	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"

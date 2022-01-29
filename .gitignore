@@ -25,6 +25,7 @@ Thumbs.db
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+/bin/
 /jog
 *.log
 /target
