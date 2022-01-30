@@ -61,6 +61,17 @@ generate:
 	go generate ./...
 	go fmt ./...
 
+.PHONY: test
+# test
+test:
+	# go test ./... -v -covermode=count -coverprofile=coverage.out gcflags=all=-l
+	go test ./... -covermode=count -coverprofile=coverage.out gcflags=all=-l
+	go tool cover -html=./coverage.out -o ./coverage.html
+	#go install github.com/gojp/goreportcard/cmd/goreportcard-cli@latest
+	#https://github.com/alecthomas/gometalinter/releases/tag/v3.0.0
+	#goreportcard-cli -v
+	goreportcard-cli
+
 .PHONY: all
 # generate all
 all:
