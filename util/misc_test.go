@@ -249,6 +249,7 @@ func Test_ExtractStringSliceFromMap(t *testing.T) {
 	m := map[string]interface{}{
 		"k": []string{"v0", "v1"},
 		"p": "not slice",
+		"z": nil,
 	}
 
 	v, err := ExtractStringSliceFromMap(m, "k")
@@ -268,6 +269,10 @@ func Test_ExtractStringSliceFromMap(t *testing.T) {
 	assert.Nil(v)
 	_, has = m["p"]
 	assert.True(has, "should be still there")
+
+	v, err = ExtractStringSliceFromMap(m, "z")
+	assert.NoError(err)
+	assert.Equal(0, len(v))
 }
 
 func Test_MkdirAll(t *testing.T) {

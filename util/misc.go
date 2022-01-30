@@ -152,7 +152,7 @@ func ExtractFromMap(m map[string]interface{}, key string) interface{} {
 // ExtractStringSliceFromMap ...
 func ExtractStringSliceFromMap(m map[string]interface{}, key string) ([]string, error) {
 	v, has := m[key]
-	if !has {
+	if !has || v == nil {
 		return []string{}, nil
 	}
 
