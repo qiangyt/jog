@@ -3,7 +3,7 @@
 
 // The build tag makes sure the stub is not built in the final build.
 
-package main2
+package main
 
 import (
 	"github.com/go-kratos/kratos/v2"

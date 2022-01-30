@@ -1,4 +1,4 @@
-package main2
+package main
 
 import (
 	"flag"
@@ -44,7 +44,7 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
 	)
 }
 
-func main() {
+func ServerMain() {
 	flag.Parse()
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,

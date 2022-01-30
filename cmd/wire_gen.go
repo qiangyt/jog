@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main2
+package main
 
 import (
 	"github.com/go-kratos/kratos/v2"
