@@ -1,8 +1,8 @@
-package static 
+package static
 
 const (
-  // DefaultServer_yml ...
-  DefaultServer_yml string = `listen-on:
+	// DefaultServer_yml ...
+	DefaultServer_yml string = `listen-on:
 - protocol: http
   ip: 127.0.0.1
   port: 8585

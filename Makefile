@@ -59,6 +59,7 @@ build:
 # generate
 generate:
 	go generate ./...
+	go fmt ./...
 
 .PHONY: all
 # generate all
