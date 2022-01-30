@@ -3,20 +3,20 @@ package convert
 import (
 	"fmt"
 	"log"
-	"os"
+	"strings"
 	"time"
 
-	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
+	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/convert/config"
 	"github.com/tj/go-naturaldate"
 )
 
 // ConvertOptionsT ...
 type ConvertOptionsT struct {
-	LogFilePath     string
-	ConfigFilePath  string
-	Debug           bool
+	LogFilePath    string
+	ConfigFilePath string
+
 	ConfigItemPath  string
 	ConfigItemValue string
 	FollowMode      bool
@@ -115,16 +115,10 @@ func (i ConvertOptions) HasTimestampFilter() bool {
 	return i.BeforeFilter != nil || i.AfterFilter != nil
 }
 
-func printErrorHint(format string, a ...interface{}) {
-	PrintHelp()
-	color.Red.Printf(format+". Please check above example\n", a...)
-}
-
-// OptionsWithCommandLine ...
-func OptionsWithCommandLine() (bool, ConvertOptions) {
+// ConvertOptionsWithCommandLine ...
+func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, ConvertOptions) {
 
 	r := &ConvertOptionsT{
-		Debug:            false,
 		FollowMode:       false,
 		NumberOfLines:    -1,
 		levelFilterTexts: make([]string, 0),
@@ -133,103 +127,93 @@ func OptionsWithCommandLine() (bool, ConvertOptions) {
 	var err error
 	var hasNumberOfLines = false
 
-	for i := 0; i < len(os.Args); i++ {
-		if i == 0 {
-			continue
-		}
+	args := globalOptions.SubArgs
 
-		arg := os.Args[i]
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
 
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing config file path")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing config file path")
 					return false, nil
 				}
 
-				r.ConfigFilePath = os.Args[i+1]
+				r.ConfigFilePath = args[i+1]
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing config item expression")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing config item expression")
 					return false, nil
 				}
 
-				r.ConfigItemPath, r.ConfigItemValue, err = ParseConfigExpression(os.Args[i+1])
+				r.ConfigItemPath, r.ConfigItemValue, err = parseConfigExpression(args[i+1])
 				if err != nil {
-					printErrorHint("%v", err)
+					globalOptions.PrintErrorHint("%v", err)
 					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing config item path")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing config item path")
 					return false, nil
 				}
 
-				r.ConfigItemPath = os.Args[i+1]
+				r.ConfigItemPath = args[i+1]
 				i++
 			} else if arg == "-f" || arg == "--follow" {
 				r.FollowMode = true
 			} else if arg == "-n" || arg == "--lines" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing lines argument")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing lines argument")
 					return false, nil
 				}
 
-				r.NumberOfLines = strutil.MustInt(os.Args[i+1])
+				r.NumberOfLines = strutil.MustInt(args[i+1])
 				hasNumberOfLines = true
 				i++
 			} else if arg == "-t" || arg == "--template" {
 				PrintConfigTemplate()
 				return false, nil
-			} else if arg == "-h" || arg == "--help" {
-				PrintHelp()
-				return false, nil
-			} else if arg == "-V" || arg == "--version" {
-				PrintVersion()
-				return false, nil
-			} else if arg == "-d" || arg == "--debug" {
-				r.Debug = true
 			} else if arg == "-j" || arg == "--json" {
 				r.OutputRawJSON = true
 			} else if arg == "-l" || arg == "--level" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing level argument")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing level argument")
 					return false, nil
 				}
 
-				r.levelFilterTexts = append(r.levelFilterTexts, os.Args[i+1])
+				r.levelFilterTexts = append(r.levelFilterTexts, args[i+1])
 				i++
 			} else if arg == "-g" || arg == "--grok" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing grok argument")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing grok argument")
 					return false, nil
 				}
 
-				r.GrokPatternsUsed = append(r.GrokPatternsUsed, os.Args[i+1])
+				r.GrokPatternsUsed = append(r.GrokPatternsUsed, args[i+1])
 				i++
 			} else if arg == "--reset-grok-library-dir" {
 				config.ResetDefaultGrokLibraryDir()
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing after argument")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing after argument")
 					return false, nil
 				}
 
-				r.afterFilterText = os.Args[i+1]
+				r.afterFilterText = args[i+1]
 				i++
 			} else if arg == "-b" || arg == "--before" {
-				if i+1 >= len(os.Args) {
-					printErrorHint("Missing before argument")
+				if i+1 >= len(args) {
+					globalOptions.PrintErrorHint("Missing before argument")
 					return false, nil
 				}
 
-				r.beforeFilterText = os.Args[i+1]
+				r.beforeFilterText = args[i+1]
 				i++
 			} else {
-				printErrorHint("Unknown option: '%s'", arg)
+				globalOptions.PrintErrorHint("Unknown option: '%s'", arg)
 				return false, nil
 			}
 		} else {
@@ -244,4 +228,12 @@ func OptionsWithCommandLine() (bool, ConvertOptions) {
 	}
 
 	return true, r
+}
+
+func parseConfigExpression(expr string) (string, string, error) {
+	arr := strings.Split(expr, "=")
+	if len(arr) != 2 {
+		return "", "", fmt.Errorf("invalid config item expression: <%s>", expr)
+	}
+	return arr[0], arr[1], nil
 }

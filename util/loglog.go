@@ -67,8 +67,8 @@ func (i LogFile) Close() {
 	}
 }
 
-// InitLogger ...
-func InitLogger(jogHomeDir string) LogFile {
+// InitLogLogger ...
+func InitLogLogger(jogHomeDir string) LogFile {
 	r := &LogFileT{
 		path: filepath.Join(jogHomeDir, "jog.log"),
 	}
