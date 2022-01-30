@@ -3,12 +3,12 @@ package convert
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/convert/config"
+	"github.com/qiangyt/jog/util"
 	"github.com/tj/go-naturaldate"
 )
 
@@ -41,7 +41,7 @@ type ConvertOptionsT struct {
 type ConvertOptions = *ConvertOptionsT
 
 // PrintConfigTemplate ...
-func PrintConfigTemplate() {
+func (i ConvertOptions) PrintConfigTemplate() {
 	fmt.Println(config.BuildDefaultConfigurationYAML())
 }
 
@@ -147,7 +147,7 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 					return false, nil
 				}
 
-				r.ConfigItemPath, r.ConfigItemValue, err = parseConfigExpression(args[i+1])
+				r.ConfigItemPath, r.ConfigItemValue, err = util.ParseConfigExpression(args[i+1])
 				if err != nil {
 					globalOptions.PrintErrorHint("%v", err)
 					return false, nil
@@ -173,7 +173,7 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				hasNumberOfLines = true
 				i++
 			} else if arg == "-t" || arg == "--template" {
-				PrintConfigTemplate()
+				r.PrintConfigTemplate()
 				return false, nil
 			} else if arg == "-j" || arg == "--json" {
 				r.OutputRawJSON = true
@@ -228,12 +228,4 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 	}
 
 	return true, r
-}
-
-func parseConfigExpression(expr string) (string, string, error) {
-	arr := strings.Split(expr, "=")
-	if len(arr) != 2 {
-		return "", "", fmt.Errorf("invalid config item expression: <%s>", expr)
-	}
-	return arr[0], arr[1], nil
 }

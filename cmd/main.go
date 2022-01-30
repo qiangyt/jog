@@ -41,5 +41,12 @@ func main() {
 		}()
 	}
 
-	convert.Main(globalOptions)
+	if globalOptions.RunMode == common.RunMode_Server {
+		ok, _ := common.ServerOptionsWithCommandLine(globalOptions)
+		if !ok {
+			return
+		}
+	} else {
+		convert.Main(globalOptions)
+	}
 }

@@ -61,18 +61,18 @@ func GlobalOptionsWithCommandLine(version string) (bool, GlobalOptions) {
 }
 
 // PrintVersion ...
-func (me GlobalOptions) PrintVersion() {
-	fmt.Println(me.Version)
+func (i GlobalOptions) PrintVersion() {
+	fmt.Println(i.Version)
 }
 
-func (me GlobalOptions) PrintErrorHint(format string, a ...interface{}) {
+func (i GlobalOptions) PrintErrorHint(format string, a ...interface{}) {
 	color.Red.Printf(format+". Please check above example\n", a...)
 }
 
 // PrintHelp ...
-func (me GlobalOptions) PrintHelp() {
+func (i GlobalOptions) PrintHelp() {
 	color.New(color.Blue, color.OpBold).Println("\nJog: convert/view/share log")
-	me.PrintVersion()
+	i.PrintVersion()
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Global options:")
@@ -82,14 +82,14 @@ func (me GlobalOptions) PrintHelp() {
 	fmt.Printf("  -V,  --version              Display app version information\n")
 	fmt.Println()
 
-	if me.RunMode == RunMode_Server {
-		me.PrintServerHelp()
+	if i.RunMode == RunMode_Server {
+		i.PrintServerHelp()
 	} else {
-		me.PrintConvertHelp()
+		i.PrintConvertHelp()
 	}
 }
 
-func (me GlobalOptions) PrintServerHelp() {
+func (i GlobalOptions) PrintServerHelp() {
 	fmt.Println("server help: TODO")
 	fmt.Println()
 
@@ -105,7 +105,7 @@ func (me GlobalOptions) PrintServerHelp() {
 	fmt.Println()
 }
 
-func (me GlobalOptions) PrintConvertHelp() {
+func (i GlobalOptions) PrintConvertHelp() {
 	defaultGrokLibraryDirs := strings.Join(config.DefaultGrokLibraryDirs(false), ", ")
 
 	color.New(color.FgBlue, color.OpBold).Println("Convert/view usage:")

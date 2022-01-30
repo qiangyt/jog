@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/mitchellh/go-homedir"
@@ -188,4 +189,12 @@ func MustStringSlice(raw interface{}) ([]string, error) {
 	default:
 		return nil, fmt.Errorf("not a string array: %v", raw)
 	}
+}
+
+func ParseConfigExpression(expr string) (string, string, error) {
+	arr := strings.Split(expr, "=")
+	if len(arr) != 2 {
+		return "", "", fmt.Errorf("invalid config item expression: <%s>", expr)
+	}
+	return arr[0], arr[1], nil
 }
