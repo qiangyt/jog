@@ -1,7 +1,6 @@
-package config
+package convert
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"log"
@@ -12,31 +11,12 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/static"
-	"github.com/qiangyt/jog/static/grok_vjeantet"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
 
-const (
-	jogHomeDir = "~/.jog"
-)
-
-// JogHomeDir ...
-func JogHomeDir(expand bool, children ...string) string {
-	var r string
-
-	if !expand {
-		r = jogHomeDir
-	} else {
-		r = util.ExpandHomePath(jogHomeDir)
-		util.MkdirAll(r)
-	}
-
-	return filepath.Join(r, filepath.Join(children...))
-}
-
-// ConfigurationT ...
-type ConfigurationT struct {
+// ConfigT ...
+type ConfigT struct {
 	// TODO: configurable
 	Colorization            bool
 	Replace                 map[string]string
@@ -53,21 +33,21 @@ type ConfigurationT struct {
 	Grok                    Grok
 }
 
-// Configuration ...
-type Configuration = *ConfigurationT
+// Config ...
+type Config = *ConfigT
 
 // UnmarshalYAML ...
-func (i Configuration) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
-func (i Configuration) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+func (i Config) MarshalYAML() (interface{}, error) {
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i Configuration) Init(cfg Configuration) {
+func (i Config) Init(cfg Config) {
 	if cfg != nil {
 		panic(fmt.Errorf("root configure initialization"))
 	}
@@ -88,9 +68,9 @@ func (i Configuration) Init(cfg Configuration) {
 
 	timestampField := i.Fields.Standards["timestamp"]
 	if timestampField != nil {
-		if timestampField.Type == FieldTypeAuto {
-			timestampField.Type = FieldTypeTime
-		} else if timestampField.Type != FieldTypeTime {
+		if timestampField.Type == FieldType_Auto {
+			timestampField.Type = FieldType_Time
+		} else if timestampField.Type != FieldType_Time {
 			panic(fmt.Errorf("invalid configuration: type of field 'timestamp' must be 'time' or 'auto'"))
 		}
 	}
@@ -100,7 +80,7 @@ func (i Configuration) Init(cfg Configuration) {
 }
 
 // Reset ...
-func (i Configuration) Reset() {
+func (i Config) Reset() {
 	i.Colorization = true
 	i.Replace = make(map[string]string)
 	i.Pattern = ""
@@ -116,7 +96,7 @@ func (i Configuration) Reset() {
 }
 
 // HasFieldInPattern ...
-func (i Configuration) HasFieldInPattern(fieldName string) bool {
+func (i Config) HasFieldInPattern(fieldName string) bool {
 	r, contains := i.fieldsInPattern[fieldName]
 	if contains {
 		return r
@@ -128,7 +108,7 @@ func (i Configuration) HasFieldInPattern(fieldName string) bool {
 }
 
 // FromMap ...
-func (i Configuration) FromMap(m map[string]interface{}) error {
+func (i Config) FromMap(m map[string]interface{}) error {
 	var v interface{}
 
 	v = util.ExtractFromMap(m, "colorization")
@@ -193,7 +173,7 @@ func (i Configuration) FromMap(m map[string]interface{}) error {
 }
 
 // ToMap ...
-func (i Configuration) ToMap() map[string]interface{} {
+func (i Config) ToMap() map[string]interface{} {
 	r := make(map[string]interface{})
 	r["replace"] = i.Replace
 	r["pattern"] = i.Pattern
@@ -206,7 +186,7 @@ func (i Configuration) ToMap() map[string]interface{} {
 	return r
 }
 
-func lookForConfigFile(dir string) string {
+func LookForConfigFile(dir string) string {
 	log.Printf("looking for config files in: %s\n", dir)
 	r := filepath.Join(dir, ".jog.yaml")
 	if util.FileExists(r) {
@@ -222,7 +202,7 @@ func lookForConfigFile(dir string) string {
 // DetermineConfigFilePath return (file path)
 func DetermineConfigFilePath() string {
 	dir := util.ExeDirectory()
-	r := lookForConfigFile(dir)
+	r := LookForConfigFile(dir)
 	if len(r) != 0 {
 		return r
 	}
@@ -232,81 +212,17 @@ func DetermineConfigFilePath() string {
 		log.Printf("failed to get home dir: %v\n", err)
 		return ""
 	}
-	return lookForConfigFile(dir)
+	return LookForConfigFile(dir)
 }
 
-type grokPatternItem struct {
-	Name string
-	Expr string
-}
-
-func parseGrokPatterns(patternsText string) []grokPatternItem {
-	r := make([]grokPatternItem, 0)
-
-	buf := bytes.NewBufferString(patternsText)
-
-	scanner := bufio.NewScanner(buf)
-	for scanner.Scan() {
-		l := scanner.Text()
-		l = strings.TrimSpace(l)
-		if len(l) > 0 && l[0] != '#' {
-			nameAndExpr := strings.SplitN(l, " ", 2)
-
-			p := grokPatternItem{}
-			p.Name = nameAndExpr[0]
-			p.Expr = nameAndExpr[1]
-
-			r = append(r, p)
-		}
-	}
-
-	return r
-}
-
-func loadAllGrokPatterns() []grokPatternItem {
-	r := []grokPatternItem{}
-
-	r = append(r, parseGrokPatterns(grok_vjeantet.Aws)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Bacula)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Bro)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Exim)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Firewalls)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Grok_patterns)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Haproxy)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Java)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Junos)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Linux_syslog)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Mcollective_patterns)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Mcollective)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Mongodb)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Nagios)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Postgresql)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Rails)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Redis)...)
-	r = append(r, parseGrokPatterns(grok_vjeantet.Ruby)...)
-
-	return r
-}
-
-func mergeGrokPatterns(allPatterns map[string]grokPatternItem, patternsText string) {
-	newPatterns := parseGrokPatterns(patternsText)
-	for _, pattern := range newPatterns {
-		name := pattern.Name
-		if existingOne, alreadyExists := allPatterns[name]; alreadyExists == true {
-			panic(fmt.Errorf("duplicated grok pattern. name: %s. existing: %s. duplicated: %s", name, existingOne.Expr, pattern.Expr))
-		}
-		allPatterns[name] = pattern
-	}
-}
-
-// BuildDefaultConfigurationYAML ...
-func BuildDefaultConfigurationYAML() string {
-	tmpl, err := template.New("default configuration YAML").Parse(static.DefaultConfiguration_yml)
+// BuildDefaultConfigYAML ...
+func BuildDefaultConfigYAML() string {
+	tmpl, err := template.New("default configuration YAML").Parse(static.DefaultConfig_yml)
 	if err != nil {
 		panic(errors.Wrap(err, "failed to parse default configuration YAML as template"))
 	}
 
-	grokPatterns := loadAllGrokPatterns()
+	grokPatterns := util.LoadAllGrokPatterns()
 
 	var buf bytes.Buffer
 	err = tmpl.Execute(&buf, map[string]interface{}{"grokPatterns": grokPatterns})
@@ -316,30 +232,30 @@ func BuildDefaultConfigurationYAML() string {
 	return buf.String()
 }
 
-// WithDefaultYamlFile ...
-func WithDefaultYamlFile() Configuration {
+// NewConfigWithDefaultYamlFile ...
+func NewConfigWithDefaultYamlFile() Config {
 	path := DetermineConfigFilePath()
 
 	if len(path) == 0 {
 		log.Println("config file not found, take default one")
-		return WithYaml(BuildDefaultConfigurationYAML())
+		return NewConfigWithYaml(BuildDefaultConfigYAML())
 	}
 
 	log.Printf("config file: %s\n", path)
-	return WithYamlFile(path)
+	return NewConfigWithYamlFile(path)
 }
 
-// WithYamlFile ...
-func WithYamlFile(path string) Configuration {
+// NewConfigWithYamlFile ...
+func NewConfigWithYamlFile(path string) Config {
 	log.Printf("config file: %s\n", path)
 
 	yamlText := string(util.ReadFile(path))
-	return WithYaml(yamlText)
+	return NewConfigWithYaml(yamlText)
 }
 
-// WithYaml ...
-func WithYaml(yamlText string) Configuration {
-	r := &ConfigurationT{
+// NewConfigWithYaml ...
+func NewConfigWithYaml(yamlText string) Config {
+	r := &ConfigT{
 		Replace: map[string]string{
 			"\\\"": "\"",
 			"\\'":  "'",

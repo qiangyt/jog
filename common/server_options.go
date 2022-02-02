@@ -58,7 +58,7 @@ func ServerOptionsWithCommandLine(globalOptions GlobalOptions) (bool, ServerOpti
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config file path")
+					util.PrintErrorHint("Missing config file path")
 					return false, nil
 				}
 
@@ -66,19 +66,19 @@ func ServerOptionsWithCommandLine(globalOptions GlobalOptions) (bool, ServerOpti
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config item expression")
+					util.PrintErrorHint("Missing config item expression")
 					return false, nil
 				}
 
 				r.ConfigItemPath, r.ConfigItemValue, err = util.ParseConfigExpression(args[i+1])
 				if err != nil {
-					globalOptions.PrintErrorHint("%v", err)
+					util.PrintErrorHint("%v", err)
 					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config item path")
+					util.PrintErrorHint("Missing config item path")
 					return false, nil
 				}
 
@@ -88,7 +88,7 @@ func ServerOptionsWithCommandLine(globalOptions GlobalOptions) (bool, ServerOpti
 				r.PrintConfigTemplate()
 				return false, nil
 			} else {
-				globalOptions.PrintErrorHint("Unknown option: '%s'", arg)
+				util.PrintErrorHint("Unknown option: '%s'", arg)
 				return false, nil
 			}
 		} else {

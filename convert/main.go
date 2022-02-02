@@ -6,18 +6,16 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/common"
-	"github.com/qiangyt/jog/convert/config"
 	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
 
-func readConfig(configFilePath string) config.Configuration {
+func readConfig(configFilePath string) Config {
 	if len(configFilePath) == 0 {
-		return config.WithDefaultYamlFile()
+		return NewConfigWithDefaultYamlFile()
 	}
-	return config.WithYamlFile(configFilePath)
+	return NewConfigWithYamlFile(configFilePath)
 }
 
 func printConfigItem(m map[string]interface{}, configItemPath string) {
@@ -32,7 +30,7 @@ func printConfigItem(m map[string]interface{}, configItemPath string) {
 	fmt.Print(string(out))
 }
 
-func setConfigItem(cfg config.Configuration, m map[string]interface{}, configItemPath string, configItemValue string) {
+func setConfigItem(cfg Config, m map[string]interface{}, configItemPath string, configItemValue string) {
 	if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
 		panic(errors.Wrap(err, ""))
 	}
@@ -41,15 +39,15 @@ func setConfigItem(cfg config.Configuration, m map[string]interface{}, configIte
 	}
 }
 
-func Main(globalOptions common.GlobalOptions) {
-	config.InitDefaultGrokLibraryDir()
+func Main(args []string) Options {
+	util.InitDefaultGrokLibraryDir()
 
-	ok, options := ConvertOptionsWithCommandLine(globalOptions)
+	ok, options := NewOptionsWithCommandLine(args)
 	if !ok {
-		return
+		return nil
 	}
 
-	logFile := util.InitLogLogger(config.JogHomeDir(true))
+	logFile := util.InitLogLogger(util.JogHomeDir(true))
 	defer logFile.Close()
 
 	cfg := readConfig(options.ConfigFilePath)
@@ -60,7 +58,7 @@ func Main(globalOptions common.GlobalOptions) {
 			setConfigItem(cfg, m, options.ConfigItemPath, options.ConfigItemValue)
 		} else {
 			printConfigItem(m, options.ConfigItemPath)
-			return
+			return options
 		}
 	}
 
@@ -81,5 +79,5 @@ func Main(globalOptions common.GlobalOptions) {
 		ProcessLocalFile(cfg, options, options.FollowMode, options.LogFilePath)
 	}
 
-	fmt.Println()
+	return options
 }

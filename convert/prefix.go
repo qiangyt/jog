@@ -1,4 +1,4 @@
-package config
+package convert
 
 // PrefixT ...
 type PrefixT struct {
@@ -27,10 +27,10 @@ func (i Prefix) ToMap() map[string]interface{} {
 
 // UnmarshalYAML ...
 func (i Prefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Prefix) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }

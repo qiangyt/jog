@@ -11,7 +11,6 @@ import (
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/convert/config"
 	"github.com/qiangyt/jog/util"
 )
 
@@ -32,7 +31,7 @@ type LogRecordT struct {
 type LogRecord = *LogRecordT
 
 // PrintElement ...
-func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable, builder *strings.Builder, a string) {
+func (i LogRecord) PrintElement(cfg Config, element util.Printable, builder *strings.Builder, a string) {
 	var color util.Color
 	if cfg.Colorization {
 		if i.StartupLine {
@@ -48,7 +47,7 @@ func (i LogRecord) PrintElement(cfg config.Configuration, element util.Printable
 }
 
 // PopulateOtherFields ...
-func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields map[string]util.AnyValue, implicitStandardFields map[string]FieldValue, result map[string]string) {
+func (i LogRecord) PopulateOtherFields(cfg Config, unknownFields map[string]util.AnyValue, implicitStandardFields map[string]FieldValue, result map[string]string) {
 	if !cfg.HasOthersFieldInPattern {
 		return
 	}
@@ -103,7 +102,7 @@ func (i LogRecord) PopulateOtherFields(cfg config.Configuration, unknownFields m
 }
 
 // PopulateExplicitStandardFields ...
-func (i LogRecord) PopulateExplicitStandardFields(cfg config.Configuration, explicitStandardFields map[string]FieldValue, result map[string]string) {
+func (i LogRecord) PopulateExplicitStandardFields(cfg Config, explicitStandardFields map[string]FieldValue, result map[string]string) {
 	for _, f := range explicitStandardFields {
 		builder := &strings.Builder{}
 		i.PrintElement(cfg, f.Config, builder, f.Output)
@@ -113,7 +112,7 @@ func (i LogRecord) PopulateExplicitStandardFields(cfg config.Configuration, expl
 }
 
 // AsFlatLine ...
-func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
+func (i LogRecord) AsFlatLine(cfg Config) string {
 	builder := &strings.Builder{}
 
 	i.PrintElement(cfg, cfg.LineNo, builder, fmt.Sprintf("%-6v ", i.LineNo))
@@ -147,7 +146,7 @@ func (i LogRecord) AsFlatLine(cfg config.Configuration) string {
 }
 
 // ExtractStandardFields ...
-func (i LogRecord) ExtractStandardFields(cfg config.Configuration) (map[string]FieldValue, map[string]FieldValue) {
+func (i LogRecord) ExtractStandardFields(cfg Config) (map[string]FieldValue, map[string]FieldValue) {
 	explicts := make(map[string]FieldValue)
 	implicits := make(map[string]FieldValue)
 
@@ -163,7 +162,7 @@ func (i LogRecord) ExtractStandardFields(cfg config.Configuration) (map[string]F
 }
 
 // MatchesLevelFilter ...
-func (i LogRecord) MatchesLevelFilter(cfg config.Configuration, levelFilters []config.Enum) bool {
+func (i LogRecord) MatchesLevelFilter(cfg Config, levelFilters []Enum) bool {
 	levelFieldValue := i.StandardFields["level"]
 	if levelFieldValue != nil {
 		levelFieldEnum := levelFieldValue.enumValue
@@ -177,7 +176,7 @@ func (i LogRecord) MatchesLevelFilter(cfg config.Configuration, levelFilters []c
 }
 
 // MatchesTimestampFilter ...
-func (i LogRecord) MatchesTimestampFilter(cfg config.Configuration, beforeFilter *time.Time, afterFilter *time.Time) bool {
+func (i LogRecord) MatchesTimestampFilter(cfg Config, beforeFilter *time.Time, afterFilter *time.Time) bool {
 	timestampFieldValue := i.StandardFields["timestamp"]
 	if timestampFieldValue != nil {
 		timestampValue := timestampFieldValue.timeValue
@@ -198,7 +197,7 @@ func (i LogRecord) MatchesTimestampFilter(cfg config.Configuration, beforeFilter
 }
 
 // MatchesFilters ...
-func (i LogRecord) MatchesFilters(cfg config.Configuration, options ConvertOptions) bool {
+func (i LogRecord) MatchesFilters(cfg Config, options Options) bool {
 	levelFilters := options.GetLevelFilters()
 
 	if len(options.levelFilters) > 0 {
@@ -216,12 +215,12 @@ func (i LogRecord) MatchesFilters(cfg config.Configuration, options ConvertOptio
 	return true
 }
 
-func isStartupLine(cfg config.Configuration, raw string) bool {
+func isStartupLine(cfg Config, raw string) bool {
 	contains := cfg.StartupLine.Contains
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
-func tryToParseUsingGrok(cfg config.Configuration, options ConvertOptions, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseUsingGrok(cfg Config, options Options, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
@@ -273,7 +272,7 @@ func tryToParseUsingGrok(cfg config.Configuration, options ConvertOptions, lineN
 	return
 }
 
-func tryToParseAsJSON(cfg config.Configuration, options ConvertOptions, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseAsJSON(cfg Config, options Options, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
@@ -321,7 +320,7 @@ func tryToParseAsJSON(cfg config.Configuration, options ConvertOptions, lineNo i
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(cfg config.Configuration, options ConvertOptions, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(cfg Config, options Options, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		UnknownFields:  make(map[string]util.AnyValue),

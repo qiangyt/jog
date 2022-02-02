@@ -1,15 +1,15 @@
-package config
+package convert
 
-// DynamicObject ...
-type DynamicObject interface {
+// DynObject ...
+type DynObject interface {
 	Reset()
 	FromMap(m map[string]interface{}) error
 	ToMap() map[string]interface{}
-	Init(cfg Configuration)
+	Init(cfg Config)
 }
 
-// UnmarshalYAML ...
-func UnmarshalYAML(i DynamicObject, unmarshal func(interface{}) error) error {
+// DynObject4YAML ...
+func DynObject4YAML(i DynObject, unmarshal func(interface{}) error) error {
 	m := make(map[string]interface{})
 	err := unmarshal(&m)
 	if err != nil {
@@ -27,7 +27,7 @@ func UnmarshalYAML(i DynamicObject, unmarshal func(interface{}) error) error {
 	return err
 }
 
-// MarshalYAML ...
-func MarshalYAML(i DynamicObject) (interface{}, error) {
+// DynObject2YAML ...
+func DynObject2YAML(i DynObject) (map[string]interface{}, error) {
 	return i.ToMap(), nil
 }

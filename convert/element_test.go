@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"testing"

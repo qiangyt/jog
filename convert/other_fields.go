@@ -1,4 +1,4 @@
-package config
+package convert
 
 // OtherFieldsT ...
 type OtherFieldsT struct {

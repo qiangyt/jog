@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gookit/color"
 	"github.com/gookit/goutil/strutil"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
@@ -197,4 +198,16 @@ func ParseConfigExpression(expr string) (string, string, error) {
 		return "", "", fmt.Errorf("invalid config item expression: <%s>", expr)
 	}
 	return arr[0], arr[1], nil
+}
+
+func PrintErrorHint(format string, a ...interface{}) {
+	color.Red.Printf(format+". Please check above example\n", a...)
+}
+
+// abs function that works for int, Math.Abs only accepts float64
+func Abs(value int) int {
+	if value < 0 {
+		value = value * -1
+	}
+	return value
 }

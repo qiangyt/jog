@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"fmt"
@@ -28,16 +28,16 @@ func (i FieldMap) Reset() {
 
 // UnmarshalYAML ...
 func (i FieldMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i FieldMap) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i FieldMap) Init(cfg Configuration) {
+func (i FieldMap) Init(cfg Config) {
 
 }
 

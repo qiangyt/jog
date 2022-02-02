@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"testing"
@@ -9,17 +9,17 @@ import (
 func Test_CompressPrefixAction_String(t *testing.T) {
 	assert := require.New(t)
 
-	assert.Equal("remove-non-first-letter", CompressPrefixActionRemoveNonFirstLetter.String())
-	assert.Equal("remove", CompressPrefixActionRemove.String())
-	assert.Equal("remove-non-first-letter", CompressPrefixActionDefault.String())
-	assert.Equal("", (CompressPrefixActionDefault + 99).String())
+	assert.Equal("remove-non-first-letter", CompressPrefixAction_RemoveNonFirstLetter.String())
+	assert.Equal("remove", CompressPrefixAction_Remove.String())
+	assert.Equal("remove-non-first-letter", CompressPrefixAction_Default.String())
+	assert.Equal("", (CompressPrefixAction_Default + 99).String())
 }
 
-func Test_ParseCompressPrefixAction(t *testing.T) {
+func Test_ParseCompressPrefixAction_(t *testing.T) {
 	assert := require.New(t)
 
-	assert.Equal(CompressPrefixActionRemoveNonFirstLetter, ParseCompressPrefixAction("remove-non-first-letter"))
-	assert.Equal(CompressPrefixActionRemove, ParseCompressPrefixAction("remove"))
+	assert.Equal(CompressPrefixAction_RemoveNonFirstLetter, ParseCompressPrefixAction("remove-non-first-letter"))
+	assert.Equal(CompressPrefixAction_Remove, ParseCompressPrefixAction("remove"))
 
 	assert.Panics(func() { ParseCompressPrefixAction("wrong") })
 }
@@ -50,7 +50,7 @@ func Test_CompressPrefix_FromMap_ToMap_happy(t *testing.T) {
 	assert.False(target.Enabled)
 	assert.NotNil(target.Separators.IsEmpty())
 	assert.NotNil(target.WhiteList.IsEmpty())
-	assert.Equal(CompressPrefixActionDefault, target.Action)
+	assert.Equal(CompressPrefixAction_Default, target.Action)
 
 	actual := target.ToMap()
 
@@ -71,7 +71,7 @@ func Test_CompressPrefix_FromMap_ToMap_happy(t *testing.T) {
 	assert.True(target.Enabled)
 	assert.True(target.Separators.Contains("."))
 	assert.True(target.WhiteList.Contains("com."))
-	assert.Equal(CompressPrefixActionRemove, target.Action)
+	assert.Equal(CompressPrefixAction_Remove, target.Action)
 
 	actual = target.ToMap()
 
@@ -89,7 +89,7 @@ func Test_CompressPrefix_RemoveNonFirstLetter(t *testing.T) {
 	target.Enabled = true
 	target.Separators.Parse(".")
 	target.WhiteList.Parse("com.")
-	target.Action = CompressPrefixActionRemoveNonFirstLetter
+	target.Action = CompressPrefixAction_RemoveNonFirstLetter
 
 	// white-list-ed
 	assert.Equal("com.example", target.Compress("com.example"))
@@ -113,7 +113,7 @@ func Test_CompressPrefix_Remove(t *testing.T) {
 	target.Enabled = true
 	target.Separators.Parse(".")
 	target.WhiteList.Parse("com.")
-	target.Action = CompressPrefixActionRemove
+	target.Action = CompressPrefixAction_Remove
 
 	// white-list-ed
 	assert.Equal("com.example", target.Compress("com.example"))

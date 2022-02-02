@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
-	"github.com/qiangyt/jog/convert/config"
+	"github.com/qiangyt/jog/util"
 )
 
 type RunMode int
@@ -65,10 +65,6 @@ func (i GlobalOptions) PrintVersion() {
 	fmt.Println(i.Version)
 }
 
-func (i GlobalOptions) PrintErrorHint(format string, a ...interface{}) {
-	color.Red.Printf(format+". Please check above example\n", a...)
-}
-
 // PrintHelp ...
 func (i GlobalOptions) PrintHelp() {
 	color.New(color.Blue, color.OpBold).Println("\nJog: convert/view/share log")
@@ -106,7 +102,7 @@ func (i GlobalOptions) PrintServerHelp() {
 }
 
 func (i GlobalOptions) PrintConvertHelp() {
-	defaultGrokLibraryDirs := strings.Join(config.DefaultGrokLibraryDirs(false), ", ")
+	defaultGrokLibraryDirs := strings.Join(util.DefaultGrokLibraryDirs(false), ", ")
 
 	color.New(color.FgBlue, color.OpBold).Println("Convert/view usage:")
 	color.FgBlue.Println("  jog  [option...]  <your JSON log file path>")

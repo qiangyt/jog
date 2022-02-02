@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"fmt"
@@ -9,26 +9,26 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// CompressPrefixAction ...
-type CompressPrefixAction int
+// CompressPrefixAction_ ...
+type CompressPrefixAction_ int
 
 const (
-	// CompressPrefixActionRemoveNonFirstLetter ...
-	CompressPrefixActionRemoveNonFirstLetter CompressPrefixAction = iota
+	// CompressPrefixAction_RemoveNonFirstLetter ...
+	CompressPrefixAction_RemoveNonFirstLetter CompressPrefixAction_ = iota
 
-	// CompressPrefixActionRemove ...
-	CompressPrefixActionRemove
+	// CompressPrefixAction_Remove ...
+	CompressPrefixAction_Remove
 
-	// CompressPrefixActionDefault ...
-	CompressPrefixActionDefault = CompressPrefixActionRemoveNonFirstLetter
+	// CompressPrefixAction_Default ...
+	CompressPrefixAction_Default = CompressPrefixAction_RemoveNonFirstLetter
 )
 
 // Format ...
-func (i CompressPrefixAction) String() string {
-	if i == CompressPrefixActionRemoveNonFirstLetter {
+func (i CompressPrefixAction_) String() string {
+	if i == CompressPrefixAction_RemoveNonFirstLetter {
 		return "remove-non-first-letter"
 	}
-	if i == CompressPrefixActionRemove {
+	if i == CompressPrefixAction_Remove {
 		return "remove"
 	}
 
@@ -36,15 +36,15 @@ func (i CompressPrefixAction) String() string {
 }
 
 // ParseCompressPrefixAction ...
-func ParseCompressPrefixAction(text string) CompressPrefixAction {
+func ParseCompressPrefixAction(text string) CompressPrefixAction_ {
 	if "remove-non-first-letter" == text {
-		return CompressPrefixActionRemoveNonFirstLetter
+		return CompressPrefixAction_RemoveNonFirstLetter
 	}
 	if "remove" == text {
-		return CompressPrefixActionRemove
+		return CompressPrefixAction_Remove
 	}
 
-	panic(fmt.Errorf("unknown CompressPrefixAction text: %v", text))
+	panic(fmt.Errorf("unknown CompressPrefixAction_ text: %v", text))
 }
 
 // CompressPrefixT ...
@@ -55,7 +55,7 @@ type CompressPrefixT struct {
 	Enabled    bool
 	Separators StringSet
 	WhiteList  StringSet
-	Action     CompressPrefixAction
+	Action     CompressPrefixAction_
 }
 
 // CompressPrefix ..
@@ -63,16 +63,16 @@ type CompressPrefix = *CompressPrefixT
 
 // UnmarshalYAML ...
 func (i CompressPrefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i CompressPrefix) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i CompressPrefix) Init(cfg Configuration) {
+func (i CompressPrefix) Init(cfg Config) {
 
 }
 
@@ -117,7 +117,7 @@ func (i CompressPrefix) Reset() {
 	i.Enabled = false
 	i.Separators = &StringSetT{}
 	i.WhiteList = &StringSetT{}
-	i.Action = CompressPrefixActionDefault
+	i.Action = CompressPrefixAction_Default
 }
 
 // TODO: this 2 caches are not thread-safe, should be moved to a context
@@ -152,7 +152,7 @@ func (i CompressPrefix) detectSeparator(text string) (string, []string) {
 
 // Compress ...
 func (i CompressPrefix) Compress(text string) string {
-	if i.Action == CompressPrefixActionRemoveNonFirstLetter {
+	if i.Action == CompressPrefixAction_RemoveNonFirstLetter {
 		if existingOne, ok := _compressCache4RemoveNonFirstLetter[text]; ok {
 			return existingOne
 		}
@@ -179,7 +179,7 @@ func (i CompressPrefix) Compress(text string) string {
 		return r
 	}
 
-	if i.Action == CompressPrefixActionRemove {
+	if i.Action == CompressPrefixAction_Remove {
 		if existingOne, ok := _compressCache4Remove[text]; ok {
 			return existingOne
 		}

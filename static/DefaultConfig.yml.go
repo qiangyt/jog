@@ -1,8 +1,8 @@
 package static
 
 const (
-	// DefaultConfiguration_yml ...
-	DefaultConfiguration_yml string = `colorization: true
+	// DefaultConfig_yml ...
+	DefaultConfig_yml string = `colorization: true
 pattern: "${timestamp} ${level} <${thread}> ${logger}: ${message} {${others}} ${stacktrace}"
 startup-line:
   color: FgGreen, OpBold

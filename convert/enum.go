@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"github.com/qiangyt/jog/util"
@@ -16,16 +16,16 @@ type Enum = *EnumT
 
 // TODO: remove this? UnmarshalYAML ...
 func (i Enum) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // TODO: remove this? MarshalYAML ...
 func (i Enum) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // TODO: remove this? Init ...
-func (i Enum) Init(cfg Configuration) {
+func (i Enum) Init(cfg Config) {
 
 }
 

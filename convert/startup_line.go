@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"github.com/gookit/goutil/strutil"
@@ -17,12 +17,12 @@ type StartupLine = *StartupLineT
 
 // UnmarshalYAML ...
 func (i StartupLine) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i StartupLine) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Reset ...

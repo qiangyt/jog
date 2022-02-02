@@ -6,14 +6,12 @@ import (
 	"time"
 
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/common"
-	"github.com/qiangyt/jog/convert/config"
 	"github.com/qiangyt/jog/util"
 	"github.com/tj/go-naturaldate"
 )
 
-// ConvertOptionsT ...
-type ConvertOptionsT struct {
+// OptionsT ...
+type OptionsT struct {
 	LogFilePath    string
 	ConfigFilePath string
 
@@ -23,7 +21,7 @@ type ConvertOptionsT struct {
 	NumberOfLines   int
 
 	levelFilterTexts []string
-	levelFilters     []config.Enum
+	levelFilters     []Enum
 
 	beforeFilterText string
 	BeforeFilter     *time.Time
@@ -35,18 +33,20 @@ type ConvertOptionsT struct {
 
 	GrokPatternsUsed []string
 	GrokPatterns     []string
+
+	OpenWebGUI bool
 }
 
-// ConvertOptions ...
-type ConvertOptions = *ConvertOptionsT
+// Options ...
+type Options = *OptionsT
 
 // PrintConfigTemplate ...
-func (i ConvertOptions) PrintConfigTemplate() {
-	fmt.Println(config.BuildDefaultConfigurationYAML())
+func (i Options) PrintConfigTemplate() {
+	fmt.Println(BuildDefaultConfigYAML())
 }
 
 // InitGroks ...
-func (i ConvertOptions) InitGroks(cfg config.Configuration) {
+func (i Options) InitGroks(cfg Config) {
 	if len(i.GrokPatternsUsed) == 0 {
 		// try to uses default patterns
 		i.GrokPatternsUsed = cfg.Grok.Uses
@@ -58,19 +58,19 @@ func (i ConvertOptions) InitGroks(cfg config.Configuration) {
 	}
 }
 
-func (i ConvertOptions) isGrokEnabled() bool {
+func (i Options) isGrokEnabled() bool {
 	return len(i.GrokPatterns) > 0
 }
 
 // GetLevelFilters ...
-func (i ConvertOptions) GetLevelFilters() []config.Enum {
+func (i Options) GetLevelFilters() []Enum {
 	return i.levelFilters
 }
 
 // InitLevelFilters ...
-func (i ConvertOptions) InitLevelFilters(levelFieldEnums config.EnumMap) {
+func (i Options) InitLevelFilters(levelFieldEnums EnumMap) {
 	if len(i.levelFilterTexts) == 0 {
-		i.levelFilters = make([]config.Enum, 0)
+		i.levelFilters = make([]Enum, 0)
 		return
 	}
 
@@ -81,14 +81,14 @@ func (i ConvertOptions) InitLevelFilters(levelFieldEnums config.EnumMap) {
 }
 
 // InitTimestampFilters ...
-func (i ConvertOptions) InitTimestampFilters(timestampField config.Field) {
+func (i Options) InitTimestampFilters(timestampField Field) {
 	now := time.Now()
 
 	if len(i.beforeFilterText) > 0 {
 		f, err := naturaldate.Parse(i.beforeFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
 			log.Printf("failed to parse before-time filter %s as natural timestamp, so try absolute parse\n", i.beforeFilterText)
-			f = ParseTimestamp(timestampField, i.beforeFilterText)
+			f = timestampField.ParseTimestamp(i.beforeFilterText)
 		}
 		log.Printf("before-time filter: %v", f)
 		i.BeforeFilter = &f
@@ -97,7 +97,7 @@ func (i ConvertOptions) InitTimestampFilters(timestampField config.Field) {
 		f, err := naturaldate.Parse(i.afterFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
 			log.Printf("failed to parse after-time filter %s as natural timestamp, so try absolute parse\n", i.afterFilterText)
-			f = ParseTimestamp(timestampField, i.afterFilterText)
+			f = timestampField.ParseTimestamp(i.afterFilterText)
 		}
 		log.Printf("after-time filter: %v", f)
 		i.AfterFilter = &f
@@ -111,23 +111,22 @@ func (i ConvertOptions) InitTimestampFilters(timestampField config.Field) {
 }
 
 // HasTimestampFilter ...
-func (i ConvertOptions) HasTimestampFilter() bool {
+func (i Options) HasTimestampFilter() bool {
 	return i.BeforeFilter != nil || i.AfterFilter != nil
 }
 
-// ConvertOptionsWithCommandLine ...
-func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, ConvertOptions) {
+// NewOptionsWithCommandLine ...
+func NewOptionsWithCommandLine(args []string) (bool, Options) {
 
-	r := &ConvertOptionsT{
+	r := &OptionsT{
 		FollowMode:       false,
 		NumberOfLines:    -1,
 		levelFilterTexts: make([]string, 0),
 		GrokPatternsUsed: make([]string, 0),
+		OpenWebGUI:       false,
 	}
 	var err error
 	var hasNumberOfLines = false
-
-	args := globalOptions.SubArgs
 
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
@@ -135,7 +134,7 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config file path")
+					util.PrintErrorHint("Missing config file path")
 					return false, nil
 				}
 
@@ -143,19 +142,19 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config item expression")
+					util.PrintErrorHint("Missing config item expression")
 					return false, nil
 				}
 
 				r.ConfigItemPath, r.ConfigItemValue, err = util.ParseConfigExpression(args[i+1])
 				if err != nil {
-					globalOptions.PrintErrorHint("%v", err)
+					util.PrintErrorHint("%v", err)
 					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing config item path")
+					util.PrintErrorHint("Missing config item path")
 					return false, nil
 				}
 
@@ -165,7 +164,7 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				r.FollowMode = true
 			} else if arg == "-n" || arg == "--lines" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing lines argument")
+					util.PrintErrorHint("Missing lines argument")
 					return false, nil
 				}
 
@@ -179,7 +178,7 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				r.OutputRawJSON = true
 			} else if arg == "-l" || arg == "--level" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing level argument")
+					util.PrintErrorHint("Missing level argument")
 					return false, nil
 				}
 
@@ -187,18 +186,18 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				i++
 			} else if arg == "-g" || arg == "--grok" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing grok argument")
+					util.PrintErrorHint("Missing grok argument")
 					return false, nil
 				}
 
 				r.GrokPatternsUsed = append(r.GrokPatternsUsed, args[i+1])
 				i++
 			} else if arg == "--reset-grok-library-dir" {
-				config.ResetDefaultGrokLibraryDir()
+				util.ResetDefaultGrokLibraryDir()
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing after argument")
+					util.PrintErrorHint("Missing after argument")
 					return false, nil
 				}
 
@@ -206,14 +205,16 @@ func ConvertOptionsWithCommandLine(globalOptions common.GlobalOptions) (bool, Co
 				i++
 			} else if arg == "-b" || arg == "--before" {
 				if i+1 >= len(args) {
-					globalOptions.PrintErrorHint("Missing before argument")
+					util.PrintErrorHint("Missing before argument")
 					return false, nil
 				}
 
 				r.beforeFilterText = args[i+1]
 				i++
+			} else if arg == "-w" || arg == "--web-gui" {
+				r.OpenWebGUI = true
 			} else {
-				globalOptions.PrintErrorHint("Unknown option: '%s'", arg)
+				util.PrintErrorHint("Unknown option: '%s'", arg)
 				return false, nil
 			}
 		} else {

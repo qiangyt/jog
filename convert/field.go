@@ -1,9 +1,10 @@
-package config
+package convert
 
 import (
 	"fmt"
 	"time"
 
+	"github.com/araddon/dateparse"
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/util"
 )
@@ -12,11 +13,11 @@ import (
 type FieldType int
 
 const (
-	// FieldTypeAuto ...
-	FieldTypeAuto FieldType = iota
+	// FieldType_Auto ...
+	FieldType_Auto FieldType = iota
 
-	// FieldTypeTime ...
-	FieldTypeTime
+	// FieldType_Time ...
+	FieldType_Time
 )
 
 // FieldT ...
@@ -54,7 +55,7 @@ func (i Field) Reset() {
 	i.Enums = &EnumMapT{}
 	i.Enums.Reset()
 
-	i.Type = FieldTypeAuto
+	i.Type = FieldType_Auto
 	i.TimeFormat = ""
 	i.Timezone = ""
 	i.TimeLocation = nil
@@ -62,17 +63,17 @@ func (i Field) Reset() {
 
 // UnmarshalYAML ...
 func (i Field) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := UnmarshalYAML(i, unmarshal)
+	e := DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i Field) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i Field) Init(cfg Configuration) {
+func (i Field) Init(cfg Config) {
 }
 
 // IsEnum ...
@@ -91,8 +92,8 @@ func (i Field) ToMap() map[string]interface{} {
 		r["enums"] = i.Enums.ToMap()
 	}
 
-	if i.Type != FieldTypeAuto {
-		if i.Type == FieldTypeTime {
+	if i.Type != FieldType_Auto {
+		if i.Type == FieldType_Time {
 			r["type"] = "time"
 		}
 	}
@@ -142,9 +143,9 @@ func (i Field) FromMap(m map[string]interface{}) error {
 	if typeV != nil {
 		typeT := strutil.MustString(typeV)
 		if typeT == "time" {
-			i.Type = FieldTypeTime
+			i.Type = FieldType_Time
 		} else if typeT == "auto" {
-			i.Type = FieldTypeAuto
+			i.Type = FieldType_Auto
 		} else {
 			return fmt.Errorf("unknown field type: %s", typeT)
 		}
@@ -175,4 +176,41 @@ func (i Field) GetColor(value string) util.Color {
 		return i.Enums.GetEnum(value).Color
 	}
 	return i.Color
+}
+
+// ParseTimestamp ...
+func (i Field) ParseTimestamp(text string) time.Time {
+	var timeValue time.Time
+	var err error
+
+	loc := i.TimeLocation
+	tmFormat := i.TimeFormat
+
+	if loc != nil {
+		if len(tmFormat) != 0 {
+			timeValue, err = time.ParseInLocation(tmFormat, text, loc)
+			if err != nil {
+				panic(fmt.Errorf("failed to parse time value: %s, with format: %s, loc: %v", text, tmFormat, loc))
+			}
+		} else {
+			timeValue, err = dateparse.ParseIn(text, loc)
+			if err != nil {
+				panic(fmt.Errorf("failed to parse time value: %s, loc: %v", text, loc))
+			}
+		}
+	} else {
+		if len(tmFormat) != 0 {
+			timeValue, err = time.Parse(tmFormat, text)
+			if err != nil {
+				panic(fmt.Errorf("failed to parse time value: %s, with format: %s", text, tmFormat))
+			}
+		} else {
+			timeValue, err = dateparse.ParseAny(text)
+			if err != nil {
+				panic(fmt.Errorf("failed to parse time value: %s", text))
+			}
+		}
+	}
+
+	return timeValue
 }

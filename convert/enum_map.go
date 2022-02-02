@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"fmt"
@@ -30,17 +30,17 @@ func (i EnumMap) Reset() {
 
 // UnmarshalYAML ...
 func (i EnumMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := UnmarshalYAML(i, unmarshal)
+	e := DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i EnumMap) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i EnumMap) Init(cfg Configuration) {
+func (i EnumMap) Init(cfg Config) {
 
 }
 

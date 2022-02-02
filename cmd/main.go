@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/gookit/color"
@@ -47,6 +48,8 @@ func main() {
 			return
 		}
 	} else {
-		convert.Main(globalOptions)
+		convert.Main(globalOptions.SubArgs)
 	}
+
+	fmt.Println()
 }

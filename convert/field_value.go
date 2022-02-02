@@ -5,17 +5,16 @@ import (
 	"time"
 
 	"github.com/araddon/dateparse"
-	"github.com/qiangyt/jog/convert/config"
 	"github.com/qiangyt/jog/util"
 )
 
 // FieldValueT ...
 type FieldValueT struct {
 	value     util.AnyValue
-	enumValue config.Enum
+	enumValue Enum
 	timeValue time.Time
 	Output    string
-	Config    config.Field
+	Config    Field
 }
 
 // FieldValue ...
@@ -30,8 +29,8 @@ func (i FieldValue) GetColor() util.Color {
 }
 
 // NewFieldValue ...
-func NewFieldValue(cfg config.Configuration, options ConvertOptions, fieldConfig config.Field, value util.AnyValue) FieldValue {
-	var enumValue config.Enum
+func NewFieldValue(cfg Config, options Options, fieldConfig Field, value util.AnyValue) FieldValue {
+	var enumValue Enum
 	var err error
 	var output string
 
@@ -50,7 +49,7 @@ func NewFieldValue(cfg config.Configuration, options ConvertOptions, fieldConfig
 
 	var timeValue time.Time
 	if options.HasTimestampFilter() {
-		if fieldConfig.Type == config.FieldTypeTime {
+		if fieldConfig.Type == FieldType_Time {
 			loc := fieldConfig.TimeLocation
 			tmFormat := fieldConfig.TimeFormat
 
@@ -89,41 +88,4 @@ func NewFieldValue(cfg config.Configuration, options ConvertOptions, fieldConfig
 		Output:    output,
 		Config:    fieldConfig,
 	}
-}
-
-// ParseTimestamp ...
-func ParseTimestamp(fieldConfig config.Field, text string) time.Time {
-	var timeValue time.Time
-	var err error
-
-	loc := fieldConfig.TimeLocation
-	tmFormat := fieldConfig.TimeFormat
-
-	if loc != nil {
-		if len(tmFormat) != 0 {
-			timeValue, err = time.ParseInLocation(tmFormat, text, loc)
-			if err != nil {
-				panic(fmt.Errorf("failed to parse time value: %s, with format: %s, loc: %v", text, tmFormat, loc))
-			}
-		} else {
-			timeValue, err = dateparse.ParseIn(text, loc)
-			if err != nil {
-				panic(fmt.Errorf("failed to parse time value: %s, loc: %v", text, loc))
-			}
-		}
-	} else {
-		if len(tmFormat) != 0 {
-			timeValue, err = time.Parse(tmFormat, text)
-			if err != nil {
-				panic(fmt.Errorf("failed to parse time value: %s, with format: %s", text, tmFormat))
-			}
-		} else {
-			timeValue, err = dateparse.ParseAny(text)
-			if err != nil {
-				panic(fmt.Errorf("failed to parse time value: %s", text))
-			}
-		}
-	}
-
-	return timeValue
 }

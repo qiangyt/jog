@@ -1,4 +1,4 @@
-package config
+package convert
 
 import (
 	"fmt"
@@ -22,16 +22,16 @@ type Element = *ElementT
 
 // UnmarshalYAML ...
 func (i Element) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return UnmarshalYAML(i, unmarshal)
+	return DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Element) MarshalYAML() (interface{}, error) {
-	return MarshalYAML(i)
+	return DynObject2YAML(i)
 }
 
 // Init ...
-func (i Element) Init(cfg Configuration) {
+func (i Element) Init(cfg Config) {
 
 }
 
@@ -103,7 +103,7 @@ func (i Element) IsEnabled() bool {
 
 // PrintTo ...
 func (i Element) PrintTo(color util.Color, builder *strings.Builder, a string) {
-	a = ShortenValue(a, i.PrintFormat)
+	a = shortenValue(a, i.PrintFormat)
 	if color == nil {
 		builder.WriteString(fmt.Sprintf(i.PrintFormat, a))
 	} else {
@@ -111,22 +111,14 @@ func (i Element) PrintTo(color util.Color, builder *strings.Builder, a string) {
 	}
 }
 
-// ShortenValue shortens the value to maxWidth -3 chars if necessary, shortened values will be postfixed by three dots
-func ShortenValue(inValue string, printFormat string) string {
+// shortenValue shortens the value to maxWidth -3 chars if necessary, shortened values will be postfixed by three dots
+func shortenValue(inValue string, printFormat string) string {
 	idx := strings.Index(printFormat, ".")
 	if idx >= 0 {
 		width, err := strconv.Atoi(printFormat[1:idx])
-		if err == nil && len([]rune(inValue)) > abs(width) && abs(width) > 3 {
-			return fmt.Sprint(inValue[:abs(width)-3], "...")
+		if err == nil && len([]rune(inValue)) > util.Abs(width) && util.Abs(width) > 3 {
+			return fmt.Sprint(inValue[:util.Abs(width)-3], "...")
 		}
 	}
 	return inValue
-}
-
-// abs function that works for int, Math.Abs only accepts float64
-func abs(value int) int {
-	if value < 0 {
-		value = value * -1
-	}
-	return value
 }
