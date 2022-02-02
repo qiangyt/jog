@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"log"
 	"reflect"
 
 	"github.com/gookit/goutil/strutil"
@@ -24,7 +23,7 @@ func (i AnyValue) String() string {
 }
 
 // AnyValueFromRaw ...
-func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) AnyValue {
+func AnyValueFromRaw(ctx JogContext, lineNo int, raw interface{}, replace map[string]string) AnyValue {
 	var text string
 
 	alreadyNormalized := false
@@ -38,7 +37,7 @@ func AnyValueFromRaw(lineNo int, raw interface{}, replace map[string]string) Any
 		json, err := json.MarshalIndent(raw, "", "  ")
 		if err != nil {
 			// TODO: should we panic with this err ?
-			log.Printf("line %v: failed to json format: %v\n", lineNo, raw)
+			ctx.LogError("failed to json format", "lineNo", lineNo, "raw", raw)
 		} else {
 			text = string(json)
 		}

@@ -3,7 +3,6 @@ package convert
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -204,8 +203,8 @@ func (i Config) ToMap() map[string]interface{} {
 	return r
 }
 
-func LookForConfigFile(dir string) string {
-	log.Printf("looking for config files in: %s\n", dir)
+func LookForConfigFile(ctx util.JogContext, dir string) string {
+	ctx.LogInfo("looking for config files", "dir", dir)
 	r := filepath.Join(dir, ".jog.yaml")
 	if util.FileExists(r) {
 		return r
@@ -218,19 +217,19 @@ func LookForConfigFile(dir string) string {
 }
 
 // DetermineConfigFilePath return (file path)
-func DetermineConfigFilePath() string {
+func DetermineConfigFilePath(ctx util.JogContext) string {
 	dir := util.ExeDirectory()
-	r := LookForConfigFile(dir)
+	r := LookForConfigFile(ctx, dir)
 	if len(r) != 0 {
 		return r
 	}
 
 	dir, err := homedir.Dir()
 	if err != nil {
-		log.Printf("failed to get home dir: %v\n", err)
+		ctx.LogInfo("failed to get home dir", "err", err)
 		return ""
 	}
-	return LookForConfigFile(dir)
+	return LookForConfigFile(ctx, dir)
 }
 
 // BuildDefaultConfigYAML ...
@@ -251,21 +250,21 @@ func BuildDefaultConfigYAML() string {
 }
 
 // NewConfigWithDefaultYamlFile ...
-func NewConfigWithDefaultYamlFile() Config {
-	path := DetermineConfigFilePath()
+func NewConfigWithDefaultYamlFile(ctx util.JogContext) Config {
+	path := DetermineConfigFilePath(ctx)
 
 	if len(path) == 0 {
-		log.Println("config file not found, take default one")
+		ctx.LogInfo("config file not found, take default one")
 		return NewConfigWithYaml(BuildDefaultConfigYAML())
 	}
 
-	log.Printf("config file: %s\n", path)
-	return NewConfigWithYamlFile(path)
+	ctx.LogInfo("config file", "path", path)
+	return NewConfigWithYamlFile(ctx, path)
 }
 
 // NewConfigWithYamlFile ...
-func NewConfigWithYamlFile(path string) Config {
-	log.Printf("config file: %s\n", path)
+func NewConfigWithYamlFile(ctx util.JogContext, path string) Config {
+	ctx.LogInfo("config file", "path", path)
 
 	yamlText := string(util.ReadFile(path))
 	return NewConfigWithYaml(yamlText)

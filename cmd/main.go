@@ -49,7 +49,7 @@ func main() {
 			return
 		}
 	} else {
-		convert.Main(globalOptions.SubArgs)
+		convert.Main(globalOptions.SubArgs, Version)
 	}
 
 	fmt.Println()

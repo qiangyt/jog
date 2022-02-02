@@ -2,7 +2,6 @@ package convert
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/gookit/goutil/strutil"
@@ -81,25 +80,25 @@ func (i Options) InitLevelFilters(levelFieldEnums EnumMap) {
 }
 
 // InitTimestampFilters ...
-func (i Options) InitTimestampFilters(timestampField Field) {
+func (i Options) InitTimestampFilters(ctx util.JogContext, timestampField Field) {
 	now := time.Now()
 
 	if len(i.beforeFilterText) > 0 {
 		f, err := naturaldate.Parse(i.beforeFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
-			log.Printf("failed to parse before-time filter %s as natural timestamp, so try absolute parse\n", i.beforeFilterText)
+			ctx.LogWarn("failed to parse before-time filter as natural timestamp, so try absolute parse", "beforeFilter", i.beforeFilterText)
 			f = timestampField.ParseTimestamp(i.beforeFilterText)
 		}
-		log.Printf("before-time filter: %v", f)
+		ctx.LogInfo("before-time filter", "beforeFlter", f)
 		i.BeforeFilter = &f
 	}
 	if len(i.afterFilterText) > 0 {
 		f, err := naturaldate.Parse(i.afterFilterText, now, naturaldate.WithDirection(naturaldate.Past))
 		if err != nil {
-			log.Printf("failed to parse after-time filter %s as natural timestamp, so try absolute parse\n", i.afterFilterText)
+			ctx.LogWarn("failed to parse after-time filter as natural timestamp, so try absolute parse", "afterFilter", i.afterFilterText)
 			f = timestampField.ParseTimestamp(i.afterFilterText)
 		}
-		log.Printf("after-time filter: %v", f)
+		ctx.LogInfo("after-time filter", "afterFilter", f)
 		i.AfterFilter = &f
 
 		if i.BeforeFilter != nil {
