@@ -203,7 +203,7 @@ func (i Config) ToMap() map[string]interface{} {
 	return r
 }
 
-func LookForConfigFile(ctx util.JogContext, dir string) string {
+func LookForConfigFile(ctx ConvertContext, dir string) string {
 	ctx.LogInfo("looking for config files", "dir", dir)
 	r := filepath.Join(dir, ".jog.yaml")
 	if util.FileExists(r) {
@@ -217,7 +217,7 @@ func LookForConfigFile(ctx util.JogContext, dir string) string {
 }
 
 // DetermineConfigFilePath return (file path)
-func DetermineConfigFilePath(ctx util.JogContext) string {
+func DetermineConfigFilePath(ctx ConvertContext) string {
 	dir := util.ExeDirectory()
 	r := LookForConfigFile(ctx, dir)
 	if len(r) != 0 {
@@ -250,7 +250,7 @@ func BuildDefaultConfigYAML() string {
 }
 
 // NewConfigWithDefaultYamlFile ...
-func NewConfigWithDefaultYamlFile(ctx util.JogContext) Config {
+func NewConfigWithDefaultYamlFile(ctx ConvertContext) Config {
 	path := DetermineConfigFilePath(ctx)
 
 	if len(path) == 0 {
@@ -263,7 +263,7 @@ func NewConfigWithDefaultYamlFile(ctx util.JogContext) Config {
 }
 
 // NewConfigWithYamlFile ...
-func NewConfigWithYamlFile(ctx util.JogContext, path string) Config {
+func NewConfigWithYamlFile(ctx ConvertContext, path string) Config {
 	ctx.LogInfo("config file", "path", path)
 
 	yamlText := string(util.ReadFile(path))

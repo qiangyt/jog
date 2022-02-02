@@ -14,11 +14,11 @@ type JogContextT struct {
 
 type JogContext = *JogContextT
 
-func NewJogContext(parent context.Context) JogContext {
+func NewJogContext(parent context.Context) JogContextT {
 	if parent == nil {
 		parent = context.TODO()
 	}
-	return &JogContextT{Context: parent}
+	return JogContextT{Context: parent}
 }
 
 // NewConvertContext ...
@@ -26,7 +26,7 @@ func (i JogContext) WithLogger(logger log.Logger) {
 	i.logger = logger
 }
 
-func NewTestContext() JogContext {
+func NewTestContext() JogContextT {
 	r := NewJogContext(nil)
 	r.WithLogger(log.With(log.DefaultLogger))
 	return r

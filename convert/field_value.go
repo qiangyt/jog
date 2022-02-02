@@ -29,7 +29,7 @@ func (i FieldValue) GetColor() util.Color {
 }
 
 // NewFieldValue ...
-func NewFieldValue(cfg Config, options Options, fieldConfig Field, value util.AnyValue) FieldValue {
+func NewFieldValue(options Options, fieldConfig Field, value util.AnyValue) FieldValue {
 	var enumValue Enum
 	var err error
 	var output string

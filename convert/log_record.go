@@ -196,7 +196,9 @@ func (i LogRecord) MatchesTimestampFilter(cfg Config, beforeFilter *time.Time, a
 }
 
 // MatchesFilters ...
-func (i LogRecord) MatchesFilters(cfg Config, options Options) bool {
+func (i LogRecord) MatchesFilters(ctx ConvertContext) bool {
+	options := ctx.Options()
+	cfg := ctx.Config()
 	levelFilters := options.GetLevelFilters()
 
 	if len(options.levelFilters) > 0 {
@@ -219,10 +221,12 @@ func isStartupLine(cfg Config, raw string) bool {
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
-func tryToParseUsingGrok(ctx util.JogContext, cfg Config, options Options, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseUsingGrok(ctx ConvertContext, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
+	cfg := ctx.Config()
+	options := ctx.Options()
 
 	if options.isGrokEnabled() == false {
 		matchesGrok = false
@@ -238,12 +242,12 @@ func tryToParseUsingGrok(ctx util.JogContext, cfg Config, options Options, lineN
 			//TODO: debug log
 		} else {
 			for fName, fValue := range fields {
-				v := util.AnyValueFromRaw(ctx, lineNo, fValue, cfg.Replace)
+				v := util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, cfg.Replace)
 
 				fConfig, contains := standardsFieldConfig[fName]
 				if contains {
 					fName = fConfig.Name // normalize field name
-					standardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
+					standardFields[fName] = NewFieldValue(options, fConfig, v)
 				} else {
 					unknownFields[fName] = v
 				}
@@ -271,7 +275,7 @@ func tryToParseUsingGrok(ctx util.JogContext, cfg Config, options Options, lineN
 	return
 }
 
-func tryToParseAsJSON(ctx util.JogContext, cfg Config, options Options, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseAsJSON(ctx ConvertContext, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
 	unknownFields = map[string]util.AnyValue{}
@@ -301,14 +305,14 @@ func tryToParseAsJSON(ctx util.JogContext, cfg Config, options Options, lineNo i
 		}
 	}
 
-	standardsFieldConfig := cfg.Fields.StandardsWithAllAliases
+	standardsFieldConfig := ctx.Config().Fields.StandardsWithAllAliases
 	for fName, fValue := range allFields {
-		v := util.AnyValueFromRaw(ctx, lineNo, fValue, cfg.Replace)
+		v := util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, ctx.Config().Replace)
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
 			fName = fConfig.Name // normalize field name
-			standardFields[fName] = NewFieldValue(cfg, options, fConfig, v)
+			standardFields[fName] = NewFieldValue(ctx.Options(), fConfig, v)
 		} else {
 			unknownFields[fName] = v
 		}
@@ -319,14 +323,14 @@ func tryToParseAsJSON(ctx util.JogContext, cfg Config, options Options, lineNo i
 }
 
 // ParseAsRecord ...
-func ParseAsRecord(ctx util.JogContext, cfg Config, options Options, lineNo int, rawLine string) LogRecord {
+func ParseAsRecord(ctx ConvertContext, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
 		UnknownFields:  make(map[string]util.AnyValue),
 		StandardFields: make(map[string]FieldValue),
 		Raw:            rawLine,
 		Unknown:        true,
-		StartupLine:    isStartupLine(cfg, rawLine),
+		StartupLine:    isStartupLine(ctx.Config(), rawLine),
 	}
 
 	line := strings.TrimSpace(rawLine)
@@ -338,11 +342,11 @@ func ParseAsRecord(ctx util.JogContext, cfg Config, options Options, lineNo int,
 	var isJSON bool
 	var matchesGrok bool
 
-	isJSON, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseAsJSON(ctx, cfg, options, lineNo, line)
+	isJSON, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseAsJSON(ctx, lineNo, line)
 	if isJSON {
 		r.Unknown = false
 	} else {
-		matchesGrok, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseUsingGrok(ctx, cfg, options, lineNo, line)
+		matchesGrok, r.Prefix, r.StandardFields, r.UnknownFields = tryToParseUsingGrok(ctx, lineNo, line)
 		if matchesGrok {
 			r.Unknown = false
 		} else {

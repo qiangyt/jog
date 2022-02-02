@@ -80,7 +80,8 @@ func (i Options) InitLevelFilters(levelFieldEnums EnumMap) {
 }
 
 // InitTimestampFilters ...
-func (i Options) InitTimestampFilters(ctx util.JogContext, timestampField Field) {
+func (i Options) InitTimestampFilters(ctx ConvertContext) {
+	timestampField := ctx.Config().TimestampField
 	now := time.Now()
 
 	if len(i.beforeFilterText) > 0 {
