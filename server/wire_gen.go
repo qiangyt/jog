@@ -11,14 +11,13 @@ import (
 	"github.com/qiangyt/jog/server/biz"
 	"github.com/qiangyt/jog/server/conf"
 	"github.com/qiangyt/jog/server/data"
-	"github.com/qiangyt/jog/server/server"
 	"github.com/qiangyt/jog/server/service"
 )
 
 // Injectors from wire.go:
 
 // initServer init Jog Server with kratos application.
-func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVersion, confServer *conf.Server, confData *conf.Data, logger log.Logger) (*ServerT, func(), error) {
+func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVersion, server *conf.Server, confData *conf.Data, logger log.Logger) (*ServerT, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
@@ -26,9 +25,9 @@ func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVe
 	greeterRepo := data.NewGreeterRepo(dataData, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	serverT := newServer(serverId, serverName, serverVersion, logger, httpServer, grpcServer)
+	httpServer := NewHTTPServer(server, greeterService, logger)
+	grpcServer := NewGRPCServer(server, greeterService, logger)
+	serverT := NewServer(serverId, serverName, serverVersion, logger, httpServer, grpcServer)
 	return serverT, func() {
 		cleanup()
 	}, nil

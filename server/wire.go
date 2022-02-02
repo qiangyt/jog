@@ -11,11 +11,10 @@ import (
 	"github.com/qiangyt/jog/server/biz"
 	"github.com/qiangyt/jog/server/conf"
 	"github.com/qiangyt/jog/server/data"
-	"github.com/qiangyt/jog/server/server"
 	"github.com/qiangyt/jog/server/service"
 )
 
 // initServer init Jog Server with kratos application.
 func initServer(ServerId, ServerName, ServerVersion, *conf.Server, *conf.Data, log.Logger) (*ServerT, func(), error) {
-	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newServer))
+	panic(wire.Build(ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, NewServer))
 }
