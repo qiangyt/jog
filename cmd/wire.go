@@ -9,11 +9,11 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"github.com/qiangyt/jog/internal/biz"
-	"github.com/qiangyt/jog/internal/conf"
-	"github.com/qiangyt/jog/internal/data"
-	"github.com/qiangyt/jog/internal/server"
-	"github.com/qiangyt/jog/internal/service"
+	"github.com/qiangyt/jog/server/biz"
+	"github.com/qiangyt/jog/server/conf"
+	"github.com/qiangyt/jog/server/data"
+	"github.com/qiangyt/jog/server/server"
+	"github.com/qiangyt/jog/server/service"
 )
 
 // initApp init kratos application.

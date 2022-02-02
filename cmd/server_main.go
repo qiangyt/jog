@@ -11,7 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/qiangyt/jog/internal/conf"
+	"github.com/qiangyt/jog/server/conf"
 )
 
 func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {

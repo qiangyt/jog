@@ -1,7 +1,7 @@
 syntax = "proto3";
 package kratos.api;
 
-option go_package = "github.com/qiangyt/jog/internal/conf;conf";
+option go_package = "github.com/qiangyt/jog/server/conf;conf";
 
 import "google/protobuf/duration.proto";
 
