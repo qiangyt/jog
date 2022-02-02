@@ -1,5 +1,7 @@
 package convert
 
+import "github.com/qiangyt/jog/util"
+
 // PrefixT ...
 type PrefixT struct {
 	ElementT
@@ -27,10 +29,10 @@ func (i Prefix) ToMap() map[string]interface{} {
 
 // UnmarshalYAML ...
 func (i Prefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Prefix) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
+	return util.DynObject2YAML(i)
 }

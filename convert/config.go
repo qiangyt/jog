@@ -38,26 +38,22 @@ type Config = *ConfigT
 
 // UnmarshalYAML ...
 func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Config) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
+	return util.DynObject2YAML(i)
 }
 
 // Init ...
 func (i Config) Init(cfg Config) {
-	if cfg != nil {
-		panic(fmt.Errorf("root configure initialization"))
-	}
-
-	i.StartupLine.Init(i)
-	i.LineNo.Init(i)
-	i.UnknownLine.Init(i)
-	i.Prefix.Init(i)
-	i.Fields.Init(i)
-
+	/*i.StartupLine.Reset()
+	i.LineNo.Reset()
+	i.UnknownLine.Reset()
+	i.Prefix.Reset()
+	i.Fields.Reset()
+	*/
 	levelField := i.Fields.Standards["level"]
 	if levelField != nil {
 		if !levelField.IsEnum() {
@@ -82,16 +78,37 @@ func (i Config) Init(cfg Config) {
 // Reset ...
 func (i Config) Reset() {
 	i.Colorization = true
-	i.Replace = make(map[string]string)
+
+	i.Replace = map[string]string{
+		"\\\"": "\"",
+		"\\'":  "'",
+		"\\\n": "\n",
+		"\\\r": "",
+		"\\\t": "\t",
+	}
+
 	i.Pattern = ""
 	i.HasOthersFieldInPattern = false
 	i.fieldsInPattern = make(map[string]bool)
+
+	i.StartupLine = &StartupLineT{}
 	i.StartupLine.Reset()
+
+	i.LineNo = &ElementT{}
 	i.LineNo.Reset()
+
+	i.UnknownLine = &ElementT{}
 	i.UnknownLine.Reset()
+
+	i.Prefix = &PrefixT{}
 	i.Prefix.Reset()
+
+	i.Fields = &FieldMapT{}
 	i.Fields.Reset()
+
 	i.LevelField = nil
+
+	i.Grok = &GrokT{}
 	i.Grok.Reset()
 }
 
@@ -255,22 +272,8 @@ func NewConfigWithYamlFile(path string) Config {
 
 // NewConfigWithYaml ...
 func NewConfigWithYaml(yamlText string) Config {
-	r := &ConfigT{
-		Replace: map[string]string{
-			"\\\"": "\"",
-			"\\'":  "'",
-			"\\\n": "\n",
-			"\\\r": "",
-			"\\\t": "\t",
-		},
-		Pattern:     "",
-		StartupLine: &StartupLineT{},
-		LineNo:      &ElementT{},
-		UnknownLine: &ElementT{},
-		Prefix:      &PrefixT{},
-		Fields:      &FieldMapT{},
-		Grok:        &GrokT{},
-	}
+	r := &ConfigT{}
+	r.Reset()
 
 	if err := yaml.Unmarshal([]byte(yamlText), &r); err != nil {
 		panic(errors.Wrap(err, "failed to unmarshal yaml: \n"+yamlText))

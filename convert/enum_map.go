@@ -30,18 +30,13 @@ func (i EnumMap) Reset() {
 
 // UnmarshalYAML ...
 func (i EnumMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := DynObject4YAML(i, unmarshal)
+	e := util.DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i EnumMap) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
-}
-
-// Init ...
-func (i EnumMap) Init(cfg Config) {
-
+	return util.DynObject2YAML(i)
 }
 
 // IsEmpty ...

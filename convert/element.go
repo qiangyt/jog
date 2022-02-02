@@ -22,17 +22,12 @@ type Element = *ElementT
 
 // UnmarshalYAML ...
 func (i Element) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Element) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
-}
-
-// Init ...
-func (i Element) Init(cfg Config) {
-
+	return util.DynObject2YAML(i)
 }
 
 // FromMap ...

@@ -37,12 +37,12 @@ func (i Grok) Init(cfg Config) {
 
 // UnmarshalYAML ...
 func (i Grok) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Grok) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
+	return util.DynObject2YAML(i)
 }
 
 // Reset ...

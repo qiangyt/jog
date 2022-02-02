@@ -17,12 +17,12 @@ type StartupLine = *StartupLineT
 
 // UnmarshalYAML ...
 func (i StartupLine) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i StartupLine) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
+	return util.DynObject2YAML(i)
 }
 
 // Reset ...

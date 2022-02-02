@@ -17,12 +17,12 @@ type SeparatorField = *SeparatorFieldT
 
 // UnmarshalYAML ...
 func (i SeparatorField) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i SeparatorField) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
+	return util.DynObject2YAML(i)
 }
 
 // Reset ...

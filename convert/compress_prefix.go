@@ -63,17 +63,12 @@ type CompressPrefix = *CompressPrefixT
 
 // UnmarshalYAML ...
 func (i CompressPrefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i CompressPrefix) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
-}
-
-// Init ...
-func (i CompressPrefix) Init(cfg Config) {
-
+	return util.DynObject2YAML(i)
 }
 
 // FromMap ...

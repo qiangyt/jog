@@ -63,17 +63,13 @@ func (i Field) Reset() {
 
 // UnmarshalYAML ...
 func (i Field) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := DynObject4YAML(i, unmarshal)
+	e := util.DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i Field) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
-}
-
-// Init ...
-func (i Field) Init(cfg Config) {
+	return util.DynObject2YAML(i)
 }
 
 // IsEnum ...

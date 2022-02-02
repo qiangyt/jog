@@ -16,17 +16,12 @@ type Enum = *EnumT
 
 // TODO: remove this? UnmarshalYAML ...
 func (i Enum) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return DynObject4YAML(i, unmarshal)
+	return util.DynObject4YAML(i, unmarshal)
 }
 
 // TODO: remove this? MarshalYAML ...
 func (i Enum) MarshalYAML() (interface{}, error) {
-	return DynObject2YAML(i)
-}
-
-// TODO: remove this? Init ...
-func (i Enum) Init(cfg Config) {
-
+	return util.DynObject2YAML(i)
 }
 
 // TODO: remove this? Reset ...

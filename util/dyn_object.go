@@ -1,11 +1,10 @@
-package convert
+package util
 
 // DynObject ...
 type DynObject interface {
 	Reset()
 	FromMap(m map[string]interface{}) error
 	ToMap() map[string]interface{}
-	Init(cfg Config)
 }
 
 // DynObject4YAML ...
