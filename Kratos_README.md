@@ -11,15 +11,15 @@ kratos new server
 
 cd server
 # Add a proto template
-kratos proto add api/server/server.proto
+kratos proto add server/api/server/server.proto
 # Generate the proto code
-kratos proto client api/server/server.proto
+kratos proto client server/api/server/server.proto
 # Generate the source code of service by proto file
-kratos proto server api/server/server.proto -t internal/service
+kratos proto server server/api/server/server.proto -t server/service
 
 go generate ./...
 go build -o ./bin/ ./...
-./bin/server -conf ./configs
+./bin/server -conf ./server/configs
 ```
 ## Generate other auxiliary files by Makefile
 ```

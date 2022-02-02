@@ -1,4 +1,4 @@
-package common
+package server
 
 import (
 	"bytes"
@@ -10,8 +10,8 @@ import (
 	"github.com/qiangyt/jog/util"
 )
 
-// ServerOptionsT ...
-type ServerOptionsT struct {
+// OptionsT ...
+type OptionsT struct {
 	LogFilePath    string
 	ConfigFilePath string
 
@@ -19,8 +19,8 @@ type ServerOptionsT struct {
 	ConfigItemValue string
 }
 
-// ServerOptions ...
-type ServerOptions = *ServerOptionsT
+// Options ...
+type Options = *OptionsT
 
 // BuildDefaultServerConfigurationYAML ...
 func BuildDefaultServerConfigurationYAML() string {
@@ -40,14 +40,14 @@ func BuildDefaultServerConfigurationYAML() string {
 }
 
 // PrintConfigTemplate ...
-func (i ServerOptions) PrintConfigTemplate() {
+func (i Options) PrintConfigTemplate() {
 	fmt.Println(BuildDefaultServerConfigurationYAML())
 }
 
-// NewServerOptionsWithCommandLine ...
-func NewServerOptionsWithCommandLine(args []string) (bool, ServerOptions) {
+// NewOptionsWithCommandLine ...
+func NewOptionsWithCommandLine(args []string) (bool, Options) {
 
-	r := &ServerOptionsT{}
+	r := &OptionsT{}
 	var err error
 
 	for i := 0; i < len(args); i++ {

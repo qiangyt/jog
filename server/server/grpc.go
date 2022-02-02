@@ -1,13 +1,13 @@
 package server
 
 import (
-	"github.com/qiangyt/jog/internal/conf"
-	"github.com/qiangyt/jog/internal/service"
+	"github.com/qiangyt/jog/server/conf"
+	"github.com/qiangyt/jog/server/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
-	v1 "github.com/qiangyt/jog/api/helloworld/v1"
+	v1 "github.com/qiangyt/jog/server/api/helloworld/v1"
 )
 
 // NewGRPCServer new a gRPC server.

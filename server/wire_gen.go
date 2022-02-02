@@ -4,22 +4,21 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package server
 
 import (
-	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/qiangyt/jog/internal/biz"
-	"github.com/qiangyt/jog/internal/conf"
-	"github.com/qiangyt/jog/internal/data"
-	"github.com/qiangyt/jog/internal/server"
-	"github.com/qiangyt/jog/internal/service"
+	"github.com/qiangyt/jog/server/biz"
+	"github.com/qiangyt/jog/server/conf"
+	"github.com/qiangyt/jog/server/data"
+	"github.com/qiangyt/jog/server/server"
+	"github.com/qiangyt/jog/server/service"
 )
 
 // Injectors from wire.go:
 
-// initApp init kratos application.
-func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+// initServer init Jog Server with kratos application.
+func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVersion, confServer *conf.Server, confData *conf.Data, logger log.Logger) (*ServerT, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
@@ -29,8 +28,8 @@ func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	greeterService := service.NewGreeterService(greeterUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
 	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	app := newApp(logger, httpServer, grpcServer)
-	return app, func() {
+	serverT := newServer(serverId, serverName, serverVersion, logger, httpServer, grpcServer)
+	return serverT, func() {
 		cleanup()
 	}, nil
 }

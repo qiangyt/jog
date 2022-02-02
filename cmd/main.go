@@ -8,6 +8,7 @@ import (
 	"github.com/gookit/color"
 	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/convert"
+	"github.com/qiangyt/jog/server"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -23,7 +24,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+	flag.StringVar(&flagconf, "conf", "../../server", "config path, eg: -conf config.yaml")
 }
 
 func main() {
@@ -43,7 +44,7 @@ func main() {
 	}
 
 	if globalOptions.RunMode == common.RunMode_Server {
-		ok, _ := common.NewServerOptionsWithCommandLine(globalOptions.SubArgs)
+		ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs)
 		if !ok {
 			return
 		}
