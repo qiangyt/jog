@@ -72,6 +72,7 @@ func (i Config) Init(cfg Config) {
 	}
 	i.TimestampField = timestampField
 
+	util.InitDefaultGrokLibraryDir()
 	i.Grok.Init(i)
 }
 

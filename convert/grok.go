@@ -21,9 +21,6 @@ type Grok = *GrokT
 
 // Init ...
 func (i Grok) Init(cfg Config) {
-
-	util.InitDefaultGrokLibraryDir()
-
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {

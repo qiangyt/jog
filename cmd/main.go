@@ -43,7 +43,7 @@ func main() {
 	}
 
 	if globalOptions.RunMode == common.RunMode_Server {
-		ok, _ := common.ServerOptionsWithCommandLine(globalOptions)
+		ok, _ := common.NewServerOptionsWithCommandLine(globalOptions.SubArgs)
 		if !ok {
 			return
 		}

@@ -44,13 +44,11 @@ func (i ServerOptions) PrintConfigTemplate() {
 	fmt.Println(BuildDefaultServerConfigurationYAML())
 }
 
-// ServerOptionsWithCommandLine ...
-func ServerOptionsWithCommandLine(globalOptions GlobalOptions) (bool, ServerOptions) {
+// NewServerOptionsWithCommandLine ...
+func NewServerOptionsWithCommandLine(args []string) (bool, ServerOptions) {
 
 	r := &ServerOptionsT{}
 	var err error
-
-	args := globalOptions.SubArgs
 
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
