@@ -33,7 +33,7 @@ func main() {
 		return
 	}
 
-	if !globalOptions.Debug {
+	if !globalOptions.Debug() {
 		defer func() {
 			if p := recover(); p != nil {
 				color.Red.Printf("%v\n\n", p)
@@ -43,13 +43,15 @@ func main() {
 		}()
 	}
 
-	if globalOptions.RunMode == common.RunMode_Server {
-		ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs)
+	if globalOptions.RunMode() == common.RunMode_Server {
+		ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs())
 		if !ok {
 			return
 		}
 	} else {
-		convert.Main(globalOptions.SubArgs, Version)
+		done := make(chan bool)
+		convert.Main(done, globalOptions)
+		<-done
 	}
 
 	fmt.Println()

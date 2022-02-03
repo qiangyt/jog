@@ -18,30 +18,46 @@ const (
 )
 
 type GlobalOptionsT struct {
-	Debug   bool
-	RunMode RunMode
-	SubArgs []string
-	Version string
+	debug   bool
+	runMode RunMode
+	subArgs []string
+	version string
 }
 
 type GlobalOptions = *GlobalOptionsT
 
+func (i GlobalOptions) Debug() bool {
+	return i.debug
+}
+
+func (i GlobalOptions) RunMode() RunMode {
+	return i.runMode
+}
+
+func (i GlobalOptions) SubArgs() []string {
+	return i.subArgs
+}
+
+func (i GlobalOptions) Version() string {
+	return i.version
+}
+
 func GlobalOptionsWithCommandLine(version string) (bool, GlobalOptions) {
 
 	r := &GlobalOptionsT{
-		Debug:   false,
-		RunMode: RunMode_Default,
-		SubArgs: []string{},
-		Version: version,
+		debug:   false,
+		runMode: RunMode_Default,
+		subArgs: []string{},
+		version: version,
 	}
 
 	for i := 1; i < len(os.Args); i++ {
 		arg := os.Args[i]
 
 		if i == 1 && arg == "server" {
-			r.RunMode = RunMode_Server
+			r.runMode = RunMode_Server
 		} else if arg[0:1] != "-" {
-			r.SubArgs = append(r.SubArgs, arg)
+			r.subArgs = append(r.subArgs, arg)
 		} else {
 			if arg == "-h" || arg == "--help" {
 				r.PrintHelp()
@@ -50,9 +66,9 @@ func GlobalOptionsWithCommandLine(version string) (bool, GlobalOptions) {
 				r.PrintVersion()
 				return false, nil
 			} else if arg == "-d" || arg == "--debug" {
-				r.Debug = true
+				r.debug = true
 			} else {
-				r.SubArgs = append(r.SubArgs, arg)
+				r.subArgs = append(r.subArgs, arg)
 			}
 		}
 	}
@@ -62,7 +78,7 @@ func GlobalOptionsWithCommandLine(version string) (bool, GlobalOptions) {
 
 // PrintVersion ...
 func (i GlobalOptions) PrintVersion() {
-	fmt.Println(i.Version)
+	fmt.Println(i.Version())
 }
 
 // PrintHelp ...
@@ -78,7 +94,7 @@ func (i GlobalOptions) PrintHelp() {
 	fmt.Printf("  -V,  --version              Display app version information\n")
 	fmt.Println()
 
-	if i.RunMode == RunMode_Server {
+	if i.RunMode() == RunMode_Server {
 		i.PrintServerHelp()
 	} else {
 		i.PrintConvertHelp()

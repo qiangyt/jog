@@ -2,11 +2,15 @@ package convert
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/jsonpath"
 	"github.com/qiangyt/jog/util"
+	"gopkg.in/yaml.v2"
 )
 
 type ConvertContextT struct {
@@ -46,16 +50,58 @@ func (i ConvertContext) Options() Options {
 	return i.options
 }
 
-func (i ConvertContext) LoadConfig() Config {
-	configFilePath := i.options.ConfigFilePath
+func (i ConvertContext) LoadConfig() bool {
+	var cfg Config
+	var options = i.Options()
 
-	if len(configFilePath) == 0 {
-		i.config = NewConfigWithDefaultYamlFile(i)
+	if len(options.ConfigFilePath) == 0 {
+		cfg = NewConfigWithDefaultYamlFile(i)
 	} else {
-		i.config = NewConfigWithYamlFile(i, configFilePath)
+		cfg = NewConfigWithYamlFile(i, options.ConfigFilePath)
+	}
+	i.config = cfg
+
+	if len(options.ConfigItemPath) > 0 {
+		m := cfg.ToMap()
+		if len(options.ConfigItemValue) > 0 {
+			i.SetConfigItem(m, options.ConfigItemPath, options.ConfigItemValue)
+		} else {
+			i.PrintConfigItem(m, options.ConfigItemPath)
+			return false
+		}
 	}
 
-	return i.config
+	if cfg.LevelField != nil {
+		options.InitLevelFilters(cfg.LevelField.Enums)
+	}
+	if cfg.TimestampField != nil {
+		options.InitTimestampFilters(i)
+	}
+
+	options.InitGroks(cfg)
+
+	return true
+}
+
+func (i ConvertContext) PrintConfigItem(m map[string]interface{}, configItemPath string) {
+	item, err := jsonpath.Get(m, configItemPath)
+	if err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	out, err := yaml.Marshal(item)
+	if err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	fmt.Print(string(out))
+}
+
+func (i ConvertContext) SetConfigItem(m map[string]interface{}, configItemPath string, configItemValue string) {
+	if err := jsonpath.Set(m, configItemPath, configItemValue); err != nil {
+		panic(errors.Wrap(err, ""))
+	}
+	if err := i.Config().FromMap(m); err != nil {
+		panic(errors.Wrap(err, ""))
+	}
 }
 
 func (i ConvertContext) Config() Config {
