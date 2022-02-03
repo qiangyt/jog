@@ -26,10 +26,10 @@ func (i JogContext) WithLogger(logger log.Logger) {
 	i.logger = logger
 }
 
-func NewTestContext() JogContextT {
+func NewTestContext() JogContext {
 	r := NewJogContext(nil)
 	r.WithLogger(log.With(log.DefaultLogger))
-	return r
+	return &r
 }
 
 func (i JogContext) LogInfo(msg string, keyvals ...interface{}) error {
