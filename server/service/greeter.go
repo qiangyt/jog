@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
-	v1 "github.com/qiangyt/jog/server/api/helloworld/v1"
+	v1 "github.com/qiangyt/jog/api/helloworld/v1"
 	"github.com/qiangyt/jog/server/biz"
 )
 

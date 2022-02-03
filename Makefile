@@ -1,7 +1,7 @@
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 SERVER_PROTO_FILES=$(shell find server -name *.proto)
-API_PROTO_FILES=$(shell find server/api -name *.proto)
+API_PROTO_FILES=$(shell find api -name *.proto)
 
 .PHONY: init
 # init env
