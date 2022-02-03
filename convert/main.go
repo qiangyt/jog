@@ -26,6 +26,8 @@ func Main(done chan bool, globalOptions common.GlobalOptions) ConvertContext {
 	}
 
 	go func() {
+		defer close(done)
+
 		//TODO: trap CTRL+C signal
 		if !globalOptions.Debug() {
 			defer func() {
@@ -44,7 +46,6 @@ func Main(done chan bool, globalOptions common.GlobalOptions) ConvertContext {
 			ctx.LogInfo("processing local JSON log file", "logFilePath", options.LogFilePath)
 			ProcessLocalFile(ctx)
 		}
-		close(done)
 	}()
 
 	return ctx

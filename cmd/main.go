@@ -43,16 +43,16 @@ func main() {
 		}()
 	}
 
-	if globalOptions.RunMode() == common.RunMode_Server {
-		ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs())
-		if !ok {
+	if globalOptions.RunMode() == common.RunMode_Client {
+		convertDone := make(chan bool)
+		convertCtx := convert.Main(convertDone, globalOptions)
+		if !convertCtx.Options().OpenWebGUI {
+			<-convertDone
+			fmt.Println()
 			return
 		}
-	} else {
-		done := make(chan bool)
-		convert.Main(done, globalOptions)
-		<-done
 	}
 
-	fmt.Println()
+	//	ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs())
+	server.Main(id, Name, Version, flagconf)
 }

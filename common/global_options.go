@@ -153,5 +153,6 @@ func (i GlobalOptions) PrintConvertHelp() {
 	fmt.Printf("  -n,  --lines <number of tail lines>                         Number of tail lines. 10 by default, for follow mode\n")
 	fmt.Printf("       --reset-grok-library-dir                               Save default GROK patterns to [%s]\n", defaultGrokLibraryDirs)
 	fmt.Printf("  -t,  --template                                             Print a convertion config YAML file template\n")
+	fmt.Printf("  -w,  --webgui                                               View log in a Web GUI\n")
 	fmt.Println()
 }
