@@ -7,7 +7,7 @@ info:
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /helloworld/{name}:
+    /api/helloworld/{name}:
         get:
             tags:
                 - Greeter

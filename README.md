@@ -141,6 +141,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
       - [goreportcard-cli](https://github.com/gojp/goreportcard)
       - [gometalinter](https://github.com/alecthomas/gometalinter)
       - go install github.com/golang/mock/mockgen@v1.6.0
+      - go install github.com/rakyll/statik@v0.1.7
    *  In current directory, run `./build.sh`
 
 ## Status

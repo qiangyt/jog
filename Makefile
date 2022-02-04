@@ -58,6 +58,7 @@ build:
 .PHONY: generate
 # generate
 generate:
+	statik -src=./web/dist -f
 	go generate ./...
 	go fmt ./...
 

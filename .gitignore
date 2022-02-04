@@ -36,3 +36,5 @@ idea.txt
 .vscode/
 .idea/
 *.swp
+
+/statik/

@@ -1,1 +1,4 @@
-GET http://localhost:8585/helloworld/qiangyt
+GET http://localhost:8585/api/helloworld/qiangyt
+
+###
+GET http://localhost:8585/web/index.html

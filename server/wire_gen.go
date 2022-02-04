@@ -15,6 +15,10 @@ import (
 	"github.com/qiangyt/jog/server/service"
 )
 
+import (
+	_ "github.com/qiangyt/jog/statik"
+)
+
 // Injectors from wire.go:
 
 // initServer init Jog Server with kratos application.

@@ -2,16 +2,21 @@ package static
 
 const (
 	// DefaultServer_yml ...
-	DefaultServer_yml string = `server:
-  #id: server-1 # default is host name
-  #http:
-  #  addr: 0.0.0.0:8585 # default is "0.0.0.0:8585"
-  #  network: "" # default is ""
-  #  timeout: 6s # default is "6s"
-  #grpc:
-  #  addr: 0.0.0.0:9595 # default is "0.0.0.0:9595"
-  #  network: "" # default is ""
-  #  timeout: 6s # default is "6s"
+	DefaultServer_yml string = `#log:
+#  target: file # default is "stdio"
+#  file_path: my.log # used if target=='file', default is ./jog.server.log
+
+#server:
+#  id: server-1 # default is host name
+#  http:
+#    addr: 0.0.0.0:8585 # default is "0.0.0.0:8585"
+#    network: "" # default is ""
+#    timeout: 6s # default is "6s"
+#  grpc:
+#    addr: 0.0.0.0:9595 # default is "0.0.0.0:9595"
+#    network: "" # default is ""
+#    timeout: 6s # default is "6s"
+
 data:
   database:
     driver: mysql
