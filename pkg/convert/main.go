@@ -5,7 +5,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/qiangyt/jog/pkg/grok"
-	"github.com/qiangyt/jog/pkg/util"
+	jogio "github.com/qiangyt/jog/pkg/io"
 )
 
 func Main(done chan bool, debug bool, args []string, version string) ConvertContext {
@@ -17,7 +17,7 @@ func Main(done chan bool, debug bool, args []string, version string) ConvertCont
 		return nil
 	}
 
-	ctx := NewConvertContext(options, util.JogHomeDir(true), version)
+	ctx := NewConvertContext(options, jogio.JogHomeDir(true), version)
 	defer ctx.Close()
 
 	if !ctx.LoadConfig() {

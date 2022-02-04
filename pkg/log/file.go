@@ -1,41 +1,42 @@
-package util
+package log
 
 import (
 	"os"
 
 	"github.com/pkg/errors"
+	jogio "github.com/qiangyt/jog/pkg/io"
 )
 
-// LogFileT implements io.Writer
-type LogFileT struct {
+// FileT implements io.Writer
+type FileT struct {
 	path string
 	file *os.File
 }
 
-// LogFile ...
-type LogFile = *LogFileT
+// File ...
+type File = *FileT
 
 // Write ...
-func (i LogFile) Write(p []byte) (int, error) {
+func (i File) Write(p []byte) (int, error) {
 	return i.file.Write(p)
 }
 
-func (i LogFile) Path() string {
+func (i File) Path() string {
 	return i.path
 }
 
-func (i LogFile) File() *os.File {
+func (i File) File() *os.File {
 	return i.file
 }
 
 // Open ...
-func NewLogFile(path string) LogFile {
-	r := &LogFileT{path: path}
+func NewFile(path string) File {
+	r := &FileT{path: path}
 
 	create := true
-	if fi := FileStat(path, false); fi != nil {
+	if fi := jogio.FileStat(path, false); fi != nil {
 		if fi.Size() >= 100*1024*1024 {
-			RemoveFile(path)
+			jogio.RemoveFile(path)
 		} else {
 			create = false
 		}
@@ -59,7 +60,7 @@ func NewLogFile(path string) LogFile {
 }
 
 // Close ...
-func (i LogFile) Close() {
+func (i File) Close() {
 	if i.file != nil {
 		i.file.Close()
 	}

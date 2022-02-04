@@ -11,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/grok"
+	jogio "github.com/qiangyt/jog/pkg/io"
 	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
 	"gopkg.in/yaml.v2"
@@ -218,11 +219,11 @@ func (i Config) ToMap() map[string]interface{} {
 func LookForConfigFile(ctx ConvertContext, dir string) string {
 	ctx.LogInfo("looking for config files", "dir", dir)
 	r := filepath.Join(dir, DefaultConfigFile)
-	if util.FileExists(r) {
+	if jogio.FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, DefaultConfigFile)
-	if util.FileExists(r) {
+	if jogio.FileExists(r) {
 		return r
 	}
 	return ""
@@ -230,7 +231,7 @@ func LookForConfigFile(ctx ConvertContext, dir string) string {
 
 // determineConfigFilePath return (file path)
 func determineConfigFilePath(ctx ConvertContext) string {
-	exeDir := util.ExeDirectory()
+	exeDir := jogio.ExeDirectory()
 	r := LookForConfigFile(ctx, exeDir)
 	if len(r) != 0 {
 		return r
@@ -281,7 +282,7 @@ func NewConfigWithDefaultYamlFile(ctx ConvertContext) Config {
 func NewConfigWithYamlFile(ctx ConvertContext, path string) Config {
 	ctx.LogInfo("config file", "path", path)
 
-	yamlText := string(util.ReadFile(path))
+	yamlText := string(jogio.ReadFile(path))
 	return NewConfigWithYaml(yamlText)
 }
 

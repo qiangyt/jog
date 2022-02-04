@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+	jogio "github.com/qiangyt/jog/pkg/io"
 	"github.com/qiangyt/jog/pkg/util"
 	"github.com/vjeantet/grok"
 )
@@ -24,8 +25,8 @@ func (i Grok) Init() {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {
-		dir := util.ExpandHomePath(patternsDir)
-		if util.DirExists(dir) == false {
+		dir := jogio.ExpandHomePath(patternsDir)
+		if jogio.DirExists(dir) == false {
 			continue
 		}
 		i.grok.AddPatternsFromPath(dir)

@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/mitchellh/go-homedir"
+	jogio "github.com/qiangyt/jog/pkg/io"
 	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -113,7 +114,7 @@ func normalizeLog(bc *Bootstrap) {
 	}
 	if log.Target == "file" {
 		if len(log.FilePath) == 0 {
-			log.FilePath = filepath.Join(util.ExeDirectory(), "jog.server.log")
+			log.FilePath = filepath.Join(jogio.ExeDirectory(), "jog.server.log")
 		}
 	}
 }
@@ -121,11 +122,11 @@ func normalizeLog(bc *Bootstrap) {
 func lookForConfigFile(logger *log.Helper, dir string) string {
 	logger.Infof("looking for config files in directory %s", dir)
 	r := filepath.Join(dir, DefaultConfigFile)
-	if util.FileExists(r) {
+	if jogio.FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, DefaultConfigFile)
-	if util.FileExists(r) {
+	if jogio.FileExists(r) {
 		return r
 	}
 	return ""
@@ -133,7 +134,7 @@ func lookForConfigFile(logger *log.Helper, dir string) string {
 
 // determineConfigFileUrl return (file path)
 func determineConfigFileUrl(logger *log.Helper) string {
-	exeDir := util.ExeDirectory()
+	exeDir := jogio.ExeDirectory()
 	r := lookForConfigFile(logger, exeDir)
 	if len(r) != 0 {
 		return r

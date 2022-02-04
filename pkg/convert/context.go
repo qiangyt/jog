@@ -8,6 +8,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/pkg/jsonpath"
+	joglog "github.com/qiangyt/jog/pkg/log"
 	"github.com/qiangyt/jog/pkg/util"
 	"gopkg.in/yaml.v2"
 )
@@ -16,14 +17,14 @@ type ConvertContextT struct {
 	util.JogContextT
 	config  Config
 	options Options
-	logFile util.LogFile
+	logFile joglog.File
 }
 
 type ConvertContext = *ConvertContextT
 
 // NewConvertContext ...
 func NewConvertContext(options Options, jogHomeDir string, version string) ConvertContext {
-	logFile := util.NewLogFile(filepath.Join(jogHomeDir, "convert.log"))
+	logFile := joglog.NewFile(filepath.Join(jogHomeDir, "convert.log"))
 
 	logger := log.With(log.NewStdLogger(logFile.File()),
 		"ts", log.DefaultTimestamp,
