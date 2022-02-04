@@ -33,7 +33,6 @@ idea.txt
 /local.md
 
 # Develop tools
-.vscode/
 .idea/
 *.swp
 
