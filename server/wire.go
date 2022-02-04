@@ -6,6 +6,7 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"github.com/qiangyt/jog/server/biz"
@@ -15,6 +16,6 @@ import (
 )
 
 // initServer init Jog Server with kratos application.
-func initServer(ServerId, ServerName, ServerVersion, *conf.Server, *conf.Data, log.Logger) (*ServerT, func(), error) {
+func initServer(log.Logger, ServerVersion, *conf.Bootstrap, *conf.Server, *conf.Data) (*kratos.App, func(), error) {
 	panic(wire.Build(ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, NewServer))
 }

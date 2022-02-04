@@ -3,7 +3,6 @@ package convert
 import (
 	"context"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -32,8 +31,7 @@ func NewConvertContext(options Options, jogHomeDir string, version string) Conve
 	)
 
 	ctx := util.NewJogContext(context.TODO())
-	ctx.WithLogger(logger)
-	ctx.LogInfo("------------------------------------------------", "version", version, "pid", os.Getpid())
+	ctx.WithLogger(logger, version)
 
 	return &ConvertContextT{
 		JogContextT: ctx,
@@ -43,7 +41,9 @@ func NewConvertContext(options Options, jogHomeDir string, version string) Conve
 }
 
 func (i ConvertContext) Close() {
-	i.logFile.Close()
+	if i.logFile != nil {
+		i.logFile.Close()
+	}
 }
 
 func (i ConvertContext) Options() Options {

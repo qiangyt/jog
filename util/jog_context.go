@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"os"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -22,13 +23,14 @@ func NewJogContext(parent context.Context) JogContextT {
 }
 
 // NewConvertContext ...
-func (i JogContext) WithLogger(logger log.Logger) {
+func (i JogContext) WithLogger(logger log.Logger, version string) {
 	i.logger = logger
+	i.LogInfo("------------------------------------------------", "version", version, "pid", os.Getpid())
 }
 
 func NewTestContext() JogContext {
 	r := NewJogContext(nil)
-	r.WithLogger(log.With(log.DefaultLogger))
+	r.WithLogger(log.With(log.DefaultLogger), "test")
 	return &r
 }
 

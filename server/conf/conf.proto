@@ -8,6 +8,7 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
+  Log log = 3;
 }
 
 message Server {
@@ -21,8 +22,15 @@ message Server {
     string addr = 2;
     google.protobuf.Duration timeout = 3;
   }
-  HTTP http = 1;
-  GRPC grpc = 2;
+
+  string id = 1;
+  HTTP http = 2;
+  GRPC grpc = 3;
+}
+
+message Log {
+  string target = 1; // "stdio" or "file"
+  string file_path = 2; // only used if target == "file"
 }
 
 message Data {

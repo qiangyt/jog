@@ -1,44 +1,49 @@
 package server
 
 import (
-	"flag"
 	"os"
 
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/google/wire"
+	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/server/conf"
+	"github.com/qiangyt/jog/util"
 )
 
-func Main(id string, name string, version string, flagconf string) {
-	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", name,
-		"service.version", version,
-		"trace_id", tracing.TraceID(),
-		"span_id", tracing.SpanID(),
-	)
-	c := config.New(
-		config.WithSource(
-			file.NewSource(flagconf),
-		),
-	)
-	defer c.Close()
+func Main(version string, globalOptions common.GlobalOptions) {
+	configFilePath := conf.ParseCommandLine(globalOptions.SubArgs())
+	if len(configFilePath) == 0 {
+		return
+	}
+	bc := conf.LoadConfigFile(configFilePath)
 
-	if err := c.Load(); err != nil {
-		panic(err)
+	var logFile util.LogFile
+	var logger log.Logger
+
+	if true { //conf.Log_Target() == conf.Log_stdio {
+		logger = log.With(log.NewStdLogger(os.Stdout),
+			"ts", log.DefaultTimestamp,
+			"caller", log.DefaultCaller,
+			"trace_id", tracing.TraceID(),
+			"span_id", tracing.SpanID(),
+		)
+	} else {
+		logFile = util.NewLogFile(bc.Log.GetFilePath())
+		defer logFile.Close()
+
+		logger = log.With(log.NewStdLogger(logFile.File()),
+			"ts", log.DefaultTimestamp,
+			"caller", log.DefaultCaller,
+			"trace_id", tracing.TraceID(),
+			"span_id", tracing.SpanID(),
+		)
 	}
 
-	var bc conf.Bootstrap
-	if err := c.Scan(&bc); err != nil {
-		panic(err)
-	}
-
-	server, cleanup, err := initServer(ServerId(id), ServerName(name), ServerVersion(version), bc.Server, bc.Data, logger)
+	server, cleanup, err := initServer(logger, ServerVersion(version), bc, bc.Server, bc.Data)
 	if err != nil {
 		panic(err)
 	}
@@ -48,4 +53,20 @@ func Main(id string, name string, version string, flagconf string) {
 	if err := server.Run(); err != nil {
 		panic(err)
 	}
+}
+
+// ProviderSet is server providers.
+var ProviderSet = wire.NewSet(NewHTTPServer, NewGRPCServer)
+
+type ServerVersion string
+
+func NewServer(logger log.Logger, version ServerVersion, config *conf.Bootstrap, hs *http.Server, gs *grpc.Server) *kratos.App {
+	return kratos.New(
+		kratos.ID(config.Server.GetId()),
+		kratos.Name("jog-server"),
+		kratos.Version(string(version)),
+		kratos.Metadata(map[string]string{}),
+		kratos.Logger(logger),
+		kratos.Server(hs, gs),
+	)
 }

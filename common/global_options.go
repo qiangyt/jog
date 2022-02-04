@@ -111,8 +111,6 @@ func (i GlobalOptions) PrintServerHelp() {
 
 	color.New(color.FgBlue, color.OpBold).Println("Servr mode options:")
 	fmt.Printf("  -c,  --config <server config file path>                     Specify server config YAML file path. The default is .jog.server.yaml \n")
-	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
-	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -t,  --template                                             Print a server config YAML file template\n")
 	fmt.Println()
 }

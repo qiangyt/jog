@@ -7,6 +7,7 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/qiangyt/jog/server/biz"
 	"github.com/qiangyt/jog/server/conf"
@@ -17,7 +18,7 @@ import (
 // Injectors from wire.go:
 
 // initServer init Jog Server with kratos application.
-func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVersion, server *conf.Server, confData *conf.Data, logger log.Logger) (*ServerT, func(), error) {
+func initServer(logger log.Logger, serverVersion ServerVersion, bootstrap *conf.Bootstrap, server *conf.Server, confData *conf.Data) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
@@ -27,8 +28,8 @@ func initServer(serverId ServerId, serverName ServerName, serverVersion ServerVe
 	greeterService := service.NewGreeterService(greeterUsecase, logger)
 	httpServer := NewHTTPServer(server, greeterService, logger)
 	grpcServer := NewGRPCServer(server, greeterService, logger)
-	serverT := NewServer(serverId, serverName, serverVersion, logger, httpServer, grpcServer)
-	return serverT, func() {
+	app := NewServer(logger, serverVersion, bootstrap, httpServer, grpcServer)
+	return app, func() {
 		cleanup()
 	}, nil
 }

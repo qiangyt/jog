@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -13,19 +12,9 @@ import (
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
-	// Name is the name of the compiled software.
-	Name string
 	// Version is the version of the compiled software.
 	Version string
-	// flagconf is the config flag.
-	flagconf string
-
-	id, _ = os.Hostname()
 )
-
-func init() {
-	flag.StringVar(&flagconf, "conf", "../../server", "config path, eg: -conf config.yaml")
-}
 
 func main() {
 	ok, globalOptions := common.GlobalOptionsWithCommandLine(Version)
@@ -53,6 +42,5 @@ func main() {
 		}
 	}
 
-	//	ok, _ := server.NewOptionsWithCommandLine(globalOptions.SubArgs())
-	server.Main(id, Name, Version, flagconf)
+	server.Main(Version, globalOptions)
 }
