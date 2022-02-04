@@ -49,14 +49,50 @@ generate:
 clean:
 	rm -rf ./target
 
+.PHONY: linux_amd64
+# build for linux/amd64
+linux_amd64:
+	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux_amd64 ./
+
+.PHONY: linux_arm64
+# build for linux/arm64
+linux_arm64:
+	GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux_arm64 ./
+
+.PHONY: darwin_amd64
+# build for darwin/amd64
+darwin_amd64:
+	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin_amd64 ./
+
+.PHONY: darwin_arm64
+# build for darwin/arm64
+darwin_arm64:
+	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin_arm64 ./
+
+.PHONY: windows_amd64
+# build for windows/amd64
+windows_amd64:
+	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.amd64.exe ./
+
+.PHONY: windows_amd64
+# build for windows/arm64
+windows_arm64:
+	GOOS=windows GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.arm64.exe ./
+
 .PHONY: build
 # build
 build:
-	mkdir -p target/
-	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/linux/jog ./
-	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.amd64 ./
-	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.arm64 ./
-	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/windows/jog.exe ./
+	go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog ./
+
+.PHONY: release
+# release
+release:
+	make linux_amd64;
+	make linux_arm64;
+	make darwin_amd64;
+	make darwin_arm64;
+	make windows_amd64;
+	make windows_arm64;
 
 .PHONY: test
 # test
