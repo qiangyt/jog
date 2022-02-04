@@ -6,9 +6,6 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
-
-	"github.com/qiangyt/jog/static/grok_extended"
-	"github.com/qiangyt/jog/static/grok_vjeantet"
 )
 
 type GrokPattern struct {
@@ -39,27 +36,43 @@ func ParseGrokPatterns(patternsText string) []GrokPattern {
 	return r
 }
 
+func ParseVjeantetGrokPatternsStatikFile(name string) []GrokPattern {
+	p := filepath.Join("/grok_vjeantet", name)
+	res := NewResource(p)
+	patternsText := res.ReadString()
+
+	return ParseGrokPatterns(patternsText)
+}
+
+func ParseExtendedGrokPatternsStatikFile(name string) []GrokPattern {
+	p := filepath.Join("/grok_extended", name)
+	res := NewResource(p)
+	patternsText := res.ReadString()
+
+	return ParseGrokPatterns(patternsText)
+}
+
 func LoadAllGrokPatterns() []GrokPattern {
 	r := []GrokPattern{}
 
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Aws)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Bacula)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Bro)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Exim)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Firewalls)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Grok_patterns)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Haproxy)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Java)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Junos)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Linux_syslog)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Mcollective_patterns)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Mcollective)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Mongodb)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Nagios)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Postgresql)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Rails)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Redis)...)
-	r = append(r, ParseGrokPatterns(grok_vjeantet.Ruby)...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("aws")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("bacula")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("bro")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("exim")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("firewalls")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("grok-patterns")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("haproxy")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("java")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("junos")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("linux-syslog")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("mcollective-patterns")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("mcollective")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("mongodb")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("nagios")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("postgresql")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("rails")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("redis")...)
+	r = append(r, ParseVjeantetGrokPatternsStatikFile("ruby")...)
 
 	return r
 }
@@ -75,9 +88,20 @@ func MergeGrokPatterns(allPatterns map[string]GrokPattern, patternsText string) 
 	}
 }
 
-// SaveGrokPatternFile ...
-func SaveGrokPatternFile(dir string, patternFileName string, patternFileContent string) {
-	ReplaceFile(filepath.Join(dir, patternFileName), []byte(patternFileContent))
+// CopyGrokVjeantestStatikFile ...
+func CopyGrokVjeantestStatikFile(targetDir string, name string) {
+	p := filepath.Join("/grok_vjeantet", name)
+	res := NewResource(p)
+
+	res.CopyToFile(targetDir)
+}
+
+// CopyGrokExtendedStatikFile ...
+func CopyGrokExtendedStatikFile(targetDir string, name string) {
+	p := filepath.Join("/grok_extended", name)
+	res := NewResource(p)
+
+	res.CopyToFile(targetDir)
 }
 
 // DefaultGrokLibraryDirs ...
@@ -103,41 +127,33 @@ func ResetDefaultGrokLibraryDir() {
 func InitDefaultGrokLibraryDir() {
 	jogHomeDir := JogHomeDir(true)
 
-	licensePath := filepath.Join(jogHomeDir, "grok_vjeantet.LICENSE")
-	WriteFileIfNotFound(licensePath, []byte(grok_vjeantet.LICENSE))
+	if DirExists(filepath.Join(jogHomeDir, "grok_vjeantet")) == false {
+		CopyGrokVjeantestStatikFile(jogHomeDir, "LICENSE")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "README.md")
 
-	readmePath := filepath.Join(jogHomeDir, "grok_vjeantet.README.md")
-	WriteFileIfNotFound(readmePath, []byte(grok_vjeantet.README_md))
-
-	dirVjeantet := JogHomeDir(true, "grok_vjeantet")
-	if DirExists(dirVjeantet) == false {
-		MkdirAll(dirVjeantet)
-
-		SaveGrokPatternFile(dirVjeantet, "aws", grok_vjeantet.Aws)
-		SaveGrokPatternFile(dirVjeantet, "bro", grok_vjeantet.Bro)
-		SaveGrokPatternFile(dirVjeantet, "firewalls", grok_vjeantet.Firewalls)
-		SaveGrokPatternFile(dirVjeantet, "haproxy", grok_vjeantet.Haproxy)
-		SaveGrokPatternFile(dirVjeantet, "junos", grok_vjeantet.Junos)
-		SaveGrokPatternFile(dirVjeantet, "linux-syslog", grok_vjeantet.Linux_syslog)
-		SaveGrokPatternFile(dirVjeantet, "mcollective-patterns", grok_vjeantet.Mcollective_patterns)
-		SaveGrokPatternFile(dirVjeantet, "nagios", grok_vjeantet.Nagios)
-		SaveGrokPatternFile(dirVjeantet, "rails", grok_vjeantet.Rails)
-		SaveGrokPatternFile(dirVjeantet, "redis", grok_vjeantet.Redis)
-		SaveGrokPatternFile(dirVjeantet, "bacula", grok_vjeantet.Bacula)
-		SaveGrokPatternFile(dirVjeantet, "exim", grok_vjeantet.Exim)
-		SaveGrokPatternFile(dirVjeantet, "grok-patterns", grok_vjeantet.Grok_patterns)
-		SaveGrokPatternFile(dirVjeantet, "java", grok_vjeantet.Java)
-		SaveGrokPatternFile(dirVjeantet, "mcollective", grok_vjeantet.Mcollective)
-		SaveGrokPatternFile(dirVjeantet, "mongodb", grok_vjeantet.Mongodb)
-		SaveGrokPatternFile(dirVjeantet, "postgresql", grok_vjeantet.Postgresql)
-		SaveGrokPatternFile(dirVjeantet, "ruby", grok_vjeantet.Ruby)
+		CopyGrokVjeantestStatikFile(jogHomeDir, "aws")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "bro")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "firewalls")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "haproxy")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "junos")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "linux-syslog")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "mcollective-patterns")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "nagios")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "rails")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "redis")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "bacula")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "exim")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "grok-patterns")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "java")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "mcollective")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "mongodb")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "postgresql")
+		CopyGrokVjeantestStatikFile(jogHomeDir, "ruby")
 	}
 
 	dirExtended := JogHomeDir(true, "grok_extended")
 	if DirExists(dirExtended) == false {
-		MkdirAll(dirExtended)
-
-		SaveGrokPatternFile(dirExtended, "pm2", grok_extended.Pm2)
+		CopyGrokExtendedStatikFile(jogHomeDir, "pm2")
 	}
 
 	MkdirAll(JogHomeDir(true, "grok_mine"))

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/gookit/color"
-	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/convert"
 	"github.com/qiangyt/jog/server"
 )
@@ -17,12 +16,12 @@ var (
 )
 
 func main() {
-	ok, globalOptions := common.GlobalOptionsWithCommandLine(Version)
+	ok, options := GlobalOptionsWithCommandLine(Version)
 	if !ok {
 		return
 	}
 
-	if !globalOptions.Debug() {
+	if !options.Debug() {
 		defer func() {
 			if p := recover(); p != nil {
 				color.Red.Printf("%v\n\n", p)
@@ -32,9 +31,9 @@ func main() {
 		}()
 	}
 
-	if globalOptions.RunMode() == common.RunMode_Client {
+	if options.RunMode() == RunMode_Client {
 		convertDone := make(chan bool)
-		convertCtx := convert.Main(convertDone, globalOptions)
+		convertCtx := convert.Main(convertDone, options.Debug(), options.SubArgs(), Version)
 		if !convertCtx.Options().OpenWebGUI {
 			<-convertDone
 			fmt.Println()
@@ -42,5 +41,5 @@ func main() {
 		}
 	}
 
-	server.Main(Version, globalOptions)
+	server.Main(Version, options.SubArgs())
 }

@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -92,6 +93,15 @@ func ReadFile(path string) []byte {
 	r, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to read file: %s", path))
+	}
+	return r
+}
+
+// ReadAll ...
+func ReadAll(reader io.Reader) []byte {
+	r, err := ioutil.ReadAll(reader)
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to read from Reader: %v", reader))
 	}
 	return r
 }

@@ -9,17 +9,35 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/mitchellh/go-homedir"
-	"github.com/qiangyt/jog/static"
 	"github.com/qiangyt/jog/util"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
 )
 
-func LoadConfigFile(configFilePath string) *Bootstrap {
-	kratosConfig := config.New(
-		config.WithSource(
-			file.NewSource(configFilePath),
-		),
-	)
+const (
+	DefaultConfigFile = "jog.server.yaml"
+)
+
+var _jogServerYamlResource util.Resource
+
+func init() {
+	_jogServerYamlResource = util.NewResource("/" + DefaultConfigFile)
+}
+
+func LoadConfigFile(configFileUrl string) *Bootstrap {
+	var kratosConfig config.Config
+	if util.IsResourceUrl(configFileUrl) {
+		kratosConfig = config.New(
+			config.WithSource(
+				util.NewResource(util.ResourcePath(configFileUrl)).NewKratoSource(),
+			),
+		)
+	} else {
+		kratosConfig = config.New(
+			config.WithSource(
+				file.NewSource(configFileUrl),
+			),
+		)
+	}
 	defer kratosConfig.Close()
 
 	if err := kratosConfig.Load(); err != nil {
@@ -101,19 +119,19 @@ func normalizeLog(bc *Bootstrap) {
 
 func lookForConfigFile(logger *log.Helper, dir string) string {
 	logger.Infof("looking for config files in directory %s", dir)
-	r := filepath.Join(dir, "jog.server.yaml")
+	r := filepath.Join(dir, DefaultConfigFile)
 	if util.FileExists(r) {
 		return r
 	}
-	r = filepath.Join(dir, "jog.server.yml")
+	r = filepath.Join(dir, DefaultConfigFile)
 	if util.FileExists(r) {
 		return r
 	}
 	return ""
 }
 
-// DetermineConfigFilePath return (file path)
-func determineConfigFilePath(logger *log.Helper) string {
+// determineConfigFileUrl return (file path)
+func determineConfigFileUrl(logger *log.Helper) string {
 	exeDir := util.ExeDirectory()
 	r := lookForConfigFile(logger, exeDir)
 	if len(r) != 0 {
@@ -130,13 +148,11 @@ func determineConfigFilePath(logger *log.Helper) string {
 		return r
 	}
 
-	r = filepath.Join(exeDir, "jog.server.yaml")
-	util.WriteFileIfNotFound(r, []byte(static.DefaultServer_yml))
-	return r
+	return _jogServerYamlResource.Url()
 }
 
 func ParseCommandLine(args []string) string {
-	var configFilePath string
+	var configFileUrl string
 
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
@@ -150,10 +166,10 @@ func ParseCommandLine(args []string) string {
 					return ""
 				}
 
-				configFilePath = args[i+1]
+				configFileUrl = args[i+1]
 				i++
 			} else if arg == "-t" || arg == "--template" {
-				fmt.Println(static.DefaultServer_yml)
+				fmt.Println(_jogServerYamlResource.ReadString())
 				return ""
 			} else {
 				util.PrintErrorHint("Unknown option: '%s'", arg)
@@ -162,13 +178,13 @@ func ParseCommandLine(args []string) string {
 		}
 	}
 
-	if len(configFilePath) == 0 {
+	if len(configFileUrl) == 0 {
 		tmpLogger := log.NewHelper(log.With(log.NewStdLogger(os.Stdout),
 			"ts", log.DefaultTimestamp,
 			"caller", log.DefaultCaller,
 		))
 
-		configFilePath = determineConfigFilePath(tmpLogger)
+		configFileUrl = determineConfigFileUrl(tmpLogger)
 	}
-	return configFilePath
+	return configFileUrl
 }

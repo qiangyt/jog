@@ -16,7 +16,7 @@ import (
 )
 
 import (
-	_ "github.com/qiangyt/jog/statik"
+	_ "github.com/qiangyt/jog/web/statik"
 )
 
 // Injectors from wire.go:

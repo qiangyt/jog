@@ -106,7 +106,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
       Examples:
 	     1) follow with last 10 lines:         jog -f app-20200701-1.log
 	     2) follow with specified lines:       jog -n 100 -f app-20200701-1.log
-	     3) with specified config file:        jog -c another.jog.yml app-20200701-1.log
+	     3) with specified config file:        jog -c another.jog.convert.yml app-20200701-1.log
 	     4) view docker-compose log:           docker-compose logs | jog
 	     5) print the default template:        jog -t
 	     6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log
@@ -119,7 +119,7 @@ Extra feature includes filtering by log level, by time ranage, helpful for daily
       Options:
         -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime
         -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format; can be natural datetime
-        -c,  --config <config file path>                            Specify config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml
+        -c,  --config <config file path>                            Specify config YAML file path. The default is ./jog.convert.yaml or $HOME/.jog/jog.convert.yaml
         -cs, --config-set <config item path>=<config item value>    Set value to specified config item
         -cg, --config-get <config item path>                        Get value to specified config item
         -d,  --debug                                                Print more error detail

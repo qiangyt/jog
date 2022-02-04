@@ -10,7 +10,7 @@ import (
 	v1 "github.com/qiangyt/jog/api/helloworld/v1"
 	"github.com/qiangyt/jog/server/conf"
 	"github.com/qiangyt/jog/server/service"
-	_ "github.com/qiangyt/jog/statik"
+	_ "github.com/qiangyt/jog/web/statik"
 	statikFs "github.com/rakyll/statik/fs"
 )
 
@@ -32,13 +32,20 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 
-	statikFS, err := statikFs.New()
+	webFS, err := statikFs.NewWithNamespace("web")
 	if err != nil {
-		panic(errors.Wrapf(err, "failed to load statik fs"))
+		panic(errors.Wrapf(err, "failed to load web fs"))
 	}
+	srv.HandlePrefix("/web/", http.StripPrefix("/web/", http.FileServer(webFS)))
 
+	resFS, err := statikFs.NewWithNamespace("res")
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to load res fs"))
+	}
+	srv.HandlePrefix("/res/", http.StripPrefix("/res/", http.FileServer(resFS)))
+
+	// default route
 	srv.Handle("/", http.RedirectHandler("/web/", 301))
-	srv.HandlePrefix("/web/", http.StripPrefix("/web/", http.FileServer(statikFS)))
 
 	return srv
 }

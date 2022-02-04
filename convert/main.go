@@ -4,20 +4,19 @@ import (
 	"os"
 
 	"github.com/gookit/color"
-	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/util"
 )
 
-func Main(done chan bool, globalOptions common.GlobalOptions) ConvertContext {
+func Main(done chan bool, debug bool, args []string, version string) ConvertContext {
 	util.InitDefaultGrokLibraryDir()
 
-	ok, options := NewOptionsWithCommandLine(globalOptions.SubArgs())
+	ok, options := NewOptionsWithCommandLine(args)
 	if !ok {
 		close(done)
 		return nil
 	}
 
-	ctx := NewConvertContext(options, util.JogHomeDir(true), globalOptions.Version())
+	ctx := NewConvertContext(options, util.JogHomeDir(true), version)
 	defer ctx.Close()
 
 	if !ctx.LoadConfig() {
@@ -29,7 +28,7 @@ func Main(done chan bool, globalOptions common.GlobalOptions) ConvertContext {
 		defer close(done)
 
 		//TODO: trap CTRL+C signal
-		if !globalOptions.Debug() {
+		if !debug {
 			defer func() {
 				if p := recover(); p != nil {
 					color.Red.Printf("%v\n\n", p)

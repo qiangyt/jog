@@ -1,4 +1,4 @@
-package common
+package main
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
+	"github.com/qiangyt/jog/convert"
 	"github.com/qiangyt/jog/util"
 )
 
@@ -110,7 +111,7 @@ func (i GlobalOptions) PrintServerHelp() {
 	fmt.Println()
 
 	color.New(color.FgBlue, color.OpBold).Println("Servr mode options:")
-	fmt.Printf("  -c,  --config <server config file path>                     Specify server config YAML file path. The default is .jog.server.yaml \n")
+	fmt.Printf("  -c,  --config <server config file path>                     Specify server config YAML file path. The default is ./jog.server.yaml or $HOME/.jog/jog.server.yaml \n")
 	fmt.Printf("  -t,  --template                                             Print a server config YAML file template\n")
 	fmt.Println()
 }
@@ -127,7 +128,7 @@ func (i GlobalOptions) PrintConvertHelp() {
 	color.New(color.FgBlue, color.OpBold).Println("Convert/view examples:")
 	fmt.Println("   1) follow with last 10 lines:         jog -f app-20200701-1.log")
 	fmt.Println("   2) follow with specified lines:       jog -n 100 -f app-20200701-1.log")
-	fmt.Println("   3) with specified config file:        jog -c another.jog.yml app-20200701-1.log")
+	fmt.Printf("   3) with specified config file:        jog -c another.%s app-20200701-1.log\n", convert.DefaultConfigFile)
 	fmt.Println("   4) view docker-compose log:           docker-compose logs | jog")
 	fmt.Println("   5) print the default template:        jog -t")
 	fmt.Println("   6) only shows WARN & ERROR level:     jog -l warn -l error app-20200701-1.log")
@@ -141,7 +142,7 @@ func (i GlobalOptions) PrintConvertHelp() {
 	color.New(color.FgBlue, color.OpBold).Println("Convert/view options:")
 	fmt.Printf("  -a,  --after <timestamp>                                    'after' time filter. Auto-detect the timestamp format; can be natural datetime \n")
 	fmt.Printf("  -b,  --before <timestamp>                                   'before' time filter. Auto-detect the timestamp format; can be natural datetime \n")
-	fmt.Printf("  -c,  --config <convertion config file path>                 Specify convertion config YAML file path. The default is .jog.yaml or $HOME/.jog.yaml \n")
+	fmt.Printf("  -c,  --config <convertion config file path>                 Specify convertion config YAML file path. The default is ./%s or $HOME/.jog/%s \n", convert.DefaultConfigFile, convert.DefaultConfigFile)
 	fmt.Printf("  -cs, --config-set <config item path>=<config item value>    Set value to specified config item \n")
 	fmt.Printf("  -cg, --config-get <config item path>                        Get value to specified config item \n")
 	fmt.Printf("  -f,  --follow                                               Follow mode - follow log output\n")

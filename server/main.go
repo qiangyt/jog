@@ -9,17 +9,13 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
-	"github.com/qiangyt/jog/common"
 	"github.com/qiangyt/jog/server/conf"
 	"github.com/qiangyt/jog/util"
 )
 
-func Main(version string, globalOptions common.GlobalOptions) {
-	configFilePath := conf.ParseCommandLine(globalOptions.SubArgs())
-	if len(configFilePath) == 0 {
-		return
-	}
-	bc := conf.LoadConfigFile(configFilePath)
+func Main(version string, args []string) {
+	configFileUrl := conf.ParseCommandLine(args)
+	bc := conf.LoadConfigFile(configFileUrl)
 
 	var logFile util.LogFile
 	var logger log.Logger

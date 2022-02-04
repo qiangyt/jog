@@ -9,10 +9,19 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/static"
 	"github.com/qiangyt/jog/util"
 	"gopkg.in/yaml.v2"
 )
+
+const (
+	DefaultConfigFile = "jog.convert.yaml"
+)
+
+var _jogConvertYamlResource util.Resource
+
+func init() {
+	_jogConvertYamlResource = util.NewResource("/" + DefaultConfigFile)
+}
 
 // ConfigT ...
 type ConfigT struct {
@@ -205,36 +214,39 @@ func (i Config) ToMap() map[string]interface{} {
 
 func LookForConfigFile(ctx ConvertContext, dir string) string {
 	ctx.LogInfo("looking for config files", "dir", dir)
-	r := filepath.Join(dir, ".jog.yaml")
+	r := filepath.Join(dir, DefaultConfigFile)
 	if util.FileExists(r) {
 		return r
 	}
-	r = filepath.Join(dir, ".jog.yml")
+	r = filepath.Join(dir, DefaultConfigFile)
 	if util.FileExists(r) {
 		return r
 	}
 	return ""
 }
 
-// DetermineConfigFilePath return (file path)
-func DetermineConfigFilePath(ctx ConvertContext) string {
-	dir := util.ExeDirectory()
-	r := LookForConfigFile(ctx, dir)
+// determineConfigFilePath return (file path)
+func determineConfigFilePath(ctx ConvertContext) string {
+	exeDir := util.ExeDirectory()
+	r := LookForConfigFile(ctx, exeDir)
 	if len(r) != 0 {
 		return r
 	}
 
-	dir, err := homedir.Dir()
+	homeDir, err := homedir.Dir()
 	if err != nil {
 		ctx.LogInfo("failed to get home dir", "err", err)
-		return ""
+	} else {
+		r = LookForConfigFile(ctx, homeDir)
 	}
-	return LookForConfigFile(ctx, dir)
+	return r
 }
 
 // BuildDefaultConfigYAML ...
 func BuildDefaultConfigYAML() string {
-	tmpl, err := template.New("default configuration YAML").Parse(static.DefaultConfig_yml)
+	yaml := util.NewResource(filepath.Join("/", DefaultConfigFile)).ReadString()
+
+	tmpl, err := template.New("default configuration YAML").Parse(string(yaml))
 	if err != nil {
 		panic(errors.Wrap(err, "failed to parse default configuration YAML as template"))
 	}
@@ -251,15 +263,15 @@ func BuildDefaultConfigYAML() string {
 
 // NewConfigWithDefaultYamlFile ...
 func NewConfigWithDefaultYamlFile(ctx ConvertContext) Config {
-	path := DetermineConfigFilePath(ctx)
+	configFilePath := determineConfigFilePath(ctx)
 
-	if len(path) == 0 {
+	if len(configFilePath) == 0 {
 		ctx.LogInfo("config file not found, take default one")
 		return NewConfigWithYaml(BuildDefaultConfigYAML())
 	}
 
-	ctx.LogInfo("config file", "path", path)
-	return NewConfigWithYamlFile(ctx, path)
+	ctx.LogInfo("config file", "path", configFilePath)
+	return NewConfigWithYamlFile(ctx, configFilePath)
 }
 
 // NewConfigWithYamlFile ...
