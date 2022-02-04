@@ -253,7 +253,7 @@ func BuildDefaultConfigYAML() string {
 		panic(errors.Wrap(err, "failed to parse default configuration YAML as template"))
 	}
 
-	grokPatterns := grok.LoadAllGrokPatterns()
+	grokPatterns := grok.LoadAllPatterns()
 
 	var buf bytes.Buffer
 	err = tmpl.Execute(&buf, map[string]interface{}{"grokPatterns": grokPatterns})

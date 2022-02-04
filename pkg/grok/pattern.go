@@ -7,17 +7,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
 )
 
-type GrokPattern struct {
+type Pattern struct {
 	Name string
 	Expr string
 }
 
-func ParseGrokPatterns(patternsText string) []GrokPattern {
-	r := make([]GrokPattern, 0)
+func ParsePatterns(patternsText string) []Pattern {
+	r := make([]Pattern, 0)
 
 	buf := bytes.NewBufferString(patternsText)
 
@@ -28,7 +27,7 @@ func ParseGrokPatterns(patternsText string) []GrokPattern {
 		if len(l) > 0 && l[0] != '#' {
 			nameAndExpr := strings.SplitN(l, " ", 2)
 
-			p := GrokPattern{}
+			p := Pattern{}
 			p.Name = nameAndExpr[0]
 			p.Expr = nameAndExpr[1]
 
@@ -39,49 +38,33 @@ func ParseGrokPatterns(patternsText string) []GrokPattern {
 	return r
 }
 
-func ParseVjeantetGrokPatternsStatikFile(name string) []GrokPattern {
-	p := filepath.Join("/grok_vjeantet", name)
-	res := res.New(p)
-	patternsText := res.ReadString()
+func LoadAllPatterns() []Pattern {
+	r := []Pattern{}
 
-	return ParseGrokPatterns(patternsText)
-}
-
-func ParseExtendedGrokPatternsStatikFile(name string) []GrokPattern {
-	p := filepath.Join("/grok_extended", name)
-	res := res.New(p)
-	patternsText := res.ReadString()
-
-	return ParseGrokPatterns(patternsText)
-}
-
-func LoadAllGrokPatterns() []GrokPattern {
-	r := []GrokPattern{}
-
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("aws")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("bacula")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("bro")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("exim")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("firewalls")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("grok-patterns")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("haproxy")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("java")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("junos")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("linux-syslog")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("mcollective-patterns")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("mcollective")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("mongodb")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("nagios")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("postgresql")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("rails")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("redis")...)
-	r = append(r, ParseVjeantetGrokPatternsStatikFile("ruby")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("aws")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("bacula")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("bro")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("exim")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("firewalls")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("grok-patterns")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("haproxy")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("java")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("junos")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("linux-syslog")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("mcollective-patterns")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("mcollective")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("mongodb")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("nagios")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("postgresql")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("rails")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("redis")...)
+	r = append(r, ParseVjeantetPatternsStatikFile("ruby")...)
 
 	return r
 }
 
-func MergeGrokPatterns(allPatterns map[string]GrokPattern, patternsText string) {
-	newPatterns := ParseGrokPatterns(patternsText)
+func MergePatterns(allPatterns map[string]Pattern, patternsText string) {
+	newPatterns := ParsePatterns(patternsText)
 	for _, pattern := range newPatterns {
 		name := pattern.Name
 		if existingOne, alreadyExists := allPatterns[name]; alreadyExists == true {
@@ -89,22 +72,6 @@ func MergeGrokPatterns(allPatterns map[string]GrokPattern, patternsText string) 
 		}
 		allPatterns[name] = pattern
 	}
-}
-
-// CopyGrokVjeantestStatikFile ...
-func CopyGrokVjeantestStatikFile(targetDir string, name string) {
-	p := filepath.Join("/grok_vjeantet", name)
-	res := res.New(p)
-
-	res.CopyToFile(targetDir)
-}
-
-// CopyGrokExtendedStatikFile ...
-func CopyGrokExtendedStatikFile(targetDir string, name string) {
-	p := filepath.Join("/grok_extended", name)
-	res := res.New(p)
-
-	res.CopyToFile(targetDir)
 }
 
 // DefaultGrokLibraryDirs ...
