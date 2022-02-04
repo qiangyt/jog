@@ -15,9 +15,21 @@ init:
 	go install github.com/golang/mock/mockgen@v1.6.0
 	go install github.com/rakyll/statik@v0.1.7
 
-.PHONY: generate
-# generate server & errors code & api
-generate:
+
+.PHONY: web-dist
+# web-dist
+web-dist:
+	cd ./web && quasar build
+	statik -src=./web/dist/spa -dest=./web -f -include=* -ns=web
+
+.PHONY: embed-res
+# embed-res
+embed-res:
+	statik -src=./res/raw -dest=./res -f -include=* -ns=res
+
+.PHONY: protoc
+# protoc
+protoc:
 	protoc --proto_path=. \
 	       --proto_path=./third_party \
  	       --go_out=./api/go \
@@ -37,11 +49,14 @@ generate:
  	       --go_out=paths=source_relative:. \
 	       $(SERVER_PROTO_FILES)
 
-	statik -src=./web/dist -dest=./web -f -include=* -ns=web
-	statik -src=./res/raw -dest=./res -f -include=* -ns=res
+.PHONY: generate
+# generate server & errors code & api
+generate:
+	make protoc;
+	make web-dist;
+	make embed-res;
 
 	go generate ./...
-
 	go fmt ./...
 
 .PHONY: clean
@@ -49,34 +64,34 @@ generate:
 clean:
 	rm -rf ./target
 
-.PHONY: linux_amd64
+.PHONY: linux-amd64
 # build for linux/amd64
-linux_amd64:
-	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux_amd64 ./
+linux-amd64:
+	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux-amd64 ./
 
-.PHONY: linux_arm64
+.PHONY: linux-arm64
 # build for linux/arm64
-linux_arm64:
-	GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux_arm64 ./
+linux-arm64:
+	GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.linux-arm64 ./
 
-.PHONY: darwin_amd64
+.PHONY: darwin-amd64
 # build for darwin/amd64
-darwin_amd64:
-	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin_amd64 ./
+darwin-amd64:
+	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin-amd64 ./
 
-.PHONY: darwin_arm64
+.PHONY: darwin-arm64
 # build for darwin/arm64
-darwin_arm64:
-	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin_arm64 ./
+darwin-arm64:
+	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.darwin-arm64 ./
 
-.PHONY: windows_amd64
+.PHONY: windows-amd64
 # build for windows/amd64
-windows_amd64:
+windows-amd64:
 	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.amd64.exe ./
 
-.PHONY: windows_amd64
+.PHONY: windows-amd64
 # build for windows/arm64
-windows_arm64:
+windows-arm64:
 	GOOS=windows GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/jog.arm64.exe ./
 
 .PHONY: build
@@ -87,12 +102,12 @@ build:
 .PHONY: release
 # release
 release:
-	make linux_amd64;
-	make linux_arm64;
-	make darwin_amd64;
-	make darwin_arm64;
-	make windows_amd64;
-	make windows_arm64;
+	make linux-amd64;
+	make linux-arm64;
+	make darwin-amd64;
+	make darwin-arm64;
+	make windows-amd64;
+	make windows-arm64;
 
 .PHONY: test
 # test
@@ -106,7 +121,7 @@ test:
 	goreportcard-cli
 
 .PHONY: all
-# generate all
+# all
 all:
 	make clean;
 	make generate;
