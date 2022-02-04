@@ -15,6 +15,8 @@ init:
 	go install github.com/golang/mock/mockgen@v1.6.0
 	go install github.com/rakyll/statik@v0.1.7
 
+	cd ./web && npm install
+
 
 .PHONY: web-dist
 # web-dist
