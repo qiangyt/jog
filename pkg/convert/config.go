@@ -9,6 +9,8 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/pkg/grok"
+	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
 	"gopkg.in/yaml.v2"
 )
@@ -17,10 +19,10 @@ const (
 	DefaultConfigFile = "jog.convert.yaml"
 )
 
-var _jogConvertYamlResource util.Resource
+var _jogConvertYamlResource res.Resource
 
 func init() {
-	_jogConvertYamlResource = util.NewResource("/" + DefaultConfigFile)
+	_jogConvertYamlResource = res.New("/" + DefaultConfigFile)
 }
 
 // ConfigT ...
@@ -80,7 +82,7 @@ func (i Config) Init(cfg Config) {
 	}
 	i.TimestampField = timestampField
 
-	util.InitDefaultGrokLibraryDir()
+	grok.InitDefaultGrokLibraryDir()
 	i.Grok.Init(i)
 }
 
@@ -244,14 +246,14 @@ func determineConfigFilePath(ctx ConvertContext) string {
 
 // BuildDefaultConfigYAML ...
 func BuildDefaultConfigYAML() string {
-	yaml := util.NewResource(filepath.Join("/", DefaultConfigFile)).ReadString()
+	yaml := res.New(filepath.Join("/", DefaultConfigFile)).ReadString()
 
 	tmpl, err := template.New("default configuration YAML").Parse(string(yaml))
 	if err != nil {
 		panic(errors.Wrap(err, "failed to parse default configuration YAML as template"))
 	}
 
-	grokPatterns := util.LoadAllGrokPatterns()
+	grokPatterns := grok.LoadAllGrokPatterns()
 
 	var buf bytes.Buffer
 	err = tmpl.Execute(&buf, map[string]interface{}{"grokPatterns": grokPatterns})

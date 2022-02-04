@@ -4,11 +4,12 @@ import (
 	"os"
 
 	"github.com/gookit/color"
+	"github.com/qiangyt/jog/pkg/grok"
 	"github.com/qiangyt/jog/pkg/util"
 )
 
 func Main(done chan bool, debug bool, args []string, version string) ConvertContext {
-	util.InitDefaultGrokLibraryDir()
+	grok.InitDefaultGrokLibraryDir()
 
 	ok, options := NewOptionsWithCommandLine(args)
 	if !ok {

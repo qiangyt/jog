@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gookit/goutil/strutil"
+	"github.com/qiangyt/jog/pkg/grok"
 	"github.com/qiangyt/jog/pkg/util"
 	"github.com/tj/go-naturaldate"
 )
@@ -193,7 +194,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				r.GrokPatternsUsed = append(r.GrokPatternsUsed, args[i+1])
 				i++
 			} else if arg == "--reset-grok-library-dir" {
-				util.ResetDefaultGrokLibraryDir()
+				grok.ResetDefaultGrokLibraryDir()
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(args) {

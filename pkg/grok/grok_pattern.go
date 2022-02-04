@@ -1,4 +1,4 @@
-package util
+package grok
 
 import (
 	"bufio"
@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+
+	"github.com/qiangyt/jog/pkg/res"
+	"github.com/qiangyt/jog/pkg/util"
 )
 
 type GrokPattern struct {
@@ -38,7 +41,7 @@ func ParseGrokPatterns(patternsText string) []GrokPattern {
 
 func ParseVjeantetGrokPatternsStatikFile(name string) []GrokPattern {
 	p := filepath.Join("/grok_vjeantet", name)
-	res := NewResource(p)
+	res := res.New(p)
 	patternsText := res.ReadString()
 
 	return ParseGrokPatterns(patternsText)
@@ -46,7 +49,7 @@ func ParseVjeantetGrokPatternsStatikFile(name string) []GrokPattern {
 
 func ParseExtendedGrokPatternsStatikFile(name string) []GrokPattern {
 	p := filepath.Join("/grok_extended", name)
-	res := NewResource(p)
+	res := res.New(p)
 	patternsText := res.ReadString()
 
 	return ParseGrokPatterns(patternsText)
@@ -91,7 +94,7 @@ func MergeGrokPatterns(allPatterns map[string]GrokPattern, patternsText string) 
 // CopyGrokVjeantestStatikFile ...
 func CopyGrokVjeantestStatikFile(targetDir string, name string) {
 	p := filepath.Join("/grok_vjeantet", name)
-	res := NewResource(p)
+	res := res.New(p)
 
 	res.CopyToFile(targetDir)
 }
@@ -99,7 +102,7 @@ func CopyGrokVjeantestStatikFile(targetDir string, name string) {
 // CopyGrokExtendedStatikFile ...
 func CopyGrokExtendedStatikFile(targetDir string, name string) {
 	p := filepath.Join("/grok_extended", name)
-	res := NewResource(p)
+	res := res.New(p)
 
 	res.CopyToFile(targetDir)
 }
@@ -107,27 +110,27 @@ func CopyGrokExtendedStatikFile(targetDir string, name string) {
 // DefaultGrokLibraryDirs ...
 func DefaultGrokLibraryDirs(expand bool) []string {
 	return []string{
-		JogHomeDir(expand, "grok_vjeantet"),
-		JogHomeDir(expand, "grok_extended"),
+		util.JogHomeDir(expand, "grok_vjeantet"),
+		util.JogHomeDir(expand, "grok_extended"),
 	}
 }
 
 // ResetDefaultGrokLibraryDir ...
 func ResetDefaultGrokLibraryDir() {
-	dirVjeantet := JogHomeDir(true, "grok_vjeantet")
-	RemoveDir(dirVjeantet)
+	dirVjeantet := util.JogHomeDir(true, "grok_vjeantet")
+	util.RemoveDir(dirVjeantet)
 
-	dirExtended := JogHomeDir(true, "grok_extended")
-	RemoveDir(dirExtended)
+	dirExtended := util.JogHomeDir(true, "grok_extended")
+	util.RemoveDir(dirExtended)
 
 	InitDefaultGrokLibraryDir()
 }
 
 // InitDefaultGrokLibraryDir ...
 func InitDefaultGrokLibraryDir() {
-	jogHomeDir := JogHomeDir(true)
+	jogHomeDir := util.JogHomeDir(true)
 
-	if DirExists(filepath.Join(jogHomeDir, "grok_vjeantet")) == false {
+	if util.DirExists(filepath.Join(jogHomeDir, "grok_vjeantet")) == false {
 		CopyGrokVjeantestStatikFile(jogHomeDir, "LICENSE")
 		CopyGrokVjeantestStatikFile(jogHomeDir, "README.md")
 
@@ -151,11 +154,11 @@ func InitDefaultGrokLibraryDir() {
 		CopyGrokVjeantestStatikFile(jogHomeDir, "ruby")
 	}
 
-	dirExtended := JogHomeDir(true, "grok_extended")
-	if DirExists(dirExtended) == false {
+	dirExtended := util.JogHomeDir(true, "grok_extended")
+	if util.DirExists(dirExtended) == false {
 		CopyGrokExtendedStatikFile(jogHomeDir, "pm2")
 	}
 
-	MkdirAll(JogHomeDir(true, "grok_mine"))
+	util.MkdirAll(util.JogHomeDir(true, "grok_mine"))
 
 }

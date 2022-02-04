@@ -7,7 +7,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/qiangyt/jog/pkg/convert"
-	"github.com/qiangyt/jog/pkg/util"
+	"github.com/qiangyt/jog/pkg/grok"
 )
 
 type RunMode int
@@ -117,7 +117,7 @@ func (i GlobalOptions) PrintServerHelp() {
 }
 
 func (i GlobalOptions) PrintConvertHelp() {
-	defaultGrokLibraryDirs := strings.Join(util.DefaultGrokLibraryDirs(false), ", ")
+	defaultGrokLibraryDirs := strings.Join(grok.DefaultGrokLibraryDirs(false), ", ")
 
 	color.New(color.FgBlue, color.OpBold).Println("Convert/view usage:")
 	color.FgBlue.Println("  jog  [option...]  <your JSON log file path>")

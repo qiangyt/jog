@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/mitchellh/go-homedir"
+	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
 )
@@ -17,18 +18,18 @@ const (
 	DefaultConfigFile = "jog.server.yaml"
 )
 
-var _jogServerYamlResource util.Resource
+var _jogServerYamlResource res.Resource
 
 func init() {
-	_jogServerYamlResource = util.NewResource("/" + DefaultConfigFile)
+	_jogServerYamlResource = res.New("/" + DefaultConfigFile)
 }
 
 func LoadConfigFile(configFileUrl string) *Bootstrap {
 	var kratosConfig config.Config
-	if util.IsResourceUrl(configFileUrl) {
+	if res.IsResourceUrl(configFileUrl) {
 		kratosConfig = config.New(
 			config.WithSource(
-				util.NewResource(util.ResourcePath(configFileUrl)).NewKratoSource(),
+				res.New(res.ResourcePath(configFileUrl)).NewKratoSource(),
 			),
 		)
 	} else {
