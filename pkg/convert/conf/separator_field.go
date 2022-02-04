@@ -1,4 +1,4 @@
-package convert
+package conf
 
 import (
 	"github.com/gookit/goutil/strutil"

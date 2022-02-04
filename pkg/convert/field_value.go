@@ -5,16 +5,17 @@ import (
 	"time"
 
 	"github.com/araddon/dateparse"
+	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/util"
 )
 
 // FieldValueT ...
 type FieldValueT struct {
 	value     util.AnyValue
-	enumValue Enum
+	enumValue conf.Enum
 	timeValue time.Time
 	Output    string
-	Config    Field
+	Config    conf.Field
 }
 
 // FieldValue ...
@@ -29,8 +30,8 @@ func (i FieldValue) GetColor() util.Color {
 }
 
 // NewFieldValue ...
-func NewFieldValue(options Options, fieldConfig Field, value util.AnyValue) FieldValue {
-	var enumValue Enum
+func NewFieldValue(options Options, fieldConfig conf.Field, value util.AnyValue) FieldValue {
+	var enumValue conf.Enum
 	var err error
 	var output string
 
@@ -49,7 +50,7 @@ func NewFieldValue(options Options, fieldConfig Field, value util.AnyValue) Fiel
 
 	var timeValue time.Time
 	if options.HasTimestampFilter() {
-		if fieldConfig.Type == FieldType_Time {
+		if fieldConfig.Type == conf.FieldType_Time {
 			loc := fieldConfig.TimeLocation
 			tmFormat := fieldConfig.TimeFormat
 

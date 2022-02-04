@@ -10,6 +10,7 @@ import (
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/util"
 )
 
@@ -161,7 +162,7 @@ func (i LogRecord) ExtractStandardFields(cfg Config) (map[string]FieldValue, map
 }
 
 // MatchesLevelFilter ...
-func (i LogRecord) MatchesLevelFilter(cfg Config, levelFilters []Enum) bool {
+func (i LogRecord) MatchesLevelFilter(cfg Config, levelFilters []conf.Enum) bool {
 	levelFieldValue := i.StandardFields["level"]
 	if levelFieldValue != nil {
 		levelFieldEnum := levelFieldValue.enumValue

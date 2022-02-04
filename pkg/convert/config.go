@@ -9,6 +9,7 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/grok"
 	"github.com/qiangyt/jog/pkg/res"
 	"github.com/qiangyt/jog/pkg/util"
@@ -33,14 +34,14 @@ type ConfigT struct {
 	Pattern                 string
 	fieldsInPattern         map[string]bool
 	HasOthersFieldInPattern bool
-	StartupLine             StartupLine `yaml:"startup-line"`
-	LineNo                  Element     `yaml:"line-no"`
-	UnknownLine             Element     `yaml:"unknown-line"`
-	Prefix                  Prefix
-	Fields                  FieldMap
-	LevelField              Field
-	TimestampField          Field
-	Grok                    Grok
+	StartupLine             conf.StartupLine `yaml:"startup-line"`
+	LineNo                  conf.Element     `yaml:"line-no"`
+	UnknownLine             conf.Element     `yaml:"unknown-line"`
+	Prefix                  conf.Prefix
+	Fields                  conf.FieldMap
+	LevelField              conf.Field
+	TimestampField          conf.Field
+	Grok                    conf.Grok
 }
 
 // Config ...
@@ -74,16 +75,16 @@ func (i Config) Init(cfg Config) {
 
 	timestampField := i.Fields.Standards["timestamp"]
 	if timestampField != nil {
-		if timestampField.Type == FieldType_Auto {
-			timestampField.Type = FieldType_Time
-		} else if timestampField.Type != FieldType_Time {
+		if timestampField.Type == conf.FieldType_Auto {
+			timestampField.Type = conf.FieldType_Time
+		} else if timestampField.Type != conf.FieldType_Time {
 			panic(fmt.Errorf("invalid configuration: type of field 'timestamp' must be 'time' or 'auto'"))
 		}
 	}
 	i.TimestampField = timestampField
 
 	grok.InitDefaultGrokLibraryDir()
-	i.Grok.Init(i)
+	i.Grok.Init()
 }
 
 // Reset ...
@@ -102,24 +103,24 @@ func (i Config) Reset() {
 	i.HasOthersFieldInPattern = false
 	i.fieldsInPattern = make(map[string]bool)
 
-	i.StartupLine = &StartupLineT{}
+	i.StartupLine = &conf.StartupLineT{}
 	i.StartupLine.Reset()
 
-	i.LineNo = &ElementT{}
+	i.LineNo = &conf.ElementT{}
 	i.LineNo.Reset()
 
-	i.UnknownLine = &ElementT{}
+	i.UnknownLine = &conf.ElementT{}
 	i.UnknownLine.Reset()
 
-	i.Prefix = &PrefixT{}
+	i.Prefix = &conf.PrefixT{}
 	i.Prefix.Reset()
 
-	i.Fields = &FieldMapT{}
+	i.Fields = &conf.FieldMapT{}
 	i.Fields.Reset()
 
 	i.LevelField = nil
 
-	i.Grok = &GrokT{}
+	i.Grok = &conf.GrokT{}
 	i.Grok.Reset()
 }
 

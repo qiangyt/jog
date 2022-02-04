@@ -1,4 +1,4 @@
-package convert
+package conf
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ type GrokT struct {
 type Grok = *GrokT
 
 // Init ...
-func (i Grok) Init(cfg Config) {
+func (i Grok) Init() {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {

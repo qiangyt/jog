@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gookit/goutil/strutil"
+	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/grok"
 	"github.com/qiangyt/jog/pkg/util"
 	"github.com/tj/go-naturaldate"
@@ -21,7 +22,7 @@ type OptionsT struct {
 	NumberOfLines   int
 
 	levelFilterTexts []string
-	levelFilters     []Enum
+	levelFilters     []conf.Enum
 
 	beforeFilterText string
 	BeforeFilter     *time.Time
@@ -63,14 +64,14 @@ func (i Options) isGrokEnabled() bool {
 }
 
 // GetLevelFilters ...
-func (i Options) GetLevelFilters() []Enum {
+func (i Options) GetLevelFilters() []conf.Enum {
 	return i.levelFilters
 }
 
 // InitLevelFilters ...
-func (i Options) InitLevelFilters(levelFieldEnums EnumMap) {
+func (i Options) InitLevelFilters(levelFieldEnums conf.EnumMap) {
 	if len(i.levelFilterTexts) == 0 {
-		i.levelFilters = make([]Enum, 0)
+		i.levelFilters = make([]conf.Enum, 0)
 		return
 	}
 
