@@ -53,7 +53,6 @@ protoc:
 # generate server & errors code & api
 generate:
 	make protoc;
-	make web-dist;
 	make embed-res;
 
 	go generate ./...
@@ -124,6 +123,7 @@ test:
 # all
 all:
 	make clean;
+	make web-dist;
 	make generate;
 	make build;
 
