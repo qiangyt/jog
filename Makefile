@@ -1,7 +1,7 @@
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
-SERVER_PROTO_FILES=$(shell find server -name *.proto)
-API_PROTO_FILES=$(shell find api -name *.proto)
+SERVER_PROTO_FILES=$(shell find ./pkg/server/conf -name *.proto)
+API_PROTO_FILES=$(shell find ./api/proto -name *.proto)
 
 .PHONY: init
 # init env
@@ -12,34 +12,37 @@ init:
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@v2.0.0-20220128070526-34d0cccefd7b
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@v2.0.0-20220128070526-34d0cccefd7b
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.6.1
+	go install github.com/golang/mock/mockgen@v1.6.0
+	go install github.com/rakyll/statik@v0.1.7
 
-.PHONY: errors
-# generate errors code
-errors:
+.PHONY: generate
+# generate server & errors code & api
+generate:
 	protoc --proto_path=. \
-               --proto_path=./third_party \
-               --go_out=paths=source_relative:. \
-               --go-errors_out=paths=source_relative:. \
-               $(API_PROTO_FILES)
+	       --proto_path=./third_party \
+ 	       --go_out=./api/go \
+ 	       --go-http_out=./api/go \
+ 	       --go-grpc_out=./api/go \
+ 	       --openapi_out=./api \
+	       $(API_PROTO_FILES)
 
-.PHONY: config
-# generate server proto
-config:
+	protoc --proto_path=. \
+         --proto_path=./third_party \
+         --go_out=./api/go \
+         --go-errors_out=./api/go \
+         $(API_PROTO_FILES)
+
 	protoc --proto_path=. \
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:. \
 	       $(SERVER_PROTO_FILES)
 
-.PHONY: api
-# generate api proto
-api:
-	protoc --proto_path=. \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:. \
- 	       --go-http_out=paths=source_relative:. \
- 	       --go-grpc_out=paths=source_relative:. \
- 	       --openapi_out==paths=source_relative:. \
-	       $(API_PROTO_FILES)
+	statik -src=./web/dist -dest=./web -f -include=* -ns=web
+	statik -src=./res/raw -dest=./res -f -include=* -ns=res
+
+	go generate ./...
+
+	go fmt ./...
 
 .PHONY: clean
 # clean
@@ -50,18 +53,10 @@ clean:
 # build
 build:
 	mkdir -p target/
-	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/linux/jog ./cmd
-	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.amd64 ./cmd
-	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.arm64 ./cmd
-	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/windows/jog.exe ./cmd
-
-.PHONY: generate
-# generate
-generate:
-	statik -src=./web/dist -dest=./web -f -include=* -ns=web
-	statik -src=./res/raw -dest=./res -f -include=* -ns=res
-	go generate ./...
-	go fmt ./...
+	GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/linux/jog ./
+	GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.amd64 ./
+	GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/darwin/jog.arm64 ./
+	GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-X main.Version=$(VERSION)" -o ./target/windows/jog.exe ./
 
 .PHONY: test
 # test
@@ -77,10 +72,9 @@ test:
 .PHONY: all
 # generate all
 all:
-	make api;
-	make errors;
-	make config;
+	make clean;
 	make generate;
+	make build;
 
 # show help
 help:
