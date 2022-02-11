@@ -6,6 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	kratosHttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	v1 "github.com/qiangyt/jog/api/go/helloworld/v1"
 	"github.com/qiangyt/jog/pkg/server/conf"
@@ -32,12 +33,19 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 
+	// web socket
+	wsRouter := mux.NewRouter()
+	wsRouter.HandleFunc("/web/ws", WsHandler)
+	srv.HandlePrefix("/", wsRouter)
+
+	// web static
 	webFS, err := statikFs.NewWithNamespace("web")
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to load web fs"))
 	}
 	srv.HandlePrefix("/web/", http.StripPrefix("/web/", http.FileServer(webFS)))
 
+	// resource
 	resFS, err := statikFs.NewWithNamespace("res")
 	if err != nil {
 		panic(errors.Wrapf(err, "failed to load res fs"))
