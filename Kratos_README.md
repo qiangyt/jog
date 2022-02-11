@@ -1,5 +1,7 @@
 # Kratos Project Template
 
+## Install protoc (>=3.18.1)
+   TODO
 ## Install Kratos
 ```
 go get -u github.com/go-kratos/kratos/cmd/kratos/v2@latest
