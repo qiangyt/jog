@@ -134,7 +134,7 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {
         dark: 'auto',
-        brand: {
+        /*brand: {
           primary: '#26A69A',
           secondary: '#21BA45',
           accent: '#9C27B0',
@@ -145,7 +145,7 @@ module.exports = configure(function (ctx) {
           negative: '#C10015',
           info: '#31CCEC',
           warning: '#F2C037'
-        }
+        }*/
       },
 
       // iconSet: 'material-icons', // Quasar icon set
