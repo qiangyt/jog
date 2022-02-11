@@ -50,20 +50,6 @@
       </ul></div>
     </q-drawer>
 
-    <q-drawer
-      behavior="mobile"
-      show-if-above="false"
-      elevated
-      v-model="rightDrawerOpen"
-      side="right"
-      overlay
-      bordered
-    >
-      <div>
-        1. TODO: 获取当前user的所有未读消息<br />
-      </div>
-    </q-drawer>
-
     <q-page-container>
       <q-splitter v-model="splitterModel">
         <template v-slot:before>
@@ -130,6 +116,12 @@
             <q-route-tab to="/log1" label="log 1" />
             <q-route-tab to="/log2" label="log 2" />
             <q-route-tab to="/log3" label="log 3" />
+            <q-btn
+              class="GPLAY__toolbar-input-btn"
+              color="primary"
+              icon="search"
+              unelevated
+            />
           </q-tabs>
           <div><ul>
             <li><a class="swagger_ui_link" href="http://i8700.wg:8080/swagger-ui/index.html#/LogApiV1/getLogFileUsingGET">Log API #4.1 - 指定id获取log file</a></li>
@@ -157,8 +149,7 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const leftDrawerOpen = ref(false);
-    const rightDrawerOpen = ref(false);
+    const leftDrawerOpen = ref(true);
 
     return {
       search: ref(''),
@@ -167,9 +158,8 @@ export default {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
 
-      rightDrawerOpen,
       toggleRightDrawer() {
-        rightDrawerOpen.value = !rightDrawerOpen.value;
+        //
       },
 
       splitterModel: ref(38.2), // start at 38.2%
