@@ -1,6 +1,6 @@
 package conf
 
-import "github.com/qiangyt/jog/pkg/util"
+import _util "github.com/qiangyt/jog/pkg/util"
 
 // PrefixT ...
 type PrefixT struct {
@@ -29,10 +29,10 @@ func (i Prefix) ToMap() map[string]interface{} {
 
 // UnmarshalYAML ...
 func (i Prefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Prefix) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	jogio "github.com/qiangyt/jog/pkg/io"
+	_io "github.com/qiangyt/jog/pkg/io"
 )
 
 type Pattern struct {
@@ -77,27 +77,27 @@ func MergePatterns(allPatterns map[string]Pattern, patternsText string) {
 // DefaultGrokLibraryDirs ...
 func DefaultGrokLibraryDirs(expand bool) []string {
 	return []string{
-		jogio.JogHomeDir(expand, "grok_vjeantet"),
-		jogio.JogHomeDir(expand, "grok_extended"),
+		_io.JogHomeDir(expand, "grok_vjeantet"),
+		_io.JogHomeDir(expand, "grok_extended"),
 	}
 }
 
 // ResetDefaultGrokLibraryDir ...
 func ResetDefaultGrokLibraryDir() {
-	dirVjeantet := jogio.JogHomeDir(true, "grok_vjeantet")
-	jogio.RemoveDir(dirVjeantet)
+	dirVjeantet := _io.JogHomeDir(true, "grok_vjeantet")
+	_io.RemoveDir(dirVjeantet)
 
-	dirExtended := jogio.JogHomeDir(true, "grok_extended")
-	jogio.RemoveDir(dirExtended)
+	dirExtended := _io.JogHomeDir(true, "grok_extended")
+	_io.RemoveDir(dirExtended)
 
 	InitDefaultGrokLibraryDir()
 }
 
 // InitDefaultGrokLibraryDir ...
 func InitDefaultGrokLibraryDir() {
-	jogHomeDir := jogio.JogHomeDir(true)
+	jogHomeDir := _io.JogHomeDir(true)
 
-	if jogio.DirExists(filepath.Join(jogHomeDir, "grok_vjeantet")) == false {
+	if _io.DirExists(filepath.Join(jogHomeDir, "grok_vjeantet")) == false {
 		//TODO: read directory in a loop
 		CopyGrokVjeantestStatikFile(jogHomeDir, "LICENSE")
 		CopyGrokVjeantestStatikFile(jogHomeDir, "README.md")
@@ -122,11 +122,11 @@ func InitDefaultGrokLibraryDir() {
 		CopyGrokVjeantestStatikFile(jogHomeDir, "ruby")
 	}
 
-	dirExtended := jogio.JogHomeDir(true, "grok_extended")
-	if jogio.DirExists(dirExtended) == false {
+	dirExtended := _io.JogHomeDir(true, "grok_extended")
+	if _io.DirExists(dirExtended) == false {
 		CopyGrokExtendedStatikFile(jogHomeDir, "pm2")
 	}
 
-	jogio.MkdirAll(jogio.JogHomeDir(true, "grok_mine"))
+	_io.MkdirAll(_io.JogHomeDir(true, "grok_mine"))
 
 }

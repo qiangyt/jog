@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	jogio "github.com/qiangyt/jog/pkg/io"
-	"github.com/qiangyt/jog/pkg/util"
+	_io "github.com/qiangyt/jog/pkg/io"
+	_util "github.com/qiangyt/jog/pkg/util"
 	"github.com/vjeantet/grok"
 )
 
@@ -25,8 +25,8 @@ func (i Grok) Init() {
 	i.grok, _ = grok.NewWithConfig(&grok.Config{NamedCapturesOnly: true})
 
 	for _, patternsDir := range i.LibraryDirs {
-		dir := jogio.ExpandHomePath(patternsDir)
-		if jogio.DirExists(dir) == false {
+		dir := _io.ExpandHomePath(patternsDir)
+		if _io.DirExists(dir) == false {
 			continue
 		}
 		i.grok.AddPatternsFromPath(dir)
@@ -35,12 +35,12 @@ func (i Grok) Init() {
 
 // UnmarshalYAML ...
 func (i Grok) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Grok) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // Reset ...
@@ -53,17 +53,17 @@ func (i Grok) Reset() {
 func (i Grok) FromMap(m map[string]interface{}) error {
 	var err error
 
-	i.LibraryDirs, err = util.ExtractStringSliceFromMap(m, "library-dirs")
+	i.LibraryDirs, err = _util.ExtractStringSliceFromMap(m, "library-dirs")
 	if err != nil {
 		return errors.Wrap(err, "failed to parse grok.library-dirs")
 	}
 
-	i.Uses, err = util.ExtractStringSliceFromMap(m, "uses")
+	i.Uses, err = _util.ExtractStringSliceFromMap(m, "uses")
 	if err != nil {
 		return errors.Wrap(err, "failed to parse grok.uses")
 	}
 
-	i.MatchesFields, err = util.ExtractStringSliceFromMap(m, "matches-fields")
+	i.MatchesFields, err = _util.ExtractStringSliceFromMap(m, "matches-fields")
 	if err != nil {
 		return errors.Wrap(err, "failed to parse grok.matches-fields")
 	}

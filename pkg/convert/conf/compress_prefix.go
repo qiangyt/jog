@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 	"gopkg.in/yaml.v2"
 )
 
@@ -63,33 +63,33 @@ type CompressPrefix = *CompressPrefixT
 
 // UnmarshalYAML ...
 func (i CompressPrefix) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i CompressPrefix) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // FromMap ...
 func (i CompressPrefix) FromMap(m map[string]interface{}) error {
 
-	enabledV := util.ExtractFromMap(m, "enabled")
+	enabledV := _util.ExtractFromMap(m, "enabled")
 	if enabledV != nil {
-		i.Enabled = util.ToBool(enabledV)
+		i.Enabled = _util.ToBool(enabledV)
 	}
 
-	separatorsV := util.ExtractFromMap(m, "separators")
+	separatorsV := _util.ExtractFromMap(m, "separators")
 	if separatorsV != nil {
 		i.Separators.Parse(separatorsV)
 	}
 
-	whiteListV := util.ExtractFromMap(m, "white-list")
+	whiteListV := _util.ExtractFromMap(m, "white-list")
 	if whiteListV != nil {
 		i.WhiteList.Parse(whiteListV)
 	}
 
-	actionV := util.ExtractFromMap(m, "action")
+	actionV := _util.ExtractFromMap(m, "action")
 	if actionV != nil {
 		i.Action = ParseCompressPrefixAction(strutil.MustString(actionV))
 	}

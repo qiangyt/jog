@@ -9,9 +9,9 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/mitchellh/go-homedir"
-	jogio "github.com/qiangyt/jog/pkg/io"
+	_io "github.com/qiangyt/jog/pkg/io"
 	"github.com/qiangyt/jog/pkg/res"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
 )
 
@@ -114,7 +114,7 @@ func normalizeLog(bc *Bootstrap) {
 	}
 	if log.Target == "file" {
 		if len(log.FilePath) == 0 {
-			log.FilePath = filepath.Join(jogio.ExeDirectory(), "jog.server.log")
+			log.FilePath = filepath.Join(_io.ExeDirectory(), "jog.server.log")
 		}
 	}
 }
@@ -122,11 +122,11 @@ func normalizeLog(bc *Bootstrap) {
 func lookForConfigFile(logger *log.Helper, dir string) string {
 	logger.Infof("looking for config files in directory %s", dir)
 	r := filepath.Join(dir, DefaultConfigFile)
-	if jogio.FileExists(r) {
+	if _io.FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, DefaultConfigFile)
-	if jogio.FileExists(r) {
+	if _io.FileExists(r) {
 		return r
 	}
 	return ""
@@ -134,7 +134,7 @@ func lookForConfigFile(logger *log.Helper, dir string) string {
 
 // determineConfigFileUrl return (file path)
 func determineConfigFileUrl(logger *log.Helper) string {
-	exeDir := jogio.ExeDirectory()
+	exeDir := _io.ExeDirectory()
 	r := lookForConfigFile(logger, exeDir)
 	if len(r) != 0 {
 		return r
@@ -160,11 +160,11 @@ func ParseCommandLine(args []string) string {
 		arg := args[i]
 
 		if arg[0:1] != "-" {
-			util.PrintErrorHint("Invalid argument: '%s'", arg)
+			_util.PrintErrorHint("Invalid argument: '%s'", arg)
 		} else {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing config file path")
+					_util.PrintErrorHint("Missing config file path")
 					return ""
 				}
 
@@ -174,7 +174,7 @@ func ParseCommandLine(args []string) string {
 				fmt.Println(_jogServerYamlResource.ReadString())
 				return ""
 			} else {
-				util.PrintErrorHint("Unknown option: '%s'", arg)
+				_util.PrintErrorHint("Unknown option: '%s'", arg)
 				return ""
 			}
 		}

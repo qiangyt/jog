@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // FieldMapT ...
@@ -28,19 +28,19 @@ func (i FieldMap) Reset() {
 
 // UnmarshalYAML ...
 func (i FieldMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i FieldMap) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // FromMap ...
 func (i FieldMap) FromMap(m map[string]interface{}) error {
-	othersV := util.ExtractFromMap(m, "others")
+	othersV := _util.ExtractFromMap(m, "others")
 	if othersV != nil {
-		if err := util.UnmashalYAMLAgain(othersV, &i.Others); err != nil {
+		if err := _util.UnmashalYAMLAgain(othersV, &i.Others); err != nil {
 			return err
 		}
 	}
@@ -51,7 +51,7 @@ func (i FieldMap) FromMap(m map[string]interface{}) error {
 		//}
 
 		var f Field
-		if err := util.UnmashalYAMLAgain(v, &f); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &f); err != nil {
 			return err
 		}
 

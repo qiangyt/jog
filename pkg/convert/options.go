@@ -7,7 +7,7 @@ import (
 	"github.com/gookit/goutil/strutil"
 	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/grok"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 	"github.com/tj/go-naturaldate"
 )
 
@@ -136,7 +136,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 		if arg[0:1] == "-" {
 			if arg == "-c" || arg == "--config" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing config file path")
+					_util.PrintErrorHint("Missing config file path")
 					return false, nil
 				}
 
@@ -144,19 +144,19 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				i++
 			} else if arg == "-cs" || arg == "--config-set" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing config item expression")
+					_util.PrintErrorHint("Missing config item expression")
 					return false, nil
 				}
 
-				r.ConfigItemPath, r.ConfigItemValue, err = util.ParseConfigExpression(args[i+1])
+				r.ConfigItemPath, r.ConfigItemValue, err = _util.ParseConfigExpression(args[i+1])
 				if err != nil {
-					util.PrintErrorHint("%v", err)
+					_util.PrintErrorHint("%v", err)
 					return false, nil
 				}
 				i++
 			} else if arg == "-cg" || arg == "--config-get" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing config item path")
+					_util.PrintErrorHint("Missing config item path")
 					return false, nil
 				}
 
@@ -166,7 +166,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				r.FollowMode = true
 			} else if arg == "-n" || arg == "--lines" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing lines argument")
+					_util.PrintErrorHint("Missing lines argument")
 					return false, nil
 				}
 
@@ -180,7 +180,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				r.OutputRawJSON = true
 			} else if arg == "-l" || arg == "--level" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing level argument")
+					_util.PrintErrorHint("Missing level argument")
 					return false, nil
 				}
 
@@ -188,7 +188,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				i++
 			} else if arg == "-g" || arg == "--grok" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing grok argument")
+					_util.PrintErrorHint("Missing grok argument")
 					return false, nil
 				}
 
@@ -199,7 +199,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				return false, nil
 			} else if arg == "-a" || arg == "--after" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing after argument")
+					_util.PrintErrorHint("Missing after argument")
 					return false, nil
 				}
 
@@ -207,7 +207,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 				i++
 			} else if arg == "-b" || arg == "--before" {
 				if i+1 >= len(args) {
-					util.PrintErrorHint("Missing before argument")
+					_util.PrintErrorHint("Missing before argument")
 					return false, nil
 				}
 
@@ -216,7 +216,7 @@ func NewOptionsWithCommandLine(args []string) (bool, Options) {
 			} else if arg == "-w" || arg == "--web-gui" {
 				r.OpenWebGUI = true
 			} else {
-				util.PrintErrorHint("Unknown option: '%s'", arg)
+				_util.PrintErrorHint("Unknown option: '%s'", arg)
 				return false, nil
 			}
 		} else {

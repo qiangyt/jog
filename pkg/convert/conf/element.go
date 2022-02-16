@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // ElementT ...
 type ElementT struct {
-	Color       util.Color
+	Color       _util.Color
 	Print       bool
 	PrintFormat string `yaml:"print-format"`
 }
@@ -22,29 +22,29 @@ type Element = *ElementT
 
 // UnmarshalYAML ...
 func (i Element) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Element) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // FromMap ...
 func (i Element) FromMap(m map[string]interface{}) error {
-	colorV := util.ExtractFromMap(m, "color")
+	colorV := _util.ExtractFromMap(m, "color")
 	if colorV != nil {
-		if err := util.UnmashalYAMLAgain(colorV, &i.Color); err != nil {
+		if err := _util.UnmashalYAMLAgain(colorV, &i.Color); err != nil {
 			return err
 		}
 	}
 
-	printV := util.ExtractFromMap(m, "print")
+	printV := _util.ExtractFromMap(m, "print")
 	if printV != nil {
-		i.Print = util.ToBool(printV)
+		i.Print = _util.ToBool(printV)
 	}
 
-	printFormatV := util.ExtractFromMap(m, "print-format")
+	printFormatV := _util.ExtractFromMap(m, "print-format")
 	if printFormatV != nil {
 		printFormatT := strutil.MustString(printFormatV)
 		if validPrintFormat(printFormatT) {
@@ -78,7 +78,7 @@ func (i Element) ToMap() map[string]interface{} {
 
 // Reset ...
 func (i Element) Reset() {
-	i.Color = &util.ColorT{}
+	i.Color = &_util.ColorT{}
 	i.Color.Set("OpReset")
 
 	i.Print = true
@@ -87,7 +87,7 @@ func (i Element) Reset() {
 }
 
 // GetColor ...
-func (i Element) GetColor(value string) util.Color {
+func (i Element) GetColor(value string) _util.Color {
 	return i.Color
 }
 
@@ -97,7 +97,7 @@ func (i Element) IsEnabled() bool {
 }
 
 // PrintTo ...
-func (i Element) PrintTo(color util.Color, builder *strings.Builder, a string) {
+func (i Element) PrintTo(color _util.Color, builder *strings.Builder, a string) {
 	a = shortenValue(a, i.PrintFormat)
 	if color == nil {
 		builder.WriteString(fmt.Sprintf(i.PrintFormat, a))
@@ -111,8 +111,8 @@ func shortenValue(inValue string, printFormat string) string {
 	idx := strings.Index(printFormat, ".")
 	if idx >= 0 {
 		width, err := strconv.Atoi(printFormat[1:idx])
-		if err == nil && len([]rune(inValue)) > util.Abs(width) && util.Abs(width) > 3 {
-			return fmt.Sprint(inValue[:util.Abs(width)-3], "...")
+		if err == nil && len([]rune(inValue)) > _util.Abs(width) && _util.Abs(width) > 3 {
+			return fmt.Sprint(inValue[:_util.Abs(width)-3], "...")
 		}
 	}
 	return inValue

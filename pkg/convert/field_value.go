@@ -6,12 +6,12 @@ import (
 
 	"github.com/araddon/dateparse"
 	"github.com/qiangyt/jog/pkg/convert/conf"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // FieldValueT ...
 type FieldValueT struct {
-	value     util.AnyValue
+	value     _util.AnyValue
 	enumValue conf.Enum
 	timeValue time.Time
 	Output    string
@@ -22,7 +22,7 @@ type FieldValueT struct {
 type FieldValue = *FieldValueT
 
 // GetColor ...
-func (i FieldValue) GetColor() util.Color {
+func (i FieldValue) GetColor() _util.Color {
 	if i.enumValue != nil {
 		return i.enumValue.Color
 	}
@@ -30,7 +30,7 @@ func (i FieldValue) GetColor() util.Color {
 }
 
 // NewFieldValue ...
-func NewFieldValue(options Options, fieldConfig conf.Field, value util.AnyValue) FieldValue {
+func NewFieldValue(options Options, fieldConfig conf.Field, value _util.AnyValue) FieldValue {
 	var enumValue conf.Enum
 	var err error
 	var output string

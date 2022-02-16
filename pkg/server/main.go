@@ -9,7 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
-	joglog "github.com/qiangyt/jog/pkg/log"
+	_log "github.com/qiangyt/jog/pkg/log"
 	"github.com/qiangyt/jog/pkg/server/conf"
 )
 
@@ -17,7 +17,7 @@ func Main(version string, args []string) {
 	configFileUrl := conf.ParseCommandLine(args)
 	bc := conf.LoadConfigFile(configFileUrl)
 
-	var logFile joglog.File
+	var logFile _log.File
 	var logger log.Logger
 
 	if true { //conf.Log_Target() == conf.Log_stdio {
@@ -28,7 +28,7 @@ func Main(version string, args []string) {
 			"span_id", tracing.SpanID(),
 		)
 	} else {
-		logFile = joglog.NewFile(bc.Log.GetFilePath())
+		logFile = _log.NewFile(bc.Log.GetFilePath())
 		defer logFile.Close()
 
 		logger = log.With(log.NewStdLogger(logFile.File()),

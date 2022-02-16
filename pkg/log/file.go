@@ -1,10 +1,10 @@
-package log
+package _log
 
 import (
 	"os"
 
 	"github.com/pkg/errors"
-	jogio "github.com/qiangyt/jog/pkg/io"
+	_io "github.com/qiangyt/jog/pkg/io"
 )
 
 // FileT implements io.Writer
@@ -34,9 +34,9 @@ func NewFile(path string) File {
 	r := &FileT{path: path}
 
 	create := true
-	if fi := jogio.FileStat(path, false); fi != nil {
+	if fi := _io.FileStat(path, false); fi != nil {
 		if fi.Size() >= 100*1024*1024 {
-			jogio.RemoveFile(path)
+			_io.RemoveFile(path)
 		} else {
 			create = false
 		}

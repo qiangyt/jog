@@ -2,7 +2,7 @@ package conf
 
 import (
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // SeparatorFieldT ...
@@ -17,12 +17,12 @@ type SeparatorField = *SeparatorFieldT
 
 // UnmarshalYAML ...
 func (i SeparatorField) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i SeparatorField) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // Reset ...
@@ -38,7 +38,7 @@ func (i SeparatorField) FromMap(m map[string]interface{}) error {
 		return err
 	}
 
-	labelV := util.ExtractFromMap(m, "label")
+	labelV := _util.ExtractFromMap(m, "label")
 	if labelV != nil {
 		i.Label = strutil.MustString(labelV)
 	}

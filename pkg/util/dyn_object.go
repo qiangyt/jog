@@ -1,4 +1,4 @@
-package util
+package _util
 
 // DynObject ...
 type DynObject interface {

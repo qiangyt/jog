@@ -6,7 +6,7 @@ import (
 
 	"github.com/araddon/dateparse"
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // FieldType ...
@@ -25,7 +25,7 @@ type FieldT struct {
 	ElementT
 
 	Name           string
-	Alias          util.MultiString
+	Alias          _util.MultiString
 	CaseSensitive  bool `yaml:"case-sensitive"`
 	CompressPrefix `yaml:"compress-prefix"`
 	Enums          EnumMap
@@ -44,7 +44,7 @@ func (i Field) Reset() {
 
 	i.Name = ""
 
-	i.Alias = &util.MultiStringT{}
+	i.Alias = &_util.MultiStringT{}
 	i.Alias.Set("")
 
 	i.CaseSensitive = false
@@ -63,13 +63,13 @@ func (i Field) Reset() {
 
 // UnmarshalYAML ...
 func (i Field) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := util.DynObject4YAML(i, unmarshal)
+	e := _util.DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i Field) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // IsEnum ...
@@ -111,31 +111,31 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		return err
 	}
 
-	caseSensitiveV := util.ExtractFromMap(m, "case-sensitive")
+	caseSensitiveV := _util.ExtractFromMap(m, "case-sensitive")
 	if caseSensitiveV != nil {
-		i.CaseSensitive = util.ToBool(caseSensitiveV)
+		i.CaseSensitive = _util.ToBool(caseSensitiveV)
 	}
 
-	aliasV := util.ExtractFromMap(m, "alias")
+	aliasV := _util.ExtractFromMap(m, "alias")
 	if aliasV != nil {
 		i.Alias.Set(strutil.MustString(aliasV))
 	}
 
-	compressPrefixV := util.ExtractFromMap(m, "compress-prefix")
+	compressPrefixV := _util.ExtractFromMap(m, "compress-prefix")
 	if compressPrefixV != nil {
-		if err := util.UnmashalYAMLAgain(compressPrefixV, &i.CompressPrefix); err != nil {
+		if err := _util.UnmashalYAMLAgain(compressPrefixV, &i.CompressPrefix); err != nil {
 			return err
 		}
 	}
 
-	enumsV := util.ExtractFromMap(m, "enums")
+	enumsV := _util.ExtractFromMap(m, "enums")
 	if enumsV != nil {
-		if err := util.UnmashalYAMLAgain(enumsV, &i.Enums); err != nil {
+		if err := _util.UnmashalYAMLAgain(enumsV, &i.Enums); err != nil {
 			return err
 		}
 	}
 
-	typeV := util.ExtractFromMap(m, "type")
+	typeV := _util.ExtractFromMap(m, "type")
 	if typeV != nil {
 		typeT := strutil.MustString(typeV)
 		if typeT == "time" {
@@ -147,12 +147,12 @@ func (i Field) FromMap(m map[string]interface{}) error {
 		}
 	}
 
-	timeFormatV := util.ExtractFromMap(m, "time-format")
+	timeFormatV := _util.ExtractFromMap(m, "time-format")
 	if timeFormatV != nil {
 		i.TimeFormat = strutil.MustString(timeFormatV)
 	}
 
-	timezoneV := util.ExtractFromMap(m, "timezone")
+	timezoneV := _util.ExtractFromMap(m, "timezone")
 	if timezoneV != nil {
 		i.Timezone = strutil.MustString(timezoneV)
 
@@ -167,7 +167,7 @@ func (i Field) FromMap(m map[string]interface{}) error {
 }
 
 // GetColor ...
-func (i Field) GetColor(value string) util.Color {
+func (i Field) GetColor(value string) _util.Color {
 	if i.IsEnum() {
 		return i.Enums.GetEnum(value).Color
 	}

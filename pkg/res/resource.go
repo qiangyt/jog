@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	jogio "github.com/qiangyt/jog/pkg/io"
+	_io "github.com/qiangyt/jog/pkg/io"
 	statikFs "github.com/rakyll/statik/fs"
 
 	_ "github.com/qiangyt/jog/res/statik"
@@ -70,16 +70,16 @@ func (i Resource) CopyToFile(targetDir string) {
 	content := i.ReadBytes()
 
 	targetPath := filepath.Join(targetDir, i.Path())
-	jogio.MkdirAll(filepath.Dir(targetPath))
+	_io.MkdirAll(filepath.Dir(targetPath))
 
-	jogio.ReplaceFile(targetPath, content)
+	_io.ReplaceFile(targetPath, content)
 }
 
 func (i Resource) ReadBytes() []byte {
 	f := i.Open()
 	defer f.Close()
 
-	return jogio.ReadAll(f)
+	return _io.ReadAll(f)
 }
 
 func (i Resource) ReadString() string {

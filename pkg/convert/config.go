@@ -11,9 +11,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/pkg/convert/conf"
 	"github.com/qiangyt/jog/pkg/grok"
-	jogio "github.com/qiangyt/jog/pkg/io"
+	_io "github.com/qiangyt/jog/pkg/io"
 	"github.com/qiangyt/jog/pkg/res"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 	"gopkg.in/yaml.v2"
 )
 
@@ -50,12 +50,12 @@ type Config = *ConfigT
 
 // UnmarshalYAML ...
 func (i Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i Config) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // Init ...
@@ -141,60 +141,60 @@ func (i Config) HasFieldInPattern(fieldName string) bool {
 func (i Config) FromMap(m map[string]interface{}) error {
 	var v interface{}
 
-	v = util.ExtractFromMap(m, "colorization")
+	v = _util.ExtractFromMap(m, "colorization")
 	if v != nil {
-		i.Colorization = util.ToBool(v)
+		i.Colorization = _util.ToBool(v)
 	}
 
-	v = util.ExtractFromMap(m, "replace")
+	v = _util.ExtractFromMap(m, "replace")
 	if v != nil {
 		i.Replace = v.(map[string]string)
 	}
 
-	v = util.ExtractFromMap(m, "pattern")
+	v = _util.ExtractFromMap(m, "pattern")
 	if v != nil {
 		i.Pattern = v.(string)
 		i.HasOthersFieldInPattern = i.HasFieldInPattern("others")
 	}
 
-	v = util.ExtractFromMap(m, "startup-line")
+	v = _util.ExtractFromMap(m, "startup-line")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.StartupLine); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.StartupLine); err != nil {
 			return err
 		}
 	}
 
-	v = util.ExtractFromMap(m, "line-no")
+	v = _util.ExtractFromMap(m, "line-no")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.LineNo); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.LineNo); err != nil {
 			return err
 		}
 	}
 
-	v = util.ExtractFromMap(m, "unknown-line")
+	v = _util.ExtractFromMap(m, "unknown-line")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.UnknownLine); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.UnknownLine); err != nil {
 			return err
 		}
 	}
 
-	v = util.ExtractFromMap(m, "prefix")
+	v = _util.ExtractFromMap(m, "prefix")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.Prefix); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.Prefix); err != nil {
 			return err
 		}
 	}
 
-	v = util.ExtractFromMap(m, "fields")
+	v = _util.ExtractFromMap(m, "fields")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.Fields); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.Fields); err != nil {
 			return err
 		}
 	}
 
-	v = util.ExtractFromMap(m, "grok")
+	v = _util.ExtractFromMap(m, "grok")
 	if v != nil {
-		if err := util.UnmashalYAMLAgain(v, &i.Grok); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &i.Grok); err != nil {
 			return err
 		}
 	}
@@ -219,11 +219,11 @@ func (i Config) ToMap() map[string]interface{} {
 func LookForConfigFile(ctx ConvertContext, dir string) string {
 	ctx.LogInfo("looking for config files", "dir", dir)
 	r := filepath.Join(dir, DefaultConfigFile)
-	if jogio.FileExists(r) {
+	if _io.FileExists(r) {
 		return r
 	}
 	r = filepath.Join(dir, DefaultConfigFile)
-	if jogio.FileExists(r) {
+	if _io.FileExists(r) {
 		return r
 	}
 	return ""
@@ -231,7 +231,7 @@ func LookForConfigFile(ctx ConvertContext, dir string) string {
 
 // determineConfigFilePath return (file path)
 func determineConfigFilePath(ctx ConvertContext) string {
-	exeDir := jogio.ExeDirectory()
+	exeDir := _io.ExeDirectory()
 	r := LookForConfigFile(ctx, exeDir)
 	if len(r) != 0 {
 		return r
@@ -282,7 +282,7 @@ func NewConfigWithDefaultYamlFile(ctx ConvertContext) Config {
 func NewConfigWithYamlFile(ctx ConvertContext, path string) Config {
 	ctx.LogInfo("config file", "path", path)
 
-	yamlText := string(jogio.ReadFile(path))
+	yamlText := string(_io.ReadFile(path))
 	return NewConfigWithYaml(yamlText)
 }
 

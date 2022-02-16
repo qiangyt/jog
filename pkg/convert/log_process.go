@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 var errReadTimeout = errors.New("read timeout")
@@ -140,7 +140,7 @@ func ProcessReader(ctx ConvertContext, reader io.Reader, lineNo int) int {
 	if lineNo == 1 && ctx.Options().NumberOfLines > 0 {
 
 		// skip 'options.NumberOfLines' of lines
-		tailQueue := util.NewTailQueue(ctx.Options().NumberOfLines)
+		tailQueue := _util.NewTailQueue(ctx.Options().NumberOfLines)
 		timer := time.NewTimer(readTimeout)
 
 		for {

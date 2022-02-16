@@ -1,4 +1,4 @@
-package util
+package _util
 
 // TailQueueT ...
 type TailQueueT struct {

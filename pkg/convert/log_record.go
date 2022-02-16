@@ -11,7 +11,7 @@ import (
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
 	"github.com/qiangyt/jog/pkg/convert/conf"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // LogRecordT ...
@@ -20,7 +20,7 @@ type LogRecordT struct {
 
 	Prefix         string
 	StandardFields map[string]FieldValue
-	UnknownFields  map[string]util.AnyValue
+	UnknownFields  map[string]_util.AnyValue
 	Raw            string
 
 	Unknown     bool
@@ -31,8 +31,8 @@ type LogRecordT struct {
 type LogRecord = *LogRecordT
 
 // PrintElement ...
-func (i LogRecord) PrintElement(cfg Config, element util.Printable, builder *strings.Builder, a string) {
-	var color util.Color
+func (i LogRecord) PrintElement(cfg Config, element _util.Printable, builder *strings.Builder, a string) {
+	var color _util.Color
 	if cfg.Colorization {
 		if i.StartupLine {
 			color = cfg.StartupLine.Color
@@ -47,7 +47,7 @@ func (i LogRecord) PrintElement(cfg Config, element util.Printable, builder *str
 }
 
 // PopulateOtherFields ...
-func (i LogRecord) PopulateOtherFields(cfg Config, unknownFields map[string]util.AnyValue, implicitStandardFields map[string]FieldValue, result map[string]string) {
+func (i LogRecord) PopulateOtherFields(cfg Config, unknownFields map[string]_util.AnyValue, implicitStandardFields map[string]FieldValue, result map[string]string) {
 	if !cfg.HasOthersFieldInPattern {
 		return
 	}
@@ -222,10 +222,10 @@ func isStartupLine(cfg Config, raw string) bool {
 	return len(contains) > 0 && strings.Contains(raw, contains)
 }
 
-func tryToParseUsingGrok(ctx ConvertContext, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseUsingGrok(ctx ConvertContext, lineNo int, line string) (matchesGrok bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]_util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
-	unknownFields = map[string]util.AnyValue{}
+	unknownFields = map[string]_util.AnyValue{}
 	cfg := ctx.Config()
 	options := ctx.Options()
 
@@ -243,7 +243,7 @@ func tryToParseUsingGrok(ctx ConvertContext, lineNo int, line string) (matchesGr
 			//TODO: debug log
 		} else {
 			for fName, fValue := range fields {
-				v := util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, cfg.Replace)
+				v := _util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, cfg.Replace)
 
 				fConfig, contains := standardsFieldConfig[fName]
 				if contains {
@@ -276,10 +276,10 @@ func tryToParseUsingGrok(ctx ConvertContext, lineNo int, line string) (matchesGr
 	return
 }
 
-func tryToParseAsJSON(ctx ConvertContext, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]util.AnyValue) {
+func tryToParseAsJSON(ctx ConvertContext, lineNo int, line string) (isJSON bool, prefix string, standardFields map[string]FieldValue, unknownFields map[string]_util.AnyValue) {
 	prefix = ""
 	standardFields = map[string]FieldValue{}
-	unknownFields = map[string]util.AnyValue{}
+	unknownFields = map[string]_util.AnyValue{}
 
 	posOfLeftBracket := strings.IndexByte(line, '{')
 	if posOfLeftBracket < 0 {
@@ -308,7 +308,7 @@ func tryToParseAsJSON(ctx ConvertContext, lineNo int, line string) (isJSON bool,
 
 	standardsFieldConfig := ctx.Config().Fields.StandardsWithAllAliases
 	for fName, fValue := range allFields {
-		v := util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, ctx.Config().Replace)
+		v := _util.AnyValueFromRaw(&ctx.JogContextT, lineNo, fValue, ctx.Config().Replace)
 
 		fConfig, contains := standardsFieldConfig[fName]
 		if contains {
@@ -327,7 +327,7 @@ func tryToParseAsJSON(ctx ConvertContext, lineNo int, line string) (isJSON bool,
 func ParseAsRecord(ctx ConvertContext, lineNo int, rawLine string) LogRecord {
 	r := &LogRecordT{
 		LineNo:         lineNo,
-		UnknownFields:  make(map[string]util.AnyValue),
+		UnknownFields:  make(map[string]_util.AnyValue),
 		StandardFields: make(map[string]FieldValue),
 		Raw:            rawLine,
 		Unknown:        true,

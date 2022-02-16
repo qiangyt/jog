@@ -1,4 +1,4 @@
-package io
+package _io
 
 import (
 	"io/ioutil"
@@ -68,7 +68,7 @@ func Test_DirExists(t *testing.T) {
 func Test_RemoveFile(t *testing.T) {
 	assert := require.New(t)
 
-	f, _ := ioutil.TempFile("", "jog_*.txt")
+	f, _ := _io.TempFile("", "jog_*.txt")
 	path := f.Name()
 	f.Close()
 
@@ -89,7 +89,7 @@ func Test_RemoveFile(t *testing.T) {
 func Test_RemoveDir(t *testing.T) {
 	assert := require.New(t)
 
-	path, _ := ioutil.TempDir("", "jog_*")
+	path, _ := _util.TempDir("", "jog_*")
 	assert.True(DirExists(path))
 	RemoveDir(path)
 	assert.False(DirExists(path))
@@ -129,7 +129,7 @@ func Test_ReadFile(t *testing.T) {
 func Test_WriteFileIfNotFound(t *testing.T) {
 	assert := require.New(t)
 
-	f, _ := ioutil.TempFile("", "jog_*.txt")
+	f, _ := _util.TempFile("", "jog_*.txt")
 	path := f.Name()
 	f.Close()
 

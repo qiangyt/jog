@@ -2,7 +2,7 @@ package conf
 
 import (
 	"github.com/gookit/goutil/strutil"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // StartupLineT ...
@@ -17,12 +17,12 @@ type StartupLine = *StartupLineT
 
 // UnmarshalYAML ...
 func (i StartupLine) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return util.DynObject4YAML(i, unmarshal)
+	return _util.DynObject4YAML(i, unmarshal)
 }
 
 // MarshalYAML ...
 func (i StartupLine) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // Reset ...
@@ -38,7 +38,7 @@ func (i StartupLine) FromMap(m map[string]interface{}) error {
 		return err
 	}
 
-	containsV := util.ExtractFromMap(m, "contains")
+	containsV := _util.ExtractFromMap(m, "contains")
 	if containsV != nil {
 		i.Contains = strutil.MustString(containsV)
 	}

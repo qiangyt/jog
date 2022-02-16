@@ -6,7 +6,7 @@ import (
 
 	"github.com/gookit/goutil/strutil"
 	"github.com/pkg/errors"
-	"github.com/qiangyt/jog/pkg/util"
+	_util "github.com/qiangyt/jog/pkg/util"
 )
 
 // EnumMapT ...
@@ -30,13 +30,13 @@ func (i EnumMap) Reset() {
 
 // UnmarshalYAML ...
 func (i EnumMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	e := util.DynObject4YAML(i, unmarshal)
+	e := _util.DynObject4YAML(i, unmarshal)
 	return e
 }
 
 // MarshalYAML ...
 func (i EnumMap) MarshalYAML() (interface{}, error) {
-	return util.DynObject2YAML(i)
+	return _util.DynObject2YAML(i)
 }
 
 // IsEmpty ...
@@ -59,19 +59,19 @@ func (i EnumMap) GetEnum(value string) Enum {
 
 // FromMap ...
 func (i EnumMap) FromMap(m map[string]interface{}) error {
-	caseSensitiveV := util.ExtractFromMap(m, "case-sensitive")
+	caseSensitiveV := _util.ExtractFromMap(m, "case-sensitive")
 	if caseSensitiveV != nil {
-		i.CaseSensitive = util.ToBool(caseSensitiveV)
+		i.CaseSensitive = _util.ToBool(caseSensitiveV)
 	}
 
-	defaultV := util.ExtractFromMap(m, "default")
+	defaultV := _util.ExtractFromMap(m, "default")
 	if defaultV != nil {
 		i.Default = strutil.MustString(defaultV)
 	}
 
 	for k, v := range m {
 		var ev Enum
-		if err := util.UnmashalYAMLAgain(v, &ev); err != nil {
+		if err := _util.UnmashalYAMLAgain(v, &ev); err != nil {
 			return err
 		}
 
