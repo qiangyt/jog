@@ -93,6 +93,11 @@ func ReadFile(path string) []byte {
 	return r
 }
 
+// ReadTextFile ...
+func ReadTextFile(path string) string {
+	return string(ReadFile(path))
+}
+
 // ReadAll ...
 func ReadAll(reader io.Reader) []byte {
 	r, err := ioutil.ReadAll(reader)
@@ -100,6 +105,11 @@ func ReadAll(reader io.Reader) []byte {
 		panic(errors.Wrapf(err, "failed to read from Reader: %v", reader))
 	}
 	return r
+}
+
+// ReadAllText ...
+func ReadAllText(reader io.Reader) string {
+	return string(ReadAll(reader))
 }
 
 // WriteFileIfNotFound ...
