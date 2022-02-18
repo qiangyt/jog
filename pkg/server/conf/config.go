@@ -22,7 +22,7 @@ const (
 var _jogServerYamlResource res.Resource
 
 func init() {
-	_jogServerYamlResource = res.New("/" + DefaultConfigFile)
+	_jogServerYamlResource = res.NewResourceWithPath("/" + DefaultConfigFile)
 }
 
 func LoadConfigFile(configFileUrl string) *Bootstrap {
@@ -30,7 +30,7 @@ func LoadConfigFile(configFileUrl string) *Bootstrap {
 	if res.IsResourceUrl(configFileUrl) {
 		kratosConfig = config.New(
 			config.WithSource(
-				res.New(res.ResourcePath(configFileUrl)).NewKratoSource(),
+				res.NewResourceWithUrl(configFileUrl).NewKratoSource(),
 			),
 		)
 	} else {

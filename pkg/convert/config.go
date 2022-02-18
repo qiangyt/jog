@@ -24,7 +24,7 @@ const (
 var _jogConvertYamlResource res.Resource
 
 func init() {
-	_jogConvertYamlResource = res.New("/" + DefaultConfigFile)
+	_jogConvertYamlResource = res.NewResourceWithPath("/" + DefaultConfigFile)
 }
 
 // ConfigT ...
@@ -248,7 +248,7 @@ func determineConfigFilePath(ctx ConvertContext) string {
 
 // BuildDefaultConfigYAML ...
 func BuildDefaultConfigYAML() string {
-	yaml := res.New(filepath.Join("/", DefaultConfigFile)).ReadString()
+	yaml := res.NewResourceWithPath(filepath.Join("/", DefaultConfigFile)).ReadString()
 
 	tmpl, err := template.New("default configuration YAML").Parse(string(yaml))
 	if err != nil {

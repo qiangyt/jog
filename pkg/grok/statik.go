@@ -8,7 +8,7 @@ import (
 
 func ParseVjeantetPatternsStatikFile(name string) []Pattern {
 	p := filepath.Join("/grok_vjeantet", name)
-	res := res.New(p)
+	res := res.NewResourceWithPath(p)
 	patternsText := res.ReadString()
 
 	return ParsePatterns(patternsText)
@@ -16,7 +16,7 @@ func ParseVjeantetPatternsStatikFile(name string) []Pattern {
 
 func ParseExtendedPatternsStatikFile(name string) []Pattern {
 	p := filepath.Join("/grok_extended", name)
-	res := res.New(p)
+	res := res.NewResourceWithPath(p)
 	patternsText := res.ReadString()
 
 	return ParsePatterns(patternsText)
@@ -25,7 +25,7 @@ func ParseExtendedPatternsStatikFile(name string) []Pattern {
 // CopyGrokVjeantestStatikFile ...
 func CopyGrokVjeantestStatikFile(targetDir string, name string) {
 	p := filepath.Join("/grok_vjeantet", name)
-	res := res.New(p)
+	res := res.NewResourceWithPath(p)
 
 	res.CopyToFile(targetDir)
 }
@@ -33,7 +33,7 @@ func CopyGrokVjeantestStatikFile(targetDir string, name string) {
 // CopyGrokExtendedStatikFile ...
 func CopyGrokExtendedStatikFile(targetDir string, name string) {
 	p := filepath.Join("/grok_extended", name)
-	res := res.New(p)
+	res := res.NewResourceWithPath(p)
 
 	res.CopyToFile(targetDir)
 }

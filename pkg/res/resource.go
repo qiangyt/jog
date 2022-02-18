@@ -34,20 +34,24 @@ type ResourceT struct {
 
 type Resource = *ResourceT
 
-func New(path string) Resource {
+func NewResourceWithPath(path string) Resource {
 	return &ResourceT{path: path}
+}
+
+func NewResourceWithUrl(url string) Resource {
+	return NewResourceWithPath(ResourcePath(url))
 }
 
 func (i Resource) NewKratoSource() StatikSource {
 	return NewStatikSource(i)
 }
 
-func (i Resource) Path() string {
-	return i.path
+func (me Resource) Path() string {
+	return me.path
 }
 
-func (i Resource) Url() string {
-	return filepath.Join(UrlPrefix, i.path)
+func (me Resource) Url() string {
+	return filepath.Join(UrlPrefix, me.path)
 }
 
 func IsResourceUrl(url string) bool {
@@ -58,30 +62,30 @@ func ResourcePath(url string) string {
 	return url[len(UrlPrefix):]
 }
 
-func (i Resource) Open() http.File {
-	r, err := Fs().Open(i.Path())
+func (me Resource) Open() http.File {
+	r, err := Fs().Open(me.Path())
 	if err != nil {
-		panic(errors.Wrapf(err, "failed to open resource: %s", i.Path()))
+		panic(errors.Wrapf(err, "failed to open resource: %s", me.Path()))
 	}
 	return r
 }
 
-func (i Resource) CopyToFile(targetDir string) {
-	content := i.ReadBytes()
+func (me Resource) CopyToFile(targetDir string) {
+	content := me.ReadBytes()
 
-	targetPath := filepath.Join(targetDir, i.Path())
+	targetPath := filepath.Join(targetDir, me.Path())
 	_io.MkdirAll(filepath.Dir(targetPath))
 
 	_io.ReplaceFile(targetPath, content)
 }
 
-func (i Resource) ReadBytes() []byte {
-	f := i.Open()
+func (me Resource) ReadBytes() []byte {
+	f := me.Open()
 	defer f.Close()
 
 	return _io.ReadAll(f)
 }
 
-func (i Resource) ReadString() string {
-	return string(i.ReadBytes())
+func (me Resource) ReadString() string {
+	return string(me.ReadBytes())
 }
