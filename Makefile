@@ -1,7 +1,8 @@
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 SERVER_PROTO_FILES=$(shell find ./pkg/server/conf -name *.proto)
-API_PROTO_FILES=$(shell find ./api/proto -name *.proto)
+#API_PROTO_FILES=$(shell find ./api/proto -name *.proto)
+API_PROTO_FILES=./api/proto/error_reason.proto ./api/proto/index.proto ./api/proto/greeter.proto
 
 .PHONY: init
 # init env
@@ -33,6 +34,7 @@ embed-res:
 # protoc
 protoc:
 	protoc --proto_path=. \
+	       --proto_path=./api/proto \
 	       --proto_path=./third_party \
  	       --go_out=./api/go \
  	       --go-http_out=./api/go \
@@ -41,6 +43,7 @@ protoc:
 	       $(API_PROTO_FILES)
 
 	protoc --proto_path=. \
+	       --proto_path=./api/proto \
          --proto_path=./third_party \
          --go_out=./api/go \
          --go-errors_out=./api/go \

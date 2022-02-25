@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "common/v1;common";
+option java_multiple_files = true;
+option java_package = "jog.api.common";
+option java_outer_classname = "JogApCommonProtoV1";
+
+message StringId {
+  string id = 1;
+}

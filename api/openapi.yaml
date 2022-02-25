@@ -3,8 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: ""
     version: 0.0.1
 paths:
     /api/helloworld/{name}:
@@ -26,6 +25,76 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/HelloReply'
+    /api/index/_:
+        get:
+            tags:
+                - Index
+            operationId: Index_List
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IndexListResp'
+        post:
+            tags:
+                - Index
+            operationId: Index_Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/IndexCreateReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StringId'
+    /api/index/_/{id}:
+        get:
+            tags:
+                - Index
+            operationId: Index_Remove
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IndexData'
+        patch:
+            tags:
+                - Index
+            operationId: Index_Update
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/IndexUpdateReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StringId'
 components:
     schemas:
         HelloReply:
@@ -34,5 +103,36 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        IndexCreateReq:
+            type: object
+            properties:
+                name:
+                    type: string
+        IndexData:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+        IndexListResp:
+            type: object
+            properties:
+                indices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/IndexData'
+        IndexUpdateReq:
+            type: object
+            properties:
+                id:
+                    type: string
+        StringId:
+            type: object
+            properties:
+                id:
+                    type: string
 tags:
     - name: Greeter
+      description: The greeting service definition.
+    - name: Index

@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package index.v1;
+
+import "google/api/annotations.proto";
+import "common.proto";
+
+option go_package = "index/v1;index";
+option java_multiple_files = true;
+option java_package = "jog.api.index.v1";
+option java_outer_classname = "JogApiIndexProtoV1";
+
+service Index {
+
+  rpc Get (common.StringId) returns (IndexData)  {
+    option (google.api.http) = {
+      get: "/api/index/_/{id}"
+    };
+  }
+
+  rpc List (IndexListReq) returns (IndexListResp)  {
+    option (google.api.http) = {
+      get: "/api/index/_"
+    };
+  }
+
+  rpc Create (IndexCreateReq) returns (common.StringId)  {
+    option (google.api.http) = {
+      post: "/api/index/_"
+      body: "*"
+    };
+  }
+
+  rpc Update (IndexUpdateReq) returns (common.StringId)  {
+    option (google.api.http) = {
+      patch: "/api/index/_/{id}"
+      body: "*"
+    };
+  }
+
+  rpc Remove (common.StringId) returns (IndexData)  {
+    option (google.api.http) = {
+      get: "/api/index/_/{id}"
+    };
+  }
+
+}
+
+message IndexData {
+  string id = 1;
+  string name = 2;
+}
+
+message IndexListReq {
+}
+
+message IndexListResp {
+  repeated IndexData indices = 1;
+}
+
+message IndexCreateReq {
+  string name = 1;
+}
+
+message IndexUpdateReq {
+  string id = 1;
+}
